@@ -594,6 +594,7 @@ static void cluster_unprepare(struct lpm_cluster *cluster,
 	level = &cluster->levels[cluster->last_level];
 	if (level->notify_rpm) {
 		msm_rpm_exit_sleep();
+<<<<<<< HEAD
 
 		/* If RPM bumps up CX to turbo, unvote CX turbo vote
 		 * during exit of rpm assisted power collapse to
@@ -601,6 +602,8 @@ static void cluster_unprepare(struct lpm_cluster *cluster,
 		 */
 
 		lpm_wa_cx_unvote_send();
+=======
+>>>>>>> FETCH_HEAD
 		msm_mpm_exit_sleep(from_idle);
 	}
 

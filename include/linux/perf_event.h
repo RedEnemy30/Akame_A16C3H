@@ -51,6 +51,10 @@ struct perf_guest_info_callbacks {
 #include <linux/atomic.h>
 #include <linux/sysfs.h>
 #include <linux/perf_regs.h>
+<<<<<<< HEAD
+=======
+#include <linux/workqueue.h>
+>>>>>>> FETCH_HEAD
 #include <asm/local.h>
 
 struct perf_callchain_entry {
@@ -316,6 +320,15 @@ struct perf_event {
 	int				nr_siblings;
 	int				group_flags;
 	struct perf_event		*group_leader;
+<<<<<<< HEAD
+=======
+
+	/*
+	 * Protect the pmu, attributes and context of a group leader.
+	 * Note: does not protect the pointer to the group_leader.
+	 */
+	struct mutex			group_leader_mutex;
+>>>>>>> FETCH_HEAD
 	struct pmu			*pmu;
 
 	enum perf_event_active_state	state;
@@ -433,11 +446,14 @@ struct perf_event {
 #endif /* CONFIG_PERF_EVENTS */
 };
 
+<<<<<<< HEAD
 enum perf_event_context_type {
 	task_context,
 	cpu_context,
 };
 
+=======
+>>>>>>> FETCH_HEAD
 /**
  * struct perf_event_context - event context structure
  *
@@ -445,7 +461,10 @@ enum perf_event_context_type {
  */
 struct perf_event_context {
 	struct pmu			*pmu;
+<<<<<<< HEAD
 	enum perf_event_context_type	type;
+=======
+>>>>>>> FETCH_HEAD
 	/*
 	 * Protect the states of the events in the list,
 	 * nr_active, and the list:
@@ -487,6 +506,12 @@ struct perf_event_context {
 	int				nr_cgroups;	 /* cgroup evts */
 	int				nr_branch_stack; /* branch_stack evt */
 	struct rcu_head			rcu_head;
+<<<<<<< HEAD
+=======
+
+	struct delayed_work		orphans_remove;
+	bool				orphans_remove_sched;
+>>>>>>> FETCH_HEAD
 };
 
 /*
@@ -710,6 +735,14 @@ extern int perf_cpu_time_max_percent_handler(struct ctl_table *table, int write,
 		loff_t *ppos);
 
 
+<<<<<<< HEAD
+=======
+static inline bool perf_paranoid_any(void)
+{
+	return sysctl_perf_event_paranoid > 2;
+}
+
+>>>>>>> FETCH_HEAD
 static inline bool perf_paranoid_tracepoint_raw(void)
 {
 	return sysctl_perf_event_paranoid > -1;

@@ -50,7 +50,11 @@ static int cmtp_sock_release(struct socket *sock)
 {
 	struct sock *sk = sock->sk;
 
+<<<<<<< HEAD
 	BT_DBG("sock %p sk %p", sock, sk);
+=======
+	BT_DBG("sock %pK sk %pK", sock, sk);
+>>>>>>> FETCH_HEAD
 
 	if (!sk)
 		return 0;
@@ -200,7 +204,11 @@ static int cmtp_sock_create(struct net *net, struct socket *sock, int protocol,
 {
 	struct sock *sk;
 
+<<<<<<< HEAD
 	BT_DBG("sock %p", sock);
+=======
+	BT_DBG("sock %pK", sock);
+>>>>>>> FETCH_HEAD
 
 	if (sock->type != SOCK_RAW)
 		return -ESOCKTNOSUPPORT;

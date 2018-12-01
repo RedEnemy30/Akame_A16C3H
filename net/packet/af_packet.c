@@ -1317,6 +1317,7 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (!po->running)
 		return -EINVAL;
 
@@ -1324,6 +1325,14 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 		return -EALREADY;
 
 	mutex_lock(&fanout_mutex);
+=======
+	mutex_lock(&fanout_mutex);
+
+	err = -EALREADY;
+	if (po->fanout)
+		goto out;
+
+>>>>>>> FETCH_HEAD
 	match = NULL;
 	list_for_each_entry(f, &fanout_list, list) {
 		if (f->id == id &&
@@ -1357,7 +1366,14 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 		list_add(&match->list, &fanout_list);
 	}
 	err = -EINVAL;
+<<<<<<< HEAD
 	if (match->type == type &&
+=======
+
+	spin_lock(&po->bind_lock);
+	if (po->running &&
+	    match->type == type &&
+>>>>>>> FETCH_HEAD
 	    match->prot_hook.type == po->prot_hook.type &&
 	    match->prot_hook.dev == po->prot_hook.dev) {
 		err = -ENOSPC;
@@ -1369,6 +1385,16 @@ static int fanout_add(struct sock *sk, u16 id, u16 type_flags)
 			err = 0;
 		}
 	}
+<<<<<<< HEAD
+=======
+	spin_unlock(&po->bind_lock);
+
+	if (err && !atomic_read(&match->sk_ref)) {
+		list_del(&match->list);
+		kfree(match);
+	}
+
+>>>>>>> FETCH_HEAD
 out:
 	mutex_unlock(&fanout_mutex);
 	return err;
@@ -1379,6 +1405,7 @@ static void fanout_release(struct sock *sk)
 	struct packet_sock *po = pkt_sk(sk);
 	struct packet_fanout *f;
 
+<<<<<<< HEAD
 	f = po->fanout;
 	if (!f)
 		return;
@@ -1390,6 +1417,18 @@ static void fanout_release(struct sock *sk)
 		list_del(&f->list);
 		dev_remove_pack(&f->prot_hook);
 		kfree(f);
+=======
+	mutex_lock(&fanout_mutex);
+	f = po->fanout;
+	if (f) {
+		po->fanout = NULL;
+
+		if (atomic_dec_and_test(&f->sk_ref)) {
+			list_del(&f->list);
+			dev_remove_pack(&f->prot_hook);
+			kfree(f);
+		}
+>>>>>>> FETCH_HEAD
 	}
 	mutex_unlock(&fanout_mutex);
 }
@@ -2493,17 +2532,32 @@ static int packet_release(struct socket *sock)
 static int packet_do_bind(struct sock *sk, struct net_device *dev, __be16 protocol)
 {
 	struct packet_sock *po = pkt_sk(sk);
+<<<<<<< HEAD
+=======
+	int ret = 0;
+
+	lock_sock(sk);
+
+	spin_lock(&po->bind_lock);
+>>>>>>> FETCH_HEAD
 
 	if (po->fanout) {
 		if (dev)
 			dev_put(dev);
 
+<<<<<<< HEAD
 		return -EINVAL;
 	}
 
 	lock_sock(sk);
 
 	spin_lock(&po->bind_lock);
+=======
+		ret = -EINVAL;
+		goto out_unlock;
+	}
+
+>>>>>>> FETCH_HEAD
 	unregister_prot_hook(sk, true);
 
 	po->num = protocol;
@@ -2530,7 +2584,11 @@ static int packet_do_bind(struct sock *sk, struct net_device *dev, __be16 protoc
 out_unlock:
 	spin_unlock(&po->bind_lock);
 	release_sock(sk);
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 /*
@@ -3135,19 +3193,38 @@ packet_setsockopt(struct socket *sock, int level, int optname, char __user *optv
 
 		if (optlen != sizeof(val))
 			return -EINVAL;
+<<<<<<< HEAD
 		if (po->rx_ring.pg_vec || po->tx_ring.pg_vec)
 			return -EBUSY;
+=======
+>>>>>>> FETCH_HEAD
 		if (copy_from_user(&val, optval, sizeof(val)))
 			return -EFAULT;
 		switch (val) {
 		case TPACKET_V1:
 		case TPACKET_V2:
 		case TPACKET_V3:
+<<<<<<< HEAD
 			po->tp_version = val;
 			return 0;
 		default:
 			return -EINVAL;
 		}
+=======
+			break;
+		default:
+			return -EINVAL;
+		}
+		lock_sock(sk);
+		if (po->rx_ring.pg_vec || po->tx_ring.pg_vec) {
+			ret = -EBUSY;
+		} else {
+			po->tp_version = val;
+			ret = 0;
+		}
+		release_sock(sk);
+		return ret;
+>>>>>>> FETCH_HEAD
 	}
 	case PACKET_RESERVE:
 	{
@@ -3602,6 +3679,10 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
 	/* Added to avoid minimal code churn */
 	struct tpacket_req *req = &req_u->req;
 
+<<<<<<< HEAD
+=======
+	lock_sock(sk);
+>>>>>>> FETCH_HEAD
 	/* Opening a Tx-ring is NOT supported in TPACKET_V3 */
 	if (!closing && tx_ring && (po->tp_version > TPACKET_V2)) {
 		WARN(1, "Tx-ring is not supported.\n");
@@ -3679,7 +3760,10 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	lock_sock(sk);
+=======
+>>>>>>> FETCH_HEAD
 
 	/* Detach socket from network */
 	spin_lock(&po->bind_lock);
@@ -3728,11 +3812,18 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
 		if (!tx_ring)
 			prb_shutdown_retire_blk_timer(po, tx_ring, rb_queue);
 	}
+<<<<<<< HEAD
 	release_sock(sk);
+=======
+>>>>>>> FETCH_HEAD
 
 	if (pg_vec)
 		free_pg_vec(pg_vec, order, req->tp_block_nr);
 out:
+<<<<<<< HEAD
+=======
+	release_sock(sk);
+>>>>>>> FETCH_HEAD
 	return err;
 }
 

@@ -2,7 +2,11 @@
  *
  * Copyright (C) 2008 Google, Inc.
  * Copyright (C) 2008 HTC Corporation
+<<<<<<< HEAD
  * Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2011-2014,2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -302,6 +306,11 @@ static long audio_compat_ioctl(struct file *file, unsigned int cmd,
 		struct msm_audio_aac_config *aac_config;
 		struct msm_audio_aac_config32 aac_config_32;
 
+<<<<<<< HEAD
+=======
+		memset(&aac_config_32, 0, sizeof(aac_config_32));
+
+>>>>>>> FETCH_HEAD
 		aac_config = (struct msm_audio_aac_config *)audio->codec_cfg;
 		aac_config_32.format = aac_config->format;
 		aac_config_32.audio_object = aac_config->audio_object;

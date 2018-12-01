@@ -589,7 +589,11 @@ static void clear_cma_bitmap(struct cma *cma, unsigned long pfn, int count)
  * global one. Requires architecture specific get_dev_cma_area() helper
  * function.
  */
+<<<<<<< HEAD
 unsigned long dma_alloc_from_contiguous(struct device *dev, int count,
+=======
+unsigned long dma_alloc_from_contiguous(struct device *dev, size_t count,
+>>>>>>> FETCH_HEAD
 				       unsigned int align)
 {
 	unsigned long mask, pfn = 0, pageno, start = 0;
@@ -604,12 +608,22 @@ unsigned long dma_alloc_from_contiguous(struct device *dev, int count,
 	if (align > CONFIG_CMA_ALIGNMENT)
 		align = CONFIG_CMA_ALIGNMENT;
 
+<<<<<<< HEAD
 	pr_debug("%s(cma %p, count %d, align %d)\n", __func__, (void *)cma,
+=======
+	pr_debug("%s(cma %pK, count %zu, align %d)\n", __func__, (void *)cma,
+>>>>>>> FETCH_HEAD
 		 count, align);
 
 	if (!count)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	if (count > cma->count)
+		return 0;
+
+>>>>>>> FETCH_HEAD
 	mask = (1 << align) - 1;
 
 

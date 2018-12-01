@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2008-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -90,7 +94,12 @@ enum {
 enum {
 	MDSS_PANEL_POWER_OFF = 0,
 	MDSS_PANEL_POWER_ON,
+<<<<<<< HEAD
 	MDSS_PANEL_POWER_DOZE,
+=======
+	MDSS_PANEL_POWER_LP1,
+	MDSS_PANEL_POWER_LP2,
+>>>>>>> FETCH_HEAD
 };
 
 enum {
@@ -104,6 +113,16 @@ enum {
 	MODE_GPIO_HIGH,
 	MODE_GPIO_LOW,
 };
+<<<<<<< HEAD
+=======
+enum dsi_lane_ids {
+	DSI_LANE_0,
+	DSI_LANE_1,
+	DSI_LANE_2,
+	DSI_LANE_3,
+	DSI_LANE_MAX,
+};
+>>>>>>> FETCH_HEAD
 
 struct mdss_rect {
 	u16 x;
@@ -142,6 +161,10 @@ struct mdss_intf_recovery {
  * @MDSS_EVENT_UNBLANK:		Sent before first frame update from MDP is
  *				sent to panel.
  * @MDSS_EVENT_PANEL_ON:	After first frame update from MDP.
+<<<<<<< HEAD
+=======
+ * @MDSS_EVENT_POST_PANEL_ON	send 2nd phase panel on commands to panel
+>>>>>>> FETCH_HEAD
  * @MDSS_EVENT_BLANK:		MDP has no contents to display only blank screen
  *				is shown in panel. Sent before panel off.
  * @MDSS_EVENT_PANEL_OFF:	MDP has suspended frame updates, panel should be
@@ -188,6 +211,10 @@ enum mdss_intf_events {
 	MDSS_EVENT_LINK_READY,
 	MDSS_EVENT_UNBLANK,
 	MDSS_EVENT_PANEL_ON,
+<<<<<<< HEAD
+=======
+	MDSS_EVENT_POST_PANEL_ON,
+>>>>>>> FETCH_HEAD
 	MDSS_EVENT_BLANK,
 	MDSS_EVENT_PANEL_OFF,
 	MDSS_EVENT_CLOSE,
@@ -217,6 +244,13 @@ struct lcd_panel_info {
 	u32 border_clr;
 	u32 underflow_clr;
 	u32 hsync_skew;
+<<<<<<< HEAD
+=======
+	u32 border_top;
+	u32 border_bottom;
+	u32 border_left;
+	u32 border_right;
+>>>>>>> FETCH_HEAD
 	/* Pad width */
 	u32 xres_pad;
 	/* Pad height */
@@ -283,7 +317,13 @@ struct mipi_panel_info {
 	/* The packet-size should not bet changed */
 	char no_max_pkt_size;
 	/* Clock required during LP commands */
+<<<<<<< HEAD
 	char force_clk_lane_hs;
+=======
+	bool force_clk_lane_hs;
+
+	bool always_on;
+>>>>>>> FETCH_HEAD
 
 	char vsync_enable;
 	char hw_vsync_mode;
@@ -291,6 +331,10 @@ struct mipi_panel_info {
 	char lp11_init;
 	u32  init_delay;
 	u32  post_init_delay;
+<<<<<<< HEAD
+=======
+	u32  phy_lane_clamp_mask;	/*DSI physical lane clamp mask*/
+>>>>>>> FETCH_HEAD
 };
 
 struct edp_panel_info {
@@ -366,6 +410,10 @@ struct mdss_panel_info {
 	u32 clk_rate;
 	u32 clk_min;
 	u32 clk_max;
+<<<<<<< HEAD
+=======
+	u32 mdp_transfer_time_us;
+>>>>>>> FETCH_HEAD
 	u32 frame_count;
 	u32 is_3d_panel;
 	u32 out_format;
@@ -452,6 +500,10 @@ struct mdss_panel_debugfs_info {
 	u32 xres;
 	u32 yres;
 	struct lcd_panel_info lcdc;
+<<<<<<< HEAD
+=======
+	struct dentry *parent;
+>>>>>>> FETCH_HEAD
 	u32 override_flag;
 	char frame_rate;
 	struct mdss_panel_debugfs_info *next;
@@ -522,7 +574,13 @@ static inline int mdss_panel_get_vtotal(struct mdss_panel_info *pinfo)
 {
 	return pinfo->yres + pinfo->lcdc.v_back_porch +
 			pinfo->lcdc.v_front_porch +
+<<<<<<< HEAD
 			pinfo->lcdc.v_pulse_width;
+=======
+			pinfo->lcdc.v_pulse_width+
+			pinfo->lcdc.border_top +
+			pinfo->lcdc.border_bottom;
+>>>>>>> FETCH_HEAD
 }
 
 /*
@@ -538,10 +596,18 @@ static inline int mdss_panel_get_vtotal(struct mdss_panel_info *pinfo)
 static inline int mdss_panel_get_htotal(struct mdss_panel_info *pinfo, bool
 		consider_fbc)
 {
+<<<<<<< HEAD
 	int adj_xres = pinfo->xres;
 
 	if (consider_fbc && pinfo->fbc.enabled)
 		adj_xres = mult_frac(pinfo->xres,
+=======
+	int adj_xres = pinfo->xres + pinfo->lcdc.border_left +
+				pinfo->lcdc.border_right;
+
+	if (consider_fbc && pinfo->fbc.enabled)
+		adj_xres = mult_frac(adj_xres,
+>>>>>>> FETCH_HEAD
 				pinfo->fbc.target_bpp, pinfo->bpp);
 
 	return adj_xres + pinfo->lcdc.h_back_porch +
@@ -593,8 +659,13 @@ static inline bool mdss_panel_is_power_on(int panel_power_state)
  * @panel_power_state: enum identifying the power state to be checked
  *
  * This function returns true if the panel is in an intermediate low power
+<<<<<<< HEAD
  * state where it is still on but not fully interactive. It may still accept
  * commands and display updates but would be operating in a low power mode.
+=======
+ * state where it is still on but not fully interactive. It may or may not
+ * accept any commands and display updates.
+>>>>>>> FETCH_HEAD
  */
 static inline bool mdss_panel_is_power_on_lp(int panel_power_state)
 {
@@ -603,6 +674,22 @@ static inline bool mdss_panel_is_power_on_lp(int panel_power_state)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * mdss_panel_is_panel_power_on_ulp: - checks if panel is in ultra low power mode
+ * @pdata: pointer to the panel struct associated to the panel
+ * @panel_power_state: enum identifying the power state to be checked
+ *
+ * This function returns true if the panel is in a ultra low power
+ * state where it is still on but cannot recieve any display updates.
+ */
+static inline bool mdss_panel_is_power_on_ulp(int panel_power_state)
+{
+	return panel_power_state == MDSS_PANEL_POWER_LP2;
+}
+
+/**
+>>>>>>> FETCH_HEAD
  * mdss_panel_intf_type: - checks if a given intf type is primary
  * @intf_val: panel interface type of the individual controller
  *

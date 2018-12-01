@@ -52,6 +52,11 @@ Optional properties:
 - qcom,store-hard-reset-reason	Boolean property which if set will store the hardware
 				reset reason to SOFT_RB_SPARE register of the core PMIC
 				PON peripheral.
+<<<<<<< HEAD
+=======
+- qcom,pon-reset-off		Boolean property which if set will store the hardware
+				power off in the system shut-down state, instead of a reset-state.
+>>>>>>> FETCH_HEAD
 
 All the below properties are in the sub-node section (properties of the child
 node).

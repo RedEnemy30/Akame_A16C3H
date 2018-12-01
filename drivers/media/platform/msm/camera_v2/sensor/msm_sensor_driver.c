@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2015,2017 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -103,7 +107,15 @@ static int32_t msm_sensor_driver_create_i2c_v4l_subdev
 	s_ctrl->msm_sd.sd.entity.name =	s_ctrl->msm_sd.sd.name;
 	s_ctrl->sensordata->sensor_info->session_id = session_id;
 	s_ctrl->msm_sd.close_seq = MSM_SD_CLOSE_2ND_CATEGORY | 0x3;
+<<<<<<< HEAD
 	msm_sd_register(&s_ctrl->msm_sd);
+=======
+	rc = msm_sd_register(&s_ctrl->msm_sd);
+	if (rc < 0) {
+		pr_err("failed: msm_sd_register rc %d", rc);
+		return rc;
+	}
+>>>>>>> FETCH_HEAD
 	CDBG("%s:%d\n", __func__, __LINE__);
 	return rc;
 }
@@ -133,7 +145,15 @@ static int32_t msm_sensor_driver_create_v4l_subdev
 	s_ctrl->msm_sd.sd.entity.group_id = MSM_CAMERA_SUBDEV_SENSOR;
 	s_ctrl->msm_sd.sd.entity.name = s_ctrl->msm_sd.sd.name;
 	s_ctrl->msm_sd.close_seq = MSM_SD_CLOSE_2ND_CATEGORY | 0x3;
+<<<<<<< HEAD
 	msm_sd_register(&s_ctrl->msm_sd);
+=======
+	rc = msm_sd_register(&s_ctrl->msm_sd);
+	if (rc < 0) {
+		pr_err("failed: msm_sd_register rc %d", rc);
+		return rc;
+	}
+>>>>>>> FETCH_HEAD
 	msm_sensor_v4l2_subdev_fops = v4l2_subdev_fops;
 #ifdef CONFIG_COMPAT
 	msm_sensor_v4l2_subdev_fops.compat_ioctl32 =
@@ -407,6 +427,7 @@ static int32_t msm_sensor_create_pd_settings(void *setting,
 
 #ifdef CONFIG_COMPAT
 	if (is_compat_task()) {
+<<<<<<< HEAD
 		int i = 0;
 		struct msm_sensor_power_setting32 *power_setting_iter =
 		(struct msm_sensor_power_setting32 *)compat_ptr((
@@ -418,6 +439,13 @@ static int32_t msm_sensor_create_pd_settings(void *setting,
 			pd[i].delay = power_setting_iter[i].delay;
 			pd[i].seq_type = power_setting_iter[i].seq_type;
 			pd[i].seq_val = power_setting_iter[i].seq_val;
+=======
+		rc = msm_sensor_get_pw_settings_compat(
+			pd, pu, size_down);
+		if (rc < 0) {
+			pr_err("failed");
+			return -EFAULT;
+>>>>>>> FETCH_HEAD
 		}
 	} else
 #endif
@@ -652,6 +680,10 @@ int32_t msm_sensor_driver_probe(void *setting,
 	struct msm_camera_slave_info        *camera_info = NULL;
 
 	unsigned long                        mount_pos = 0;
+<<<<<<< HEAD
+=======
+	uint32_t                             is_yuv;
+>>>>>>> FETCH_HEAD
 
 	/* Validate input parameters */
 	if (!setting) {
@@ -712,6 +744,10 @@ int32_t msm_sensor_driver_probe(void *setting,
 			setting32.is_init_params_valid;
 		slave_info->sensor_init_params = setting32.sensor_init_params;
 		slave_info->is_flash_supported = setting32.is_flash_supported;
+<<<<<<< HEAD
+=======
+		slave_info->output_format = setting32.output_format;
+>>>>>>> FETCH_HEAD
 	} else
 #endif
 	{
@@ -902,12 +938,15 @@ int32_t msm_sensor_driver_probe(void *setting,
 	pr_err("%s probe succeeded", slave_info->sensor_name);
 
 	/*
+<<<<<<< HEAD
 	  Set probe succeeded flag to 1 so that no other camera shall
 	 * probed on this slot
 	 */
 	s_ctrl->is_probe_succeed = 1;
 
 	/*
+=======
+>>>>>>> FETCH_HEAD
 	 * Update the subdevice id of flash-src based on availability in kernel.
 	 */
 	if (slave_info->is_flash_supported == 0) {
@@ -946,9 +985,18 @@ int32_t msm_sensor_driver_probe(void *setting,
 		goto free_camera_info;
 	}
 	/* Update sensor mount angle and position in media entity flag */
+<<<<<<< HEAD
 	mount_pos = s_ctrl->sensordata->sensor_info->position << 16;
 	mount_pos = mount_pos | ((s_ctrl->sensordata->sensor_info->
 		sensor_mount_angle / 90) << 8);
+=======
+	is_yuv = (slave_info->output_format == MSM_SENSOR_YCBCR) ? 1 : 0;
+	mount_pos = is_yuv << 25 |
+		(s_ctrl->sensordata->sensor_info->position << 16) |
+		((s_ctrl->sensordata->
+		sensor_info->sensor_mount_angle / 90) << 8);
+
+>>>>>>> FETCH_HEAD
 	s_ctrl->msm_sd.sd.entity.flags = mount_pos | MEDIA_ENT_FL_DEFAULT;
 
 	/*Save sensor info*/
@@ -956,6 +1004,14 @@ int32_t msm_sensor_driver_probe(void *setting,
 
 	msm_sensor_fill_sensor_info(s_ctrl, probed_info, entity_name);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Set probe succeeded flag to 1 so that no other camera shall
+	 * probed on this slot
+	 */
+	s_ctrl->is_probe_succeed = 1;
+>>>>>>> FETCH_HEAD
 	return rc;
 
 camera_power_down:

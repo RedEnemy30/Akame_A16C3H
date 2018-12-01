@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2014, 2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -287,6 +291,13 @@ static int mdss_mdp_rotator_queue_sub(struct mdss_mdp_rotator_session *rot,
 	ATRACE_BEGIN("rotator_kickoff");
 	ret = mdss_mdp_rotator_kickoff(rot_ctl, rot, dst_data);
 	ATRACE_END("rotator_kickoff");
+<<<<<<< HEAD
+=======
+	if (ret) {
+		pr_err("mdss_mdp_rotator_kickoff error : %d\n", ret);
+		goto error;
+	}
+>>>>>>> FETCH_HEAD
 
 	return ret;
 error:
@@ -311,6 +322,10 @@ static void mdss_mdp_rotator_commit_wq_handler(struct work_struct *work)
 	if (rot->rot_sync_pt_data) {
 		atomic_inc(&rot->rot_sync_pt_data->commit_cnt);
 		mdss_fb_signal_timeline(rot->rot_sync_pt_data);
+<<<<<<< HEAD
+=======
+		rot->fence_release = true;
+>>>>>>> FETCH_HEAD
 	} else {
 		pr_err("rot_sync_pt_data is NULL\n");
 	}
@@ -357,7 +372,11 @@ static int mdss_mdp_rotator_busy_wait_ex(struct mdss_mdp_rotator_session *rot)
 
 	if (rot->use_sync_pt)
 		mdss_fb_wait_for_fence(rot->rot_sync_pt_data);
+<<<<<<< HEAD
 
+=======
+	rot->fence_release = false;
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 
@@ -634,6 +653,19 @@ int mdss_mdp_rotator_setup(struct msm_fb_data_type *mfd,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static void mdss_mdp_rotator_fence_free(
+	struct mdss_mdp_rotator_session *rot)
+{
+	if (rot->rot_sync_pt_data && !rot->fence_release) {
+		atomic_inc(&rot->rot_sync_pt_data->commit_cnt);
+		mdss_fb_signal_timeline(rot->rot_sync_pt_data);
+		rot->fence_release = true;
+	}
+}
+
+>>>>>>> FETCH_HEAD
 static int mdss_mdp_rotator_finish(struct mdss_mdp_rotator_session *rot)
 {
 	struct mdss_mdp_pipe *rot_pipe;
@@ -665,6 +697,11 @@ static int mdss_mdp_rotator_finish(struct mdss_mdp_rotator_session *rot)
 	if (!list_empty(&rot->list))
 		list_del(&rot->list);
 
+<<<<<<< HEAD
+=======
+	mdss_mdp_rotator_fence_free(rot);
+
+>>>>>>> FETCH_HEAD
 	rot_sync_pt_data = rot->rot_sync_pt_data;
 	commit_work = rot->commit_work;
 	memset(rot, 0, sizeof(*rot));

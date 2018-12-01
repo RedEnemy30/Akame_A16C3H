@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2002,2007-2017 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -526,6 +530,7 @@ static inline unsigned int _fixup_cache_range_op(unsigned int op)
 }
 #endif
 
+<<<<<<< HEAD
 int kgsl_cache_range_op(struct kgsl_memdesc *memdesc, size_t offset,
 			size_t size, unsigned int op)
 {
@@ -541,10 +546,85 @@ int kgsl_cache_range_op(struct kgsl_memdesc *memdesc, size_t offset,
 	if (!size)
 		return -EINVAL;
 
+=======
+static int kgsl_do_cache_op(struct page *page, void *addr,
+		uint64_t offset, uint64_t size, unsigned int op)
+{
+	void (*cache_op)(const void *, const void *);
+
+	/*
+	 * The dmac_xxx_range functions handle addresses and sizes that
+	 * are not aligned to the cacheline size correctly.
+	 */
+	switch (_fixup_cache_range_op(op)) {
+	case KGSL_CACHE_OP_FLUSH:
+		cache_op = dmac_flush_range;
+		break;
+	case KGSL_CACHE_OP_CLEAN:
+		cache_op = dmac_clean_range;
+		break;
+	case KGSL_CACHE_OP_INV:
+		cache_op = dmac_inv_range;
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	if (page != NULL) {
+		unsigned long pfn = page_to_pfn(page) + offset / PAGE_SIZE;
+		/*
+		 *  page_address() returns the kernel virtual address of page.
+		 *  For high memory kernel virtual address exists only if page
+		 *  has been mapped. So use a version of kmap rather than
+		 *  page_address() for high memory.
+		 */
+		if (PageHighMem(page)) {
+			offset &= ~PAGE_MASK;
+
+			do {
+				unsigned int len = size;
+
+				if (len + offset > PAGE_SIZE)
+					len = PAGE_SIZE - offset;
+
+				page = pfn_to_page(pfn++);
+				addr = kmap_atomic(page);
+				cache_op(addr + offset, addr + offset + len);
+				kunmap_atomic(addr);
+
+				size -= len;
+				offset = 0;
+			} while (size);
+
+			return 0;
+		}
+
+		addr = page_address(page);
+	}
+
+	cache_op(addr + offset, addr + offset + (size_t) size);
+	return 0;
+}
+
+int kgsl_cache_range_op(struct kgsl_memdesc *memdesc, size_t offset,
+		size_t size, unsigned int op)
+{
+	void *addr = NULL;
+	int ret = 0;
+
+	if (size == 0 || size > UINT_MAX)
+		return -EINVAL;
+
+	/* Make sure that the offset + size does not overflow */
+	if ((offset + size < offset) || (offset + size < size))
+		return -ERANGE;
+
+>>>>>>> FETCH_HEAD
 	/* Check that offset+length does not exceed memdesc->size */
 	if ((offset + size) > memdesc->size)
 		return -ERANGE;
 
+<<<<<<< HEAD
 	/* Return quietly if the buffer isn't mapped on the CPU */
 	if (addr == NULL)
 		return 0;
@@ -569,6 +649,45 @@ int kgsl_cache_range_op(struct kgsl_memdesc *memdesc, size_t offset,
 	}
 
 	return 0;
+=======
+	if (memdesc->hostptr) {
+		addr = memdesc->hostptr;
+		/* Make sure the offset + size do not overflow the address */
+		if (addr + ((size_t) offset + (size_t) size) < addr)
+			return -ERANGE;
+
+		ret = kgsl_do_cache_op(NULL, addr, offset, size, op);
+		return ret;
+	}
+
+	/*
+	 * If the buffer is not to mapped to kernel, perform cache
+	 * operations after mapping to kernel.
+	 */
+	if (memdesc->sg) {
+		struct scatterlist *sg;
+		unsigned int i, pos = 0;
+
+		for_each_sg(memdesc->sg, sg, memdesc->sglen, i) {
+			uint64_t sg_offset, sg_left;
+
+			if (offset >= (pos + sg->length)) {
+				pos += sg->length;
+				continue;
+			}
+			sg_offset = offset > pos ? offset - pos : 0;
+			sg_left = (sg->length - sg_offset > size) ? size :
+						sg->length - sg_offset;
+			ret = kgsl_do_cache_op(sg_page(sg), NULL, sg_offset,
+								sg_left, op);
+			size -= sg_left;
+			if (size == 0)
+				break;
+			pos += sg->length;
+		}
+	}
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 EXPORT_SYMBOL(kgsl_cache_range_op);
 
@@ -599,6 +718,13 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 	unsigned int align;
 	int step = ((VMALLOC_END - VMALLOC_START)/8) >> PAGE_SHIFT;
 
+<<<<<<< HEAD
+=======
+	size = PAGE_ALIGN(size);
+	if (size == 0 || size > UINT_MAX)
+		return -EINVAL;
+
+>>>>>>> FETCH_HEAD
 	align = (memdesc->flags & KGSL_MEMALIGN_MASK) >> KGSL_MEMALIGN_SHIFT;
 
 	page_size = get_page_size(size, align);
@@ -621,6 +747,12 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 	memdesc->pagetable = pagetable;
 	memdesc->ops = &kgsl_page_alloc_ops;
 
+<<<<<<< HEAD
+=======
+	/* Check for integer overflow */
+	if (sglen_alloc && (sizeof(struct scatterlist) > INT_MAX / sglen_alloc))
+		return -EINVAL;
+>>>>>>> FETCH_HEAD
 	memdesc->sg = kgsl_malloc(sglen_alloc * sizeof(struct scatterlist));
 
 	if (memdesc->sg == NULL) {
@@ -702,7 +834,13 @@ _kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
 
 	memdesc->sglen = sglen;
 	memdesc->size = size;
+<<<<<<< HEAD
 	sg_mark_end(&memdesc->sg[sglen - 1]);
+=======
+
+	if (sglen > 0)
+		sg_mark_end(&memdesc->sg[sglen - 1]);
+>>>>>>> FETCH_HEAD
 
 	/*
 	 * All memory that goes to the user has to be zeroed out before it gets

@@ -40,6 +40,10 @@ static int mdss_dsi_regulator_init(struct platform_device *pdev)
 
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
 	int i = 0;
+<<<<<<< HEAD
+=======
+	int j = 0;
+>>>>>>> FETCH_HEAD
 
 	if (!pdev) {
 		pr_err("%s: invalid input\n", __func__);
@@ -56,11 +60,24 @@ static int mdss_dsi_regulator_init(struct platform_device *pdev)
 		rc = msm_dss_config_vreg(&pdev->dev,
 			ctrl_pdata->power_data[i].vreg_config,
 			ctrl_pdata->power_data[i].num_vreg, 1);
+<<<<<<< HEAD
 		if (rc)
 			pr_err("%s: failed to init vregs for %s\n",
 				__func__, __mdss_dsi_pm_name(i));
 	}
 
+=======
+		if (rc) {
+			pr_err("%s: failed to init vregs for %s\n",
+				__func__, __mdss_dsi_pm_name(i));
+			for (j = i-1; j >= 0; j--) {
+				msm_dss_config_vreg(&pdev->dev,
+				ctrl_pdata->power_data[j].vreg_config,
+				ctrl_pdata->power_data[j].num_vreg, 0);
+			}
+		}
+	}
+>>>>>>> FETCH_HEAD
 	return rc;
 }
 
@@ -184,9 +201,15 @@ error:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int mdss_dsi_panel_power_doze(struct mdss_panel_data *pdata, int enable)
 {
 	/* Panel power control when entering/exiting doze mode */
+=======
+static int mdss_dsi_panel_power_lp(struct mdss_panel_data *pdata, int enable)
+{
+	/* Panel power control when entering/exiting lp mode */
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 
@@ -223,12 +246,22 @@ static int mdss_dsi_panel_power_ctrl(struct mdss_panel_data *pdata,
 		break;
 	case MDSS_PANEL_POWER_ON:
 		if (mdss_dsi_is_panel_on_lp(pdata))
+<<<<<<< HEAD
 			ret = mdss_dsi_panel_power_doze(pdata, false);
 		else
 			ret = mdss_dsi_panel_power_on(pdata);
 		break;
 	case MDSS_PANEL_POWER_DOZE:
 		ret = mdss_dsi_panel_power_doze(pdata, true);
+=======
+			ret = mdss_dsi_panel_power_lp(pdata, false);
+		else
+			ret = mdss_dsi_panel_power_on(pdata);
+		break;
+	case MDSS_PANEL_POWER_LP1:
+	case MDSS_PANEL_POWER_LP2:
+		ret = mdss_dsi_panel_power_lp(pdata, true);
+>>>>>>> FETCH_HEAD
 		break;
 	default:
 		pr_err("%s: unknown panel power state requested (%d)\n",
@@ -464,7 +497,11 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata, int power_state)
 
 	panel_info = &ctrl_pdata->panel_data.panel_info;
 
+<<<<<<< HEAD
 	pr_debug("%s+: ctrl=%p ndx=%d power_state=%d\n",
+=======
+	pr_debug("%s+: ctrl=%pK ndx=%d power_state=%d\n",
+>>>>>>> FETCH_HEAD
 		__func__, ctrl_pdata, ctrl_pdata->ndx, power_state);
 
 	if (power_state == panel_info->panel_power_state) {
@@ -473,7 +510,11 @@ static int mdss_dsi_off(struct mdss_panel_data *pdata, int power_state)
 		goto end;
 	}
 
+<<<<<<< HEAD
 	if (power_state != MDSS_PANEL_POWER_OFF) {
+=======
+	if (mdss_panel_is_power_on(power_state)) {
+>>>>>>> FETCH_HEAD
 		pr_debug("%s: dsi_off with panel always on\n", __func__);
 		goto panel_power_ctrl;
 	}
@@ -552,7 +593,11 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 				panel_data);
 
 	cur_power_state = pdata->panel_info.panel_power_state;
+<<<<<<< HEAD
 	pr_debug("%s+: ctrl=%p ndx=%d cur_power_state=%d\n", __func__,
+=======
+	pr_debug("%s+: ctrl=%pK ndx=%d cur_power_state=%d\n", __func__,
+>>>>>>> FETCH_HEAD
 		ctrl_pdata, ctrl_pdata->ndx, cur_power_state);
 
 	pinfo = &pdata->panel_info;
@@ -696,7 +741,11 @@ static int mdss_dsi_unblank(struct mdss_panel_data *pdata)
 				panel_data);
 	mipi  = &pdata->panel_info.mipi;
 
+<<<<<<< HEAD
 	pr_debug("%s+: ctrl=%p ndx=%d cur_blank_state=%d\n", __func__,
+=======
+	pr_debug("%s+: ctrl=%pK ndx=%d cur_blank_state=%d\n", __func__,
+>>>>>>> FETCH_HEAD
 		ctrl_pdata, ctrl_pdata->ndx, pdata->panel_info.blank_state);
 
 	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 1);
@@ -749,12 +798,20 @@ static int mdss_dsi_blank(struct mdss_panel_data *pdata, int power_state)
 				panel_data);
 	mipi = &pdata->panel_info.mipi;
 
+<<<<<<< HEAD
 	pr_debug("%s+: ctrl=%p ndx=%d power_state=%d\n",
+=======
+	pr_debug("%s+: ctrl=%pK ndx=%d power_state=%d\n",
+>>>>>>> FETCH_HEAD
 		__func__, ctrl_pdata, ctrl_pdata->ndx, power_state);
 
 	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 1);
 
+<<<<<<< HEAD
 	if (power_state == MDSS_PANEL_POWER_DOZE) {
+=======
+	if (mdss_panel_is_power_on_lp(power_state)) {
+>>>>>>> FETCH_HEAD
 		pr_debug("%s: low power state requested\n", __func__);
 		if (ctrl_pdata->low_power_config)
 			ret = ctrl_pdata->low_power_config(pdata, true);
@@ -807,6 +864,35 @@ error:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int mdss_dsi_post_panel_on(struct mdss_panel_data *pdata)
+{
+	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
+
+	if (pdata == NULL) {
+		pr_err("%s: Invalid input data\n", __func__);
+		return -EINVAL;
+	}
+
+	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
+				panel_data);
+
+	pr_debug("%s+: ctrl=%pK ndx=%d\n", __func__,
+				ctrl_pdata, ctrl_pdata->ndx);
+
+	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 1);
+
+	if (ctrl_pdata->post_panel_on)
+		ctrl_pdata->post_panel_on(pdata);
+
+	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 0);
+	pr_debug("%s-:\n", __func__);
+
+	return 0;
+}
+
+>>>>>>> FETCH_HEAD
 int mdss_dsi_cont_splash_on(struct mdss_panel_data *pdata)
 {
 	int ret = 0;
@@ -825,7 +911,11 @@ int mdss_dsi_cont_splash_on(struct mdss_panel_data *pdata)
 	ctrl_pdata = container_of(pdata, struct mdss_dsi_ctrl_pdata,
 				panel_data);
 
+<<<<<<< HEAD
 	pr_debug("%s+: ctrl=%p ndx=%d\n", __func__,
+=======
+	pr_debug("%s+: ctrl=%pK ndx=%d\n", __func__,
+>>>>>>> FETCH_HEAD
 				ctrl_pdata, ctrl_pdata->ndx);
 
 	WARN((ctrl_pdata->ctrl_state & CTRL_STATE_PANEL_INIT),
@@ -1080,6 +1170,13 @@ static int mdss_dsi_dfps_config(struct mdss_panel_data *pdata, int new_fps)
 		sctrl_pdata = mdss_dsi_get_other_ctrl(ctrl_pdata);
 	}
 
+<<<<<<< HEAD
+=======
+	ctrl_pdata->dfps_status = true;
+	if (sctrl_pdata)
+		sctrl_pdata->dfps_status = true;
+
+>>>>>>> FETCH_HEAD
 	if (new_fps !=
 		ctrl_pdata->panel_data.panel_info.mipi.frame_rate) {
 		if (pdata->panel_info.dfps_update
@@ -1252,6 +1349,12 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 		if (ctrl_pdata->on_cmds.link_state == DSI_LP_MODE)
 			rc = mdss_dsi_unblank(pdata);
 		break;
+<<<<<<< HEAD
+=======
+	case MDSS_EVENT_POST_PANEL_ON:
+		rc = mdss_dsi_post_panel_on(pdata);
+		break;
+>>>>>>> FETCH_HEAD
 	case MDSS_EVENT_PANEL_ON:
 		ctrl_pdata->ctrl_state |= CTRL_STATE_MDP_ACTIVE;
 		if (ctrl_pdata->on_cmds.link_state == DSI_HS_MODE)
@@ -1268,7 +1371,12 @@ static int mdss_dsi_event_handler(struct mdss_panel_data *pdata,
 		ctrl_pdata->ctrl_state &= ~CTRL_STATE_MDP_ACTIVE;
 		if (ctrl_pdata->off_cmds.link_state == DSI_LP_MODE)
 			rc = mdss_dsi_blank(pdata, power_state);
+<<<<<<< HEAD
 		rc = mdss_dsi_off(pdata, power_state);
+=======
+		if (!(pdata->panel_info.mipi.always_on))
+			rc = mdss_dsi_off(pdata, power_state);
+>>>>>>> FETCH_HEAD
 		break;
 	case MDSS_EVENT_CONT_SPLASH_FINISH:
 		if (ctrl_pdata->off_cmds.link_state == DSI_LP_MODE)
@@ -1548,6 +1656,13 @@ static int mdss_dsi_ctrl_probe(struct platform_device *pdev)
 		goto error_pan_node;
 	}
 
+<<<<<<< HEAD
+=======
+	ctrl_pdata->cmd_clk_ln_recovery_en =
+		of_property_read_bool(pdev->dev.of_node,
+			"qcom,dsi-clk-ln-recovery");
+
+>>>>>>> FETCH_HEAD
 	if (mdss_dsi_is_te_based_esd(ctrl_pdata)) {
 		rc = devm_request_irq(&pdev->dev,
 			gpio_to_irq(ctrl_pdata->disp_te_gpio),
@@ -1563,6 +1678,10 @@ static int mdss_dsi_ctrl_probe(struct platform_device *pdev)
 	return 0;
 
 error_pan_node:
+<<<<<<< HEAD
+=======
+	mdss_dsi_unregister_bl_settings(ctrl_pdata);
+>>>>>>> FETCH_HEAD
 	of_node_put(dsi_pan_node);
 	i--;
 error_vreg:
@@ -1654,7 +1773,11 @@ int mdss_dsi_retrieve_ctrl_resources(struct platform_device *pdev, int mode,
 		return rc;
 	}
 
+<<<<<<< HEAD
 	pr_info("%s: ctrl_base=%p ctrl_size=%x phy_base=%p phy_size=%x\n",
+=======
+	pr_info("%s: ctrl_base=%pK ctrl_size=%x phy_base=%pK phy_size=%x\n",
+>>>>>>> FETCH_HEAD
 		__func__, ctrl->ctrl_base, ctrl->reg_size, ctrl->phy_io.base,
 		ctrl->phy_io.len);
 

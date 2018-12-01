@@ -83,6 +83,10 @@ static inline int is_device_dma_capable(struct device *dev)
 #include <asm-generic/dma-mapping-broken.h>
 #endif
 
+<<<<<<< HEAD
+=======
+#ifndef CONFIG_NO_DMA
+>>>>>>> FETCH_HEAD
 static inline void *dma_remap(struct device *dev, void *cpu_addr,
 		dma_addr_t dma_handle, size_t size, struct dma_attrs *attrs)
 {
@@ -113,6 +117,10 @@ static inline void dma_unremap(struct device *dev, void *remapped_addr,
 
 	return ops->unremap(dev, remapped_addr, size);
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> FETCH_HEAD
 
 static inline u64 dma_get_mask(struct device *dev)
 {

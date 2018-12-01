@@ -14,6 +14,10 @@
 #include <linux/debugfs.h>
 #include <linux/slab.h>
 #include <linux/hash.h>
+<<<<<<< HEAD
+=======
+#include <linux/kmemleak.h>
+>>>>>>> FETCH_HEAD
 
 #define ODEBUG_HASH_BITS	14
 #define ODEBUG_HASH_SIZE	(1 << ODEBUG_HASH_BITS)
@@ -97,6 +101,10 @@ static void fill_pool(void)
 		if (!new)
 			return;
 
+<<<<<<< HEAD
+=======
+		kmemleak_not_leak(new);
+>>>>>>> FETCH_HEAD
 		raw_spin_lock_irqsave(&pool_lock, flags);
 		hlist_add_head(&new->node, &obj_pool);
 		obj_pool_free++;
@@ -1077,7 +1085,11 @@ void __init debug_objects_mem_init(void)
 	obj_cache = kmem_cache_create("debug_objects_cache",
 				      sizeof (struct debug_obj), 0,
 				      SLAB_DEBUG_OBJECTS, NULL);
+<<<<<<< HEAD
 
+=======
+	kmemleak_not_leak(obj_cache);
+>>>>>>> FETCH_HEAD
 	if (!obj_cache || debug_objects_replace_static_objects()) {
 		debug_objects_enabled = 0;
 		if (obj_cache)

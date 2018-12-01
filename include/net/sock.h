@@ -67,6 +67,10 @@
 #include <linux/atomic.h>
 #include <net/dst.h>
 #include <net/checksum.h>
+<<<<<<< HEAD
+=======
+#include <net/tcp_states.h>
+>>>>>>> FETCH_HEAD
 
 struct cgroup;
 struct cgroup_subsys;
@@ -998,6 +1002,10 @@ struct proto {
 	void			(*destroy_cgroup)(struct mem_cgroup *memcg);
 	struct cg_proto		*(*proto_cgroup)(struct mem_cgroup *memcg);
 #endif
+<<<<<<< HEAD
+=======
+	int			(*diag_destroy)(struct sock *sk, int err);
+>>>>>>> FETCH_HEAD
 };
 
 /*
@@ -2244,6 +2252,18 @@ static inline struct sock *skb_steal_sock(struct sk_buff *skb)
 	return NULL;
 }
 
+<<<<<<< HEAD
+=======
+/* This helper checks if a socket is a full socket,
+ * ie _not_ a timewait or request socket.
+ * TODO: Check for TCPF_NEW_SYN_RECV when that starts to exist.
+ */
+static inline bool sk_fullsock(const struct sock *sk)
+{
+	return (1 << sk->sk_state) & ~(TCPF_TIME_WAIT);
+}
+
+>>>>>>> FETCH_HEAD
 extern void sock_enable_timestamp(struct sock *sk, int flag);
 extern int sock_get_timestamp(struct sock *, struct timeval __user *);
 extern int sock_get_timestampns(struct sock *, struct timespec __user *);

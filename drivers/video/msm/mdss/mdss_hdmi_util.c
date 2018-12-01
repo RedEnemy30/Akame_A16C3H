@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2010-2014,2016 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -178,7 +182,11 @@ static void hdmi_ddc_print_data(struct hdmi_tx_ddc_data *ddc_data,
 		return;
 	}
 
+<<<<<<< HEAD
 	DEV_DBG("%s: buf=%p, d_len=0x%x, d_addr=0x%x, no_align=%d\n",
+=======
+	DEV_DBG("%s: buf=%pK, d_len=0x%x, d_addr=0x%x, no_align=%d\n",
+>>>>>>> FETCH_HEAD
 		caller, ddc_data->data_buf, ddc_data->data_len,
 		ddc_data->dev_addr, ddc_data->no_align);
 	DEV_DBG("%s: offset=0x%x, req_len=0x%x, retry=%d, what=%s\n",

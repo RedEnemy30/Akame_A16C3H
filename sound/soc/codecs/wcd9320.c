@@ -1204,6 +1204,17 @@ static int taiko_mad_input_put(struct snd_kcontrol *kcontrol,
 
 	taiko_mad_input = ucontrol->value.integer.value[0];
 
+<<<<<<< HEAD
+=======
+	if (taiko_mad_input >= ARRAY_SIZE(taiko_conn_mad_text)) {
+		dev_err(codec->dev,
+			"%s: taiko_mad_input = %d out of bounds\n",
+			__func__, taiko_mad_input);
+		return -EINVAL;
+	}
+
+
+>>>>>>> FETCH_HEAD
 	micb_4_int_reg = taiko->resmgr.reg_addr->micb_4_int_rbias;
 	pr_debug("%s: taiko_mad_input = %s\n", __func__,
 			taiko_conn_mad_text[taiko_mad_input]);
@@ -4716,7 +4727,11 @@ static int taiko_set_channel_map(struct snd_soc_dai *dai,
 	struct taiko_priv *taiko = snd_soc_codec_get_drvdata(dai->codec);
 	struct wcd9xxx *core = dev_get_drvdata(dai->codec->dev->parent);
 	if (!tx_slot || !rx_slot) {
+<<<<<<< HEAD
 		pr_err("%s: Invalid tx_slot=%p, rx_slot=%p\n", __func__,
+=======
+		pr_err("%s: Invalid tx_slot=%pK, rx_slot=%pK\n", __func__,
+>>>>>>> FETCH_HEAD
 			tx_slot, rx_slot);
 		return -EINVAL;
 	}

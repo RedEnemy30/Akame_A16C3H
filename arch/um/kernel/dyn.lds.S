@@ -14,8 +14,11 @@ SECTIONS
   __binary_start = .;
   . = ALIGN(4096);		/* Init code and data */
   _text = .;
+<<<<<<< HEAD
   _stext = .;
   __init_begin = .;
+=======
+>>>>>>> FETCH_HEAD
   INIT_TEXT_SECTION(PAGE_SIZE)
 
   . = ALIGN(PAGE_SIZE);
@@ -67,6 +70,10 @@ SECTIONS
   } =0x90909090
   .plt            : { *(.plt) }
   .text           : {
+<<<<<<< HEAD
+=======
+    _stext = .;
+>>>>>>> FETCH_HEAD
     TEXT_TEXT
     SCHED_TEXT
     LOCK_TEXT
@@ -91,7 +98,13 @@ SECTIONS
 
   #include <asm/common.lds.S>
 
+<<<<<<< HEAD
   init.data : { INIT_DATA }
+=======
+  __init_begin = .;
+  init.data : { INIT_DATA }
+  __init_end = .;
+>>>>>>> FETCH_HEAD
 
   /* Ensure the __preinit_array_start label is properly aligned.  We
      could instead move the label definition inside the section, but
@@ -155,6 +168,10 @@ SECTIONS
    . = ALIGN(32 / 8);
   . = ALIGN(32 / 8);
   }
+<<<<<<< HEAD
+=======
+   __bss_stop = .;
+>>>>>>> FETCH_HEAD
   _end = .;
   PROVIDE (end = .);
 

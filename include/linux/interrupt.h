@@ -241,7 +241,11 @@ extern int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m);
  * struct irq_affinity_notify - context for notification of IRQ affinity changes
  * @irq:		Interrupt to which notification applies
  * @kref:		Reference count, for internal use
+<<<<<<< HEAD
  * @work:		Work item, for internal use
+=======
+ * @list:		Add to the notifier list, for internal use
+>>>>>>> FETCH_HEAD
  * @notify:		Function to be called on change.  This will be
  *			called in process context.
  * @release:		Function to be called on release.  This will be
@@ -252,7 +256,11 @@ extern int irq_set_affinity_hint(unsigned int irq, const struct cpumask *m);
 struct irq_affinity_notify {
 	unsigned int irq;
 	struct kref kref;
+<<<<<<< HEAD
 	struct work_struct work;
+=======
+	struct list_head list;
+>>>>>>> FETCH_HEAD
 	void (*notify)(struct irq_affinity_notify *, const cpumask_t *mask);
 	void (*release)(struct kref *ref);
 };
@@ -260,6 +268,11 @@ struct irq_affinity_notify {
 extern int
 irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify);
 
+<<<<<<< HEAD
+=======
+extern int
+irq_release_affinity_notifier(struct irq_affinity_notify *notify);
+>>>>>>> FETCH_HEAD
 #else /* CONFIG_SMP */
 
 static inline int irq_set_affinity(unsigned int irq, const struct cpumask *m)

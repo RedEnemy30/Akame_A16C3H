@@ -156,7 +156,11 @@ static int ghsic_data_alloc_requests(struct usb_ep *ep, struct list_head *head,
 	struct usb_request	*req;
 	unsigned long		flags;
 
+<<<<<<< HEAD
 	pr_debug("%s: ep:%s head:%p num:%d cb:%p", __func__,
+=======
+	pr_debug("%s: ep:%s head:%pK num:%d cb:%pK", __func__,
+>>>>>>> FETCH_HEAD
 			ep->name, head, num, cb);
 
 	for (i = 0; i < num; i++) {
@@ -272,7 +276,11 @@ static int ghsic_data_receive(void *p, void *data, size_t len)
 		return -ENOTCONN;
 	}
 
+<<<<<<< HEAD
 	pr_debug("%s: p:%p#%d skb_len:%d\n", __func__,
+=======
+	pr_debug("%s: p:%pK#%d skb_len:%d\n", __func__,
+>>>>>>> FETCH_HEAD
 			port, port->port_num, skb->len);
 
 	spin_lock_irqsave(&port->tx_lock, flags);
@@ -316,7 +324,11 @@ static void ghsic_data_write_tomdm(struct work_struct *w)
 	}
 
 	while ((skb = __skb_dequeue(&port->rx_skb_q))) {
+<<<<<<< HEAD
 		pr_debug("%s: port:%p tom:%lu pno:%d\n", __func__,
+=======
+		pr_debug("%s: port:%pK tom:%lu pno:%d\n", __func__,
+>>>>>>> FETCH_HEAD
 				port, port->to_modem, port->port_num);
 
 		info = (struct timestamp_info *)skb->cb;
@@ -424,7 +436,11 @@ static void ghsic_data_start_rx(struct gdata_port *port)
 	struct timestamp_info	*info;
 	unsigned int		created;
 
+<<<<<<< HEAD
 	pr_debug("%s: port:%p\n", __func__, port);
+=======
+	pr_debug("%s: port:%pK\n", __func__, port);
+>>>>>>> FETCH_HEAD
 	if (!port)
 		return;
 
@@ -481,7 +497,11 @@ static void ghsic_data_start_io(struct gdata_port *port)
 	struct usb_ep	*ep_out, *ep_in;
 	int		ret;
 
+<<<<<<< HEAD
 	pr_debug("%s: port:%p\n", __func__, port);
+=======
+	pr_debug("%s: port:%pK\n", __func__, port);
+>>>>>>> FETCH_HEAD
 
 	if (!port)
 		return;
@@ -508,7 +528,11 @@ static void ghsic_data_start_io(struct gdata_port *port)
 	spin_lock_irqsave(&port->tx_lock, flags);
 	ep_in = port->in;
 	spin_unlock_irqrestore(&port->tx_lock, flags);
+<<<<<<< HEAD
 	pr_debug("%s: ep_in:%p\n", __func__, ep_in);
+=======
+	pr_debug("%s: ep_in:%pK\n", __func__, ep_in);
+>>>>>>> FETCH_HEAD
 
 	if (!ep_in) {
 		spin_lock_irqsave(&port->rx_lock, flags);
@@ -543,7 +567,11 @@ static void ghsic_data_connect_w(struct work_struct *w)
 		!test_bit(CH_READY, &port->bridge_sts))
 		return;
 
+<<<<<<< HEAD
 	pr_debug("%s: port:%p\n", __func__, port);
+=======
+	pr_debug("%s: port:%pK\n", __func__, port);
+>>>>>>> FETCH_HEAD
 
 	ret = data_bridge_open(&port->brdg);
 	if (ret) {
@@ -855,14 +883,22 @@ int ghsic_data_connect(void *gptr, int port_num)
 
 	ret = usb_ep_enable(port->in);
 	if (ret) {
+<<<<<<< HEAD
 		pr_err("%s: usb_ep_enable failed eptype:IN ep:%p",
+=======
+		pr_err("%s: usb_ep_enable failed eptype:IN ep:%pK",
+>>>>>>> FETCH_HEAD
 				__func__, port->in);
 		goto fail;
 	}
 	if (port->out) {
 		ret = usb_ep_enable(port->out);
 		if (ret) {
+<<<<<<< HEAD
 			pr_err("%s: usb_ep_enable failed eptype:OUT ep:%p",
+=======
+			pr_err("%s: usb_ep_enable failed eptype:OUT ep:%pK",
+>>>>>>> FETCH_HEAD
 					__func__, port->out);
 			usb_ep_disable(port->in);
 			goto fail;
@@ -939,7 +975,11 @@ static void dbg_timestamp(char *event, struct sk_buff * skb)
 	write_lock_irqsave(&dbg_data.lck, flags);
 
 	scnprintf(dbg_data.buf[dbg_data.idx], DBG_DATA_MSG,
+<<<<<<< HEAD
 		  "%p %u[%s] %u %u %u %u %u %u\n",
+=======
+		  "%pK %u[%s] %u %u %u %u %u %u\n",
+>>>>>>> FETCH_HEAD
 		  skb, skb->len, event, info->created, info->rx_queued,
 		  info->rx_done, info->rx_done_sent, info->tx_queued,
 		  get_timestamp());
@@ -1013,7 +1053,11 @@ static ssize_t ghsic_data_read_stats(struct file *file,
 		spin_lock_irqsave(&port->rx_lock, flags);
 		temp += scnprintf(buf + temp, DEBUG_DATA_BUF_SIZE - temp,
 				"\nName:           %s\n"
+<<<<<<< HEAD
 				"#PORT:%d port#:   %p\n"
+=======
+				"#PORT:%d port#:   %pK\n"
+>>>>>>> FETCH_HEAD
 				"data_ch_open:	   %d\n"
 				"data_ch_ready:    %d\n"
 				"\n******UL INFO*****\n\n"

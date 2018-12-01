@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -19,6 +23,10 @@ enum wcd_cal_type {
 	WCD9XXX_ANC_CAL = WCD9XXX_MIN_CAL,
 	WCD9XXX_MAD_CAL,
 	WCD9XXX_MBHC_CAL,
+<<<<<<< HEAD
+=======
+	WCD9XXX_VBAT_CAL,
+>>>>>>> FETCH_HEAD
 	WCD9XXX_MAX_CAL,
 };
 

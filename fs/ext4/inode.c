@@ -421,6 +421,21 @@ static int __check_block_validity(struct inode *inode, const char *func,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+int ext4_issue_zeroout(struct inode *inode, ext4_lblk_t lblk, ext4_fsblk_t pblk,
+		       ext4_lblk_t len)
+{
+	int ret;
+
+	ret = sb_issue_zeroout(inode->i_sb, pblk, len, GFP_NOFS);
+	if (ret > 0)
+		ret = 0;
+
+	return ret;
+}
+
+>>>>>>> FETCH_HEAD
 #define check_block_validity(inode, map)	\
 	__check_block_validity((inode), __func__, __LINE__, (map))
 
@@ -751,6 +766,23 @@ has_zeroout:
 		int ret = check_block_validity(inode, map);
 		if (ret != 0)
 			return ret;
+<<<<<<< HEAD
+=======
+
+		/*
+		 * Inodes with freshly allocated blocks where contents will be
+		 * visible after transaction commit must be on transaction's
+		 * ordered data list.
+		 */
+		if (map->m_flags & EXT4_MAP_NEW &&
+		    !(map->m_flags & EXT4_MAP_UNWRITTEN) &&
+		    !IS_NOQUOTA(inode) &&
+		    ext4_should_order_data(inode)) {
+			ret = ext4_jbd2_file_inode(handle, inode);
+			if (ret)
+				return ret;
+		}
+>>>>>>> FETCH_HEAD
 	}
 	return retval;
 }
@@ -1030,7 +1062,12 @@ retry_journal:
 		ext4_journal_stop(handle);
 		goto retry_grab;
 	}
+<<<<<<< HEAD
 	wait_on_page_writeback(page);
+=======
+	/* In case writeback began while the page was unlocked */
+	wait_for_stable_page(page);
+>>>>>>> FETCH_HEAD
 
 	if (ext4_should_dioread_nolock(inode))
 		ret = __block_write_begin(page, pos, len, ext4_get_block_write);
@@ -1110,6 +1147,7 @@ static int ext4_write_end(struct file *file,
 	int i_size_changed = 0;
 
 	trace_ext4_write_end(inode, pos, len, copied);
+<<<<<<< HEAD
 	if (ext4_test_inode_state(inode, EXT4_STATE_ORDERED_MODE)) {
 		ret = ext4_jbd2_file_inode(handle, inode);
 		if (ret) {
@@ -1119,6 +1157,8 @@ static int ext4_write_end(struct file *file,
 		}
 	}
 
+=======
+>>>>>>> FETCH_HEAD
 	if (ext4_has_inline_data(inode)) {
 		ret = ext4_write_inline_data_end(inode, pos, len,
 						 copied, page);
@@ -2712,7 +2752,11 @@ retry_journal:
 		goto retry_grab;
 	}
 	/* In case writeback began while the page was unlocked */
+<<<<<<< HEAD
 	wait_on_page_writeback(page);
+=======
+	wait_for_stable_page(page);
+>>>>>>> FETCH_HEAD
 
 	ret = __block_write_begin(page, pos, len, ext4_da_get_block_prep);
 	if (ret < 0) {
@@ -3574,6 +3618,10 @@ int ext4_can_truncate(struct inode *inode)
 
 int ext4_punch_hole(struct file *file, loff_t offset, loff_t length)
 {
+<<<<<<< HEAD
+=======
+#if 0
+>>>>>>> FETCH_HEAD
 	struct inode *inode = file_inode(file);
 	struct super_block *sb = inode->i_sb;
 	ext4_lblk_t first_block, stop_block;
@@ -3759,6 +3807,15 @@ out_dio:
 out_mutex:
 	mutex_unlock(&inode->i_mutex);
 	return ret;
+<<<<<<< HEAD
+=======
+#else
+	/*
+	 * Disabled as per b/28760453
+	 */
+	return -EOPNOTSUPP;
+#endif
+>>>>>>> FETCH_HEAD
 }
 
 /*

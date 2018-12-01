@@ -14,6 +14,10 @@ enum {
 	ARM_SEC_DEVEXIT,
 	ARM_SEC_HOT,
 	ARM_SEC_UNLIKELY,
+<<<<<<< HEAD
+=======
+	ARM_SEC_REF,
+>>>>>>> FETCH_HEAD
 	ARM_SEC_MAX,
 };
 

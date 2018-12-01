@@ -1,4 +1,8 @@
+<<<<<<< HEAD
  /* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+=======
+ /* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -122,6 +126,17 @@ static struct wcd9xxx_mbhc_config wcd9xxx_mbhc_cfg = {
 	.use_vddio_meas = true,
 	.enable_anc_mic_detect = false,
 	.hw_jack_type = FOUR_POLE_JACK,
+<<<<<<< HEAD
+=======
+	.key_code[0] = KEY_MEDIA,
+	.key_code[1] = KEY_VOICECOMMAND,
+	.key_code[2] = KEY_VOLUMEUP,
+	.key_code[3] = KEY_VOLUMEDOWN,
+	.key_code[4] = 0,
+	.key_code[5] = 0,
+	.key_code[6] = 0,
+	.key_code[7] = 0,
+>>>>>>> FETCH_HEAD
 };
 
 static void *def_codec_mbhc_cal(void)
@@ -174,6 +189,7 @@ static void *def_codec_mbhc_cal(void)
 	btn_high = wcd9xxx_mbhc_cal_btn_det_mp(btn_cfg,
 					       MBHC_BTN_DET_V_BTN_HIGH);
 	btn_low[0] = -50;
+<<<<<<< HEAD
 	btn_high[0] = 20;
 	btn_low[1] = 21;
 	btn_high[1] = 61;
@@ -189,6 +205,23 @@ static void *def_codec_mbhc_cal(void)
 	btn_high[6] = 269;
 	btn_low[7] = 270;
 	btn_high[7] = 500;
+=======
+	btn_high[0] = 90;
+	btn_low[1] = 130;
+	btn_high[1] = 220;
+	btn_low[2] = 235;
+	btn_high[2] = 335;
+	btn_low[3] = 375;
+	btn_high[3] = 655;
+	btn_low[4] = 656;
+	btn_high[4] = 660;
+	btn_low[5] = 661;
+	btn_high[5] = 670;
+	btn_low[6] = 671;
+	btn_high[6] = 680;
+	btn_low[7] = 681;
+	btn_high[7] = 690;
+>>>>>>> FETCH_HEAD
 	n_ready = wcd9xxx_mbhc_cal_btn_det_mp(btn_cfg, MBHC_BTN_DET_N_READY);
 	n_ready[0] = 80;
 	n_ready[1] = 12;
@@ -2243,6 +2276,25 @@ static struct snd_soc_dai_link msm8x16_dai[] = {
 		.codec_dai_name = "snd-soc-dummy-dai",
 		.codec_name = "snd-soc-dummy",
 	},
+<<<<<<< HEAD
+=======
+	{ /* hw:x, 28 */
+		.name = "QCHAT",
+		.stream_name = "QCHAT",
+		.cpu_dai_name   = "QCHAT",
+		.platform_name  = "msm-pcm-voice",
+		.dynamic = 1,
+		.trigger = {SND_SOC_DPCM_TRIGGER_POST,
+			SND_SOC_DPCM_TRIGGER_POST},
+		.no_host_mode = SND_SOC_DAI_LINK_NO_HOST,
+		.ignore_suspend = 1,
+		/* this dainlink has playback support */
+		.ignore_pmdown_time = 1,
+		.codec_dai_name = "snd-soc-dummy-dai",
+		.codec_name = "snd-soc-dummy",
+		.be_id = MSM_FRONTEND_DAI_QCHAT,
+	},
+>>>>>>> FETCH_HEAD
 	{
 		.name = LPASS_BE_QUAT_MI2S_RX,
 		.stream_name = "Quaternary MI2S Playback",

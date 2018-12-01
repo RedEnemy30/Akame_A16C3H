@@ -26,7 +26,11 @@ unsigned int arch_mod_section_prepend(struct module *mod, unsigned int section);
 void *module_alloc(unsigned long size);
 
 /* Free memory returned from module_alloc. */
+<<<<<<< HEAD
 void module_free(struct module *mod, void *module_region);
+=======
+void module_memfree(void *module_region);
+>>>>>>> FETCH_HEAD
 
 /*
  * Apply the given relocation to the (simplified) ELF.  Return -error

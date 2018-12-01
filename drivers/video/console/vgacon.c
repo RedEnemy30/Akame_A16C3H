@@ -57,6 +57,11 @@ static u32 vgacon_xres;
 static u32 vgacon_yres;
 static struct vgastate state;
 
+<<<<<<< HEAD
+=======
+struct screen_info screen_info;
+
+>>>>>>> FETCH_HEAD
 #define BLANK 0x0020
 
 #define CAN_LOAD_EGA_FONTS	/* undefine if the user must not do this */

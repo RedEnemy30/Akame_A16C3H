@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2008-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2008-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -810,7 +814,11 @@ void diag_update_pkt_buffer(unsigned char *buf, int type)
 	}
 
 	if (!ptr || length == 0) {
+<<<<<<< HEAD
 		pr_err("diag: Invalid ptr %p and length %d in %s",
+=======
+		pr_err("diag: Invalid ptr %pK and length %d in %s",
+>>>>>>> FETCH_HEAD
 						ptr, length, __func__);
 		return;
 	}
@@ -923,7 +931,11 @@ int diag_process_stm_cmd(unsigned char *buf, unsigned char *dest_buf)
 	int i;
 
 	if (!buf || !dest_buf) {
+<<<<<<< HEAD
 		pr_err("diag: Invalid pointers buf: %p, dest_buf %p in %s\n",
+=======
+		pr_err("diag: Invalid pointers buf: %pK, dest_buf %pK in %s\n",
+>>>>>>> FETCH_HEAD
 		       buf, dest_buf, __func__);
 		return -EIO;
 	}
@@ -1011,7 +1023,11 @@ int diag_cmd_log_on_demand(unsigned char *src_buf, int src_len,
 		return 0;
 
 	if (!src_buf || !dest_buf || src_len <= 0 || dest_len <= 0) {
+<<<<<<< HEAD
 		pr_err("diag: Invalid input in %s, src_buf: %p, src_len: %d, dest_buf: %p, dest_len: %d",
+=======
+		pr_err("diag: Invalid input in %s, src_buf: %pK, src_len: %d, dest_buf: %pK, dest_len: %d",
+>>>>>>> FETCH_HEAD
 		       __func__, src_buf, src_len, dest_buf, dest_len);
 		return -EINVAL;
 	}
@@ -1025,6 +1041,37 @@ int diag_cmd_log_on_demand(unsigned char *src_buf, int src_len,
 	return write_len;
 }
 
+<<<<<<< HEAD
+=======
+int diag_cmd_get_mobile_id(unsigned char *src_buf, int src_len,
+			   unsigned char *dest_buf, int dest_len)
+{
+	int write_len = 0;
+	struct diag_pkt_header_t *header = NULL;
+	struct diag_cmd_ext_mobile_rsp_t rsp;
+
+	if (!src_buf || src_len != sizeof(*header) || !dest_buf ||
+	    dest_len < sizeof(rsp))
+		return -EIO;
+
+	header = (struct diag_pkt_header_t *)src_buf;
+	rsp.header.cmd_code = header->cmd_code;
+	rsp.header.subsys_id = header->subsys_id;
+	rsp.header.subsys_cmd_code = header->subsys_cmd_code;
+	rsp.version = 2;
+	rsp.padding[0] = 0;
+	rsp.padding[1] = 0;
+	rsp.padding[2] = 0;
+	rsp.family = 0;
+	rsp.chip_id = (uint32_t)socinfo_get_id();
+
+	memcpy(dest_buf, &rsp, sizeof(rsp));
+	write_len += sizeof(rsp);
+
+	return write_len;
+}
+
+>>>>>>> FETCH_HEAD
 int diag_check_common_cmd(struct diag_pkt_header_t *header)
 {
 	int i;
@@ -1188,6 +1235,21 @@ int diag_process_apps_pkt(unsigned char *buf, int len)
 			encode_rsp_and_send(write_len - 1);
 		return 0;
 	}
+<<<<<<< HEAD
+=======
+	/* Mobile ID Rsp */
+	else if ((*buf == DIAG_CMD_DIAG_SUBSYS) &&
+		(*(buf+1) == DIAG_SS_PARAMS) &&
+		(*(buf+2) == DIAG_EXT_MOBILE_ID) && (*(buf+3) == 0x0)) {
+		write_len = diag_cmd_get_mobile_id(buf, len,
+						   driver->apps_rsp_buf,
+						   APPS_BUF_SIZE);
+		if (write_len > 0) {
+			encode_rsp_and_send(write_len - 1);
+			return 0;
+		}
+	}
+>>>>>>> FETCH_HEAD
 	 /*
 	  * If the apps processor is master and no other
 	  * processor has registered for polling command.
@@ -1998,7 +2060,11 @@ int diag_smd_write(struct diag_smd_info *smd_info, void *buf, int len)
 	int max_retries = 3;
 
 	if (!smd_info || !buf || len <= 0) {
+<<<<<<< HEAD
 		pr_err_ratelimited("diag: In %s, invalid params, smd_info: %p, buf: %p, len: %d\n",
+=======
+		pr_err_ratelimited("diag: In %s, invalid params, smd_info: %pK, buf: %pK, len: %d\n",
+>>>>>>> FETCH_HEAD
 				   __func__, smd_info, buf, len);
 		return -EINVAL;
 	}

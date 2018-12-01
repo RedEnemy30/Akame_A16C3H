@@ -57,6 +57,10 @@
 #define HCI_RS232	4
 #define HCI_PCI		5
 #define HCI_SDIO	6
+<<<<<<< HEAD
+=======
+#define HCI_SMD		7
+>>>>>>> FETCH_HEAD
 
 /* HCI controller types */
 #define HCI_BREDR	0x00

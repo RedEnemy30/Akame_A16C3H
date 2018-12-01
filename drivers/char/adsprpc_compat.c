@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014,2017 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -33,7 +37,11 @@
 
 struct compat_remote_buf {
 	compat_uptr_t pv;	/* buffer pointer */
+<<<<<<< HEAD
 	compat_ssize_t len;	/* length of buffer */
+=======
+	compat_size_t len;	/* length of buffer */
+>>>>>>> FETCH_HEAD
 };
 
 union compat_remote_arg {
@@ -56,13 +64,21 @@ struct compat_fastrpc_ioctl_mmap {
 	compat_int_t fd;	/* ion fd */
 	compat_uint_t flags;	/* flags for dsp to map with */
 	compat_uptr_t vaddrin;	/* optional virtual address */
+<<<<<<< HEAD
 	compat_ssize_t size;	/* size */
+=======
+	compat_size_t size;	/* size */
+>>>>>>> FETCH_HEAD
 	compat_uptr_t vaddrout;	/* dsps virtual address */
 };
 
 struct compat_fastrpc_ioctl_munmap {
 	compat_uptr_t vaddrout;	/* address to unmap */
+<<<<<<< HEAD
 	compat_ssize_t size;	/* size */
+=======
+	compat_size_t size;	/* size */
+>>>>>>> FETCH_HEAD
 };
 
 struct compat_fastrpc_ioctl_init {
@@ -81,7 +97,11 @@ static int compat_get_fastrpc_ioctl_invoke(
 			unsigned int cmd)
 {
 	compat_uint_t u, sc;
+<<<<<<< HEAD
 	compat_ssize_t s;
+=======
+	compat_size_t s;
+>>>>>>> FETCH_HEAD
 	compat_uptr_t p;
 	struct fastrpc_ioctl_invoke_fd *inv;
 	union compat_remote_arg *pra32;
@@ -98,8 +118,14 @@ static int compat_get_fastrpc_ioctl_invoke(
 	if (err)
 		return -EFAULT;
 
+<<<<<<< HEAD
 	inv->inv.pra = (union remote_arg *)(inv + 1);
 	err = put_user(sc, &inv->inv.sc);
+=======
+	pra = (union remote_arg *)(inv + 1);
+	err = put_user(pra, &inv->inv.pra);
+	err |= put_user(sc, &inv->inv.sc);
+>>>>>>> FETCH_HEAD
 	err |= get_user(u, &inv32->inv.handle);
 	err |= put_user(u, &inv->inv.handle);
 	err |= get_user(p, &inv32->inv.pra);
@@ -107,12 +133,20 @@ static int compat_get_fastrpc_ioctl_invoke(
 		return err;
 
 	pra32 = compat_ptr(p);
+<<<<<<< HEAD
 	pra = inv->inv.pra;
 	num = REMOTE_SCALARS_INBUFS(sc) + REMOTE_SCALARS_OUTBUFS(sc);
 	for (j = 0; j < num; j++) {
 		err |= get_user(p, &pra32[j].buf.pv);
 		pra[j].buf.pv = NULL;
 		err |= put_user(p, (compat_uptr_t *)&pra[j].buf.pv);
+=======
+	pra = (union remote_arg *)(inv + 1);
+	num = REMOTE_SCALARS_INBUFS(sc) + REMOTE_SCALARS_OUTBUFS(sc);
+	for (j = 0; j < num; j++) {
+		err |= get_user(p, &pra32[j].buf.pv);
+		err |= put_user(p, (uintptr_t *)&pra[j].buf.pv);
+>>>>>>> FETCH_HEAD
 		err |= get_user(s, &pra32[j].buf.len);
 		err |= put_user(s, &pra[j].buf.len);
 	}
@@ -121,7 +155,11 @@ static int compat_get_fastrpc_ioctl_invoke(
 		err |= put_user(u, &pra[num + j].h);
 	}
 
+<<<<<<< HEAD
 	inv->fds = NULL;
+=======
+	err |= put_user(NULL, &inv->fds);
+>>>>>>> FETCH_HEAD
 	if (cmd == COMPAT_FASTRPC_IOCTL_INVOKE_FD) {
 		err |= get_user(p, &inv32->fds);
 		err |= put_user(p, (compat_uptr_t *)&inv->fds);
@@ -164,7 +202,11 @@ static int compat_get_fastrpc_ioctl_mmap(
 {
 	compat_uint_t u;
 	compat_int_t i;
+<<<<<<< HEAD
 	compat_ssize_t s;
+=======
+	compat_size_t s;
+>>>>>>> FETCH_HEAD
 	compat_uptr_t p;
 	int err;
 
@@ -173,8 +215,12 @@ static int compat_get_fastrpc_ioctl_mmap(
 	err |= get_user(u, &map32->flags);
 	err |= put_user(u, &map->flags);
 	err |= get_user(p, &map32->vaddrin);
+<<<<<<< HEAD
 	map->vaddrin = NULL;
 	err |= put_user(p, (compat_uptr_t *)&map->vaddrin);
+=======
+	err |= put_user(p, (uintptr_t *)&map->vaddrin);
+>>>>>>> FETCH_HEAD
 	err |= get_user(s, &map32->size);
 	err |= put_user(s, &map->size);
 
@@ -199,7 +245,11 @@ static int compat_get_fastrpc_ioctl_munmap(
 			struct fastrpc_ioctl_munmap __user *unmap)
 {
 	compat_uptr_t p;
+<<<<<<< HEAD
 	compat_ssize_t s;
+=======
+	compat_size_t s;
+>>>>>>> FETCH_HEAD
 	int err;
 
 	err = get_user(p, &unmap32->vaddrout);

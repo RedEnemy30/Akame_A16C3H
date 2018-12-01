@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
 
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License version 2 and
@@ -306,7 +310,12 @@ int avcs_core_query_timer(uint64_t *avtimer_tick)
 			| avtimer_lsw;
 	res = do_div(avtimer_tick_temp, avtimer.clk_div);
 	*avtimer_tick = avtimer_tick_temp;
+<<<<<<< HEAD
 	pr_debug("%s:Avtimer: msw: %u, lsw: %u, tick: %llu\n", __func__,
+=======
+	pr_debug_ratelimited("%s:Avtimer: msw: %u, lsw: %u, tick: %llu\n",
+			__func__,
+>>>>>>> FETCH_HEAD
 			avtimer_msw, avtimer_lsw, *avtimer_tick);
 	return 0;
 }
@@ -331,6 +340,7 @@ static long avtimer_ioctl(struct file *file, unsigned int ioctl_num,
 	switch (ioctl_num) {
 	case IOCTL_GET_AVTIMER_TICK:
 	{
+<<<<<<< HEAD
 		uint32_t avtimer_msw_1st = 0, avtimer_lsw = 0;
 		uint32_t avtimer_msw_2nd = 0;
 		uint64_t avtimer_tick;
@@ -346,6 +356,21 @@ static long avtimer_ioctl(struct file *file, unsigned int ioctl_num,
 
 		pr_debug("%s: AV Timer tick: msw: %x, lsw: %x time %llx\n",
 		__func__, avtimer_msw_1st, avtimer_lsw, avtimer_tick);
+=======
+		uint64_t avtimer_tick = 0;
+		int rc;
+
+		rc = avcs_core_query_timer(&avtimer_tick);
+
+		if (rc) {
+			pr_err("%s: Error: Invalid AV Timer tick, rc = %d\n",
+				__func__, rc);
+			return rc;
+		}
+
+		pr_debug_ratelimited("%s: AV Timer tick: time %llx\n",
+		__func__, avtimer_tick);
+>>>>>>> FETCH_HEAD
 		if (copy_to_user((void *) ioctl_param, &avtimer_tick,
 				sizeof(avtimer_tick))) {
 					pr_err("copy_to_user failed\n");

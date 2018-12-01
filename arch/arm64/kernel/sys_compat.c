@@ -26,7 +26,11 @@
 #include <linux/uaccess.h>
 
 #include <asm/cacheflush.h>
+<<<<<<< HEAD
 #include <asm/unistd32.h>
+=======
+#include <asm/unistd.h>
+>>>>>>> FETCH_HEAD
 
 static inline void
 do_compat_cache_op(unsigned long start, unsigned long end, int flags)

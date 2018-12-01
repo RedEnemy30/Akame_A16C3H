@@ -2474,10 +2474,18 @@ static irqreturn_t qpnp_lbc_usbin_valid_irq_handler(int irq, void *_chip)
 			qpnp_lbc_set_appropriate_current(chip);
 			spin_unlock_irqrestore(&chip->ibat_change_lock,
 								flags);
+<<<<<<< HEAD
 			if (chip->supported_feature_flag & VDD_TRIM_SUPPORTED)
 				alarm_try_to_cancel(&chip->vddtrim_alarm);
 			if (chip->cfg_collapsible_chgr_support)
 				chip->non_collapsible_chgr_detected = false;
+=======
+			if (chip->cfg_collapsible_chgr_support)
+				chip->non_collapsible_chgr_detected = false;
+
+			if (chip->supported_feature_flag & VDD_TRIM_SUPPORTED)
+				alarm_try_to_cancel(&chip->vddtrim_alarm);
+>>>>>>> FETCH_HEAD
 		} else {
 			/*
 			 * Override VBAT_DET comparator to start charging

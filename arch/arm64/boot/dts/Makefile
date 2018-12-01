@@ -6,6 +6,7 @@ targets += dtbs
 #used for cleaning - not building
 subdir- := qcom
 
+<<<<<<< HEAD
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)
 DTB_LIST := $(addsuffix .dtb,$(DTB_NAMES))
@@ -13,6 +14,8 @@ else
 DTB_LIST := $(dtb-y)
 endif
 targets += $(DTB_LIST)
+=======
+>>>>>>> FETCH_HEAD
 
 dtbs: $(addprefix $(obj)/, $(DTB_LIST))
 

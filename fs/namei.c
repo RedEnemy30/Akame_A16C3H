@@ -3802,7 +3802,11 @@ int vfs_rename(struct inode *old_dir, struct dentry *old_dentry,
 {
 	int error;
 	int is_dir = S_ISDIR(old_dentry->d_inode->i_mode);
+<<<<<<< HEAD
 	const unsigned char *old_name;
+=======
+	struct name_snapshot old_name;
+>>>>>>> FETCH_HEAD
 
 	if (old_dentry->d_inode == new_dentry->d_inode)
  		return 0;
@@ -3821,16 +3825,26 @@ int vfs_rename(struct inode *old_dir, struct dentry *old_dentry,
 	if (!old_dir->i_op->rename)
 		return -EPERM;
 
+<<<<<<< HEAD
 	old_name = fsnotify_oldname_init(old_dentry->d_name.name);
+=======
+	take_dentry_name_snapshot(&old_name, old_dentry);
+>>>>>>> FETCH_HEAD
 
 	if (is_dir)
 		error = vfs_rename_dir(old_dir,old_dentry,new_dir,new_dentry);
 	else
 		error = vfs_rename_other(old_dir,old_dentry,new_dir,new_dentry);
 	if (!error)
+<<<<<<< HEAD
 		fsnotify_move(old_dir, new_dir, old_name, is_dir,
 			      new_dentry->d_inode, old_dentry);
 	fsnotify_oldname_free(old_name);
+=======
+		fsnotify_move(old_dir, new_dir, old_name.name, is_dir,
+			      new_dentry->d_inode, old_dentry);
+	release_dentry_name_snapshot(&old_name);
+>>>>>>> FETCH_HEAD
 
 	return error;
 }

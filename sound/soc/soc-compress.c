@@ -79,7 +79,12 @@ out:
 static int soc_compr_open_fe(struct snd_compr_stream *cstream)
 {
 	struct snd_soc_pcm_runtime *fe = cstream->private_data;
+<<<<<<< HEAD
 	struct snd_pcm_substream *fe_substream = fe->pcm->streams[0].substream;
+=======
+	struct snd_pcm_substream *fe_substream =
+		 fe->pcm->streams[cstream->direction].substream;
+>>>>>>> FETCH_HEAD
 	struct snd_soc_platform *platform = fe->platform;
 	struct snd_soc_dpcm *dpcm;
 	struct snd_soc_dapm_widget_list *list;
@@ -503,7 +508,12 @@ static int soc_compr_set_params_fe(struct snd_compr_stream *cstream,
 					struct snd_compr_params *params)
 {
 	struct snd_soc_pcm_runtime *fe = cstream->private_data;
+<<<<<<< HEAD
 	struct snd_pcm_substream *fe_substream = fe->pcm->streams[0].substream;
+=======
+	struct snd_pcm_substream *fe_substream =
+		 fe->pcm->streams[cstream->direction].substream;
+>>>>>>> FETCH_HEAD
 	struct snd_soc_platform *platform = fe->platform;
 	struct snd_soc_pcm_runtime *be_list[DPCM_MAX_BE_USERS];
 	struct snd_soc_dpcm *dpcm;
@@ -569,6 +579,14 @@ static int soc_compr_set_params_fe(struct snd_compr_stream *cstream,
 				cstream, &async_domain);
 			} else {
 				be_list[j++] = be;
+<<<<<<< HEAD
+=======
+				if (j == DPCM_MAX_BE_USERS) {
+					dev_dbg(fe->dev,
+						"ASoC: MAX backend users!\n");
+					break;
+				}
+>>>>>>> FETCH_HEAD
 			}
 		}
 		for (i = 0; i < j; i++) {
@@ -707,6 +725,25 @@ static int soc_compr_copy(struct snd_compr_stream *cstream,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int sst_compr_set_next_track_param(struct snd_compr_stream *cstream,
+				union snd_codec_options *codec_options)
+{
+	struct snd_soc_pcm_runtime *rtd = cstream->private_data;
+	struct snd_soc_platform *platform = rtd->platform;
+	int ret = 0;
+
+	if (platform->driver->compr_ops &&
+			platform->driver->compr_ops->set_next_track_param)
+		ret = platform->driver->compr_ops->set_next_track_param(cstream,
+								codec_options);
+
+	return ret;
+}
+
+
+>>>>>>> FETCH_HEAD
 static int sst_compr_set_metadata(struct snd_compr_stream *cstream,
 				struct snd_compr_metadata *metadata)
 {
@@ -734,6 +771,7 @@ static int sst_compr_get_metadata(struct snd_compr_stream *cstream,
 }
 /* ASoC Compress operations */
 static struct snd_compr_ops soc_compr_ops = {
+<<<<<<< HEAD
 	.open		= soc_compr_open,
 	.free		= soc_compr_free,
 	.set_params	= soc_compr_set_params,
@@ -745,10 +783,25 @@ static struct snd_compr_ops soc_compr_ops = {
 	.ack		= soc_compr_ack,
 	.get_caps	= soc_compr_get_caps,
 	.get_codec_caps = soc_compr_get_codec_caps
+=======
+	.open			= soc_compr_open,
+	.free			= soc_compr_free,
+	.set_params		= soc_compr_set_params,
+	.set_metadata		= sst_compr_set_metadata,
+	.set_next_track_param	= sst_compr_set_next_track_param,
+	.get_metadata		= sst_compr_get_metadata,
+	.get_params		= soc_compr_get_params,
+	.trigger		= soc_compr_trigger,
+	.pointer		= soc_compr_pointer,
+	.ack			= soc_compr_ack,
+	.get_caps		= soc_compr_get_caps,
+	.get_codec_caps		= soc_compr_get_codec_caps
+>>>>>>> FETCH_HEAD
 };
 
 /* ASoC Dynamic Compress operations */
 static struct snd_compr_ops soc_compr_dyn_ops = {
+<<<<<<< HEAD
 	.open		= soc_compr_open_fe,
 	.free		= soc_compr_free_fe,
 	.set_params	= soc_compr_set_params_fe,
@@ -760,6 +813,20 @@ static struct snd_compr_ops soc_compr_dyn_ops = {
 	.ack		= soc_compr_ack,
 	.get_caps	= soc_compr_get_caps,
 	.get_codec_caps = soc_compr_get_codec_caps
+=======
+	.open			= soc_compr_open_fe,
+	.free			= soc_compr_free_fe,
+	.set_params		= soc_compr_set_params_fe,
+	.get_params		= soc_compr_get_params,
+	.set_metadata		= sst_compr_set_metadata,
+	.set_next_track_param	= sst_compr_set_next_track_param,
+	.get_metadata		= sst_compr_get_metadata,
+	.trigger		= soc_compr_trigger_fe,
+	.pointer		= soc_compr_pointer,
+	.ack			= soc_compr_ack,
+	.get_caps		= soc_compr_get_caps,
+	.get_codec_caps		= soc_compr_get_codec_caps
+>>>>>>> FETCH_HEAD
 };
 
 /* create a new compress */
@@ -773,17 +840,45 @@ int soc_new_compress(struct snd_soc_pcm_runtime *rtd, int num)
 	struct snd_pcm *be_pcm;
 	char new_name[64];
 	int ret = 0, direction = 0;
+<<<<<<< HEAD
+=======
+	int playback = 0, capture = 0;
+>>>>>>> FETCH_HEAD
 
 	/* check client and interface hw capabilities */
 	snprintf(new_name, sizeof(new_name), "%s %s-%d",
 			rtd->dai_link->stream_name, codec_dai->name, num);
 
 	if (codec_dai->driver->playback.channels_min)
+<<<<<<< HEAD
 		direction = SND_COMPRESS_PLAYBACK;
 	else if (codec_dai->driver->capture.channels_min)
 		direction = SND_COMPRESS_CAPTURE;
 	else
 		return -EINVAL;
+=======
+		playback = 1;
+	if (codec_dai->driver->capture.channels_min)
+		capture = 1;
+
+	capture = capture && cpu_dai->driver->capture.channels_min;
+	playback = playback && cpu_dai->driver->playback.channels_min;
+
+	/*
+	 * Compress devices are unidirectional so only one of the directions
+	 * should be set, check for that (xor)
+	 */
+	if (playback + capture != 1) {
+		dev_err(rtd->card->dev, "Invalid direction for compress P %d, C %d\n",
+				playback, capture);
+		return -EINVAL;
+	}
+
+	if (playback)
+		direction = SND_COMPRESS_PLAYBACK;
+	else
+		direction = SND_COMPRESS_CAPTURE;
+>>>>>>> FETCH_HEAD
 
 	compr = kzalloc(sizeof(*compr), GFP_KERNEL);
 	if (compr == NULL) {
@@ -803,8 +898,17 @@ int soc_new_compress(struct snd_soc_pcm_runtime *rtd, int num)
 		snprintf(new_name, sizeof(new_name), "(%s)",
 			rtd->dai_link->stream_name);
 
+<<<<<<< HEAD
 		ret = snd_pcm_new_internal(rtd->card->snd_card, new_name, num,
 				1, 0, &be_pcm);
+=======
+		if (direction == SND_COMPRESS_PLAYBACK)
+			ret = snd_pcm_new_internal(rtd->card->snd_card,
+				 new_name, num, 1, 0, &be_pcm);
+		else if (direction == SND_COMPRESS_CAPTURE)
+			ret = snd_pcm_new_internal(rtd->card->snd_card,
+				 new_name, num, 0, 1, &be_pcm);
+>>>>>>> FETCH_HEAD
 		if (ret < 0) {
 			dev_err(rtd->card->dev, "ASoC: can't create compressed for %s\n",
 				rtd->dai_link->name);
@@ -813,10 +917,19 @@ int soc_new_compress(struct snd_soc_pcm_runtime *rtd, int num)
 
 		rtd->pcm = be_pcm;
 		rtd->fe_compr = 1;
+<<<<<<< HEAD
 		be_pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].
 					substream->private_data = rtd;
 		/*be_pcm->streams[SNDRV_PCM_STREAM_CAPTURE].
 					substream->private_data = rtd;*/
+=======
+		if (direction == SND_COMPRESS_PLAYBACK)
+			be_pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].
+					substream->private_data = rtd;
+		if (direction == SND_COMPRESS_CAPTURE)
+			be_pcm->streams[SNDRV_PCM_STREAM_CAPTURE].
+					substream->private_data = rtd;
+>>>>>>> FETCH_HEAD
 		memcpy(compr->ops, &soc_compr_dyn_ops,
 						sizeof(soc_compr_dyn_ops));
 	} else

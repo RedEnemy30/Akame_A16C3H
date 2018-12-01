@@ -473,11 +473,23 @@ static int raw_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 	u8  tos;
 	int err;
 	struct ip_options_data opt_copy;
+<<<<<<< HEAD
+=======
+        int hdrincl;
+>>>>>>> FETCH_HEAD
 
 	err = -EMSGSIZE;
 	if (len > 0xFFFF)
 		goto out;
 
+<<<<<<< HEAD
+=======
+	/* hdrincl should be READ_ONCE(inet->hdrincl)
+	 * but READ_ONCE() doesn't work with bit fields
+	 */
+	hdrincl = inet->hdrincl;
+
+>>>>>>> FETCH_HEAD
 	/*
 	 *	Check the flags.
 	 */
@@ -548,7 +560,11 @@ static int raw_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 		/* Linux does not mangle headers on raw sockets,
 		 * so that IP options + IP_HDRINCL is non-sense.
 		 */
+<<<<<<< HEAD
 		if (inet->hdrincl)
+=======
+		if (hdrincl)
+>>>>>>> FETCH_HEAD
 			goto done;
 		if (ipc.opt->opt.srr) {
 			if (!daddr)
@@ -570,6 +586,7 @@ static int raw_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 
 	flowi4_init_output(&fl4, ipc.oif, sk->sk_mark, tos,
 			   RT_SCOPE_UNIVERSE,
+<<<<<<< HEAD
 			   inet->hdrincl ? IPPROTO_RAW : sk->sk_protocol,
 			   inet_sk_flowi_flags(sk) | FLOWI_FLAG_CAN_SLEEP |
 			    (inet->hdrincl ? FLOWI_FLAG_KNOWN_NH : 0),
@@ -577,6 +594,15 @@ static int raw_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 			   sock_i_uid(sk));
 
 	if (!inet->hdrincl) {
+=======
+			   hdrincl ? IPPROTO_RAW : sk->sk_protocol,
+			   inet_sk_flowi_flags(sk) | FLOWI_FLAG_CAN_SLEEP |
+			    (hdrincl ? FLOWI_FLAG_KNOWN_NH : 0),
+			   daddr, saddr, 0, 0,
+			   sock_i_uid(sk));
+
+	if (!hdrincl) {
+>>>>>>> FETCH_HEAD
 		err = raw_probe_proto_opt(&fl4, msg);
 		if (err)
 			goto done;
@@ -598,7 +624,11 @@ static int raw_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 		goto do_confirm;
 back_from_confirm:
 
+<<<<<<< HEAD
 	if (inet->hdrincl)
+=======
+	if (hdrincl)
+>>>>>>> FETCH_HEAD
 		err = raw_send_hdrinc(sk, &fl4, msg->msg_iov, len,
 				      &rt, msg->msg_flags);
 

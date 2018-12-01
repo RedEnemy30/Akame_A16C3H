@@ -181,6 +181,15 @@ enum msm_flash_cfg_type_t {
 	CFG_FLASH_HIGH,
 };
 
+<<<<<<< HEAD
+=======
+enum msm_sensor_output_format_t {
+	MSM_SENSOR_BAYER,
+	MSM_SENSOR_YCBCR,
+	MSM_SENSOR_META,
+};
+
+>>>>>>> FETCH_HEAD
 struct msm_sensor_power_setting {
 	enum msm_sensor_power_seq_type_t seq_type;
 	uint16_t seq_val;
@@ -227,6 +236,10 @@ struct msm_camera_sensor_slave_info {
 	uint8_t  is_init_params_valid;
 	struct msm_sensor_init_params sensor_init_params;
 	uint8_t is_flash_supported;
+<<<<<<< HEAD
+=======
+	enum msm_sensor_output_format_t output_format;
+>>>>>>> FETCH_HEAD
 };
 
 struct msm_camera_i2c_reg_array {
@@ -306,6 +319,11 @@ struct region_params_t {
 	*/
 	uint16_t step_bound[2];
 	uint16_t code_per_step;
+<<<<<<< HEAD
+=======
+	/* qvalue for converting float type numbers to integer format */
+	uint32_t qvalue;
+>>>>>>> FETCH_HEAD
 };
 
 struct reg_settings_t {

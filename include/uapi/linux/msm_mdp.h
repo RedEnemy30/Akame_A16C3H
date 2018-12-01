@@ -102,6 +102,11 @@
 #define MDSS_MDP_HW_REV_109	MDSS_MDP_REV(1, 9, 0) /* 8994 v2.0 */
 #define MDSS_MDP_HW_REV_110	MDSS_MDP_REV(1, 10, 0) /* 8992 v1.0 */
 #define MDSS_MDP_HW_REV_200	MDSS_MDP_REV(2, 0, 0) /* 8092 v1.0 */
+<<<<<<< HEAD
+=======
+#define MDSS_MDP_HW_REV_112	MDSS_MDP_REV(1, 12, 0) /* 8952 v1.0 */
+#define MDSS_MDP_HW_REV_111	MDSS_MDP_REV(1, 11, 0) /* 8956/76 v1.0 */
+>>>>>>> FETCH_HEAD
 
 enum {
 	NOTIFY_UPDATE_INIT,
@@ -182,6 +187,16 @@ enum {
 	NUM_HSIC_PARAM,
 };
 
+<<<<<<< HEAD
+=======
+enum mdss_mdp_max_bw_mode {
+	MDSS_MAX_BW_LIMIT_DEFAULT = 0x1,
+	MDSS_MAX_BW_LIMIT_CAMERA = 0x2,
+	MDSS_MAX_BW_LIMIT_HFLIP = 0x4,
+	MDSS_MAX_BW_LIMIT_VFLIP = 0x8,
+};
+
+>>>>>>> FETCH_HEAD
 #define MDSS_MDP_ROT_ONLY		0x80
 #define MDSS_MDP_RIGHT_MIXER		0x100
 #define MDSS_MDP_DUAL_PIPE		0x200
@@ -539,6 +554,10 @@ enum mdss_mdp_blend_op {
 	BLEND_OP_MAX,
 };
 
+<<<<<<< HEAD
+=======
+#define DECIMATED_DIMENSION(dim, deci) (((dim) + ((1 << (deci)) - 1)) >> (deci))
+>>>>>>> FETCH_HEAD
 #define MAX_PLANES	4
 struct mdp_scale_data {
 	uint8_t enable_pxl_ext;

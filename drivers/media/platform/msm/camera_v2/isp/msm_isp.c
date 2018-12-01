@@ -30,9 +30,12 @@
 #include "msm_isp_axi_util.h"
 #include "msm_isp_stats_util.h"
 #include "msm_sd.h"
+<<<<<<< HEAD
 #include "msm_isp47.h"
 #include "msm_isp46.h"
 #include "msm_isp44.h"
+=======
+>>>>>>> FETCH_HEAD
 #include "msm_isp40.h"
 #include "msm_isp32.h"
 
@@ -40,6 +43,7 @@ static struct msm_sd_req_vb2_q vfe_vb2_ops;
 
 static const struct of_device_id msm_vfe_dt_match[] = {
 	{
+<<<<<<< HEAD
 		.compatible = "qcom,vfe47",
 		.data = &vfe47_hw_info,
 	},
@@ -52,6 +56,8 @@ static const struct of_device_id msm_vfe_dt_match[] = {
 		.data = &vfe44_hw_info,
 	},
 	{
+=======
+>>>>>>> FETCH_HEAD
 		.compatible = "qcom,vfe40",
 		.data = &vfe40_hw_info,
 	},

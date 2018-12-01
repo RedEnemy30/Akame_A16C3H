@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -9,7 +13,10 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+<<<<<<< HEAD
 
+=======
+>>>>>>> FETCH_HEAD
 #include <linux/debugfs.h>
 #include <linux/errno.h>
 #include <linux/etherdevice.h>
@@ -106,10 +113,13 @@ enum ecm_ipa_operation {
  * struct ecm_ipa_dev - main driver context parameters
  * @net: network interface struct implemented by this driver
  * @directory: debugfs directory for various debuging switches
+<<<<<<< HEAD
  * @tx_enable: flag that enable/disable Tx path to continue to IPA
  * @rx_enable: flag that enable/disable Rx path to continue to IPA
  * @rm_enable: flag that enable/disable Resource manager request prior to Tx
  * @dma_enable: flag that allow on-the-fly DMA mode for IPA
+=======
+>>>>>>> FETCH_HEAD
  * @eth_ipv4_hdr_hdl: saved handle for ipv4 header-insertion table
  * @eth_ipv6_hdr_hdl: saved handle for ipv6 header-insertion table
  * @usb_to_ipa_hdl: save handle for IPA pipe operations
@@ -129,10 +139,13 @@ enum ecm_ipa_operation {
  */
 struct ecm_ipa_dev {
 	struct net_device *net;
+<<<<<<< HEAD
 	u32 tx_enable;
 	u32 rx_enable;
 	u32  rm_enable;
 	bool dma_enable;
+=======
+>>>>>>> FETCH_HEAD
 	struct dentry *directory;
 	uint32_t eth_ipv4_hdr_hdl;
 	uint32_t eth_ipv6_hdr_hdl;
@@ -167,13 +180,17 @@ static void ecm_ipa_rm_notify(void *user_data, enum ipa_rm_event event,
 static struct net_device_stats *ecm_ipa_get_stats(struct net_device *net);
 static int ecm_ipa_create_rm_resource(struct ecm_ipa_dev *ecm_ipa_ctx);
 static void ecm_ipa_destory_rm_resource(struct ecm_ipa_dev *ecm_ipa_ctx);
+<<<<<<< HEAD
 static bool rx_filter(struct sk_buff *skb);
 static bool tx_filter(struct sk_buff *skb);
 static bool rm_enabled(struct ecm_ipa_dev *ecm_ipa_ctx);
+=======
+>>>>>>> FETCH_HEAD
 static int resource_request(struct ecm_ipa_dev *ecm_ipa_ctx);
 static void resource_release(struct ecm_ipa_dev *ecm_ipa_ctx);
 static netdev_tx_t ecm_ipa_start_xmit(struct sk_buff *skb,
 					struct net_device *net);
+<<<<<<< HEAD
 static int ecm_ipa_debugfs_stall_open(struct inode *inode,
 	struct file *file);
 static ssize_t ecm_ipa_debugfs_stall_write(struct file *file,
@@ -186,13 +203,19 @@ static ssize_t ecm_ipa_debugfs_enable_write(struct file *file,
 		const char __user *buf, size_t count, loff_t *ppos);
 static ssize_t ecm_ipa_debugfs_enable_read(struct file *file,
 		char __user *ubuf, size_t count, loff_t *ppos);
+=======
+static int ecm_ipa_debugfs_atomic_open(struct inode *inode, struct file *file);
+>>>>>>> FETCH_HEAD
 static ssize_t ecm_ipa_debugfs_atomic_read(struct file *file,
 		char __user *ubuf, size_t count, loff_t *ppos);
 static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx);
 static void ecm_ipa_debugfs_destroy(struct ecm_ipa_dev *ecm_ipa_ctx);
 static int ecm_ipa_ep_registers_cfg(u32 usb_to_ipa_hdl, u32 ipa_to_usb_hdl);
+<<<<<<< HEAD
 static int ecm_ipa_ep_registers_dma_cfg(u32 usb_to_ipa_hdl,
 					enum ipa_client_type prod_client);
+=======
+>>>>>>> FETCH_HEAD
 static int ecm_ipa_set_device_ethernet_addr(u8 *dev_ethaddr,
 		u8 device_ethaddr[]);
 static enum ecm_ipa_state ecm_ipa_next_state(enum ecm_ipa_state current_state,
@@ -210,22 +233,28 @@ static const struct net_device_ops ecm_ipa_netdev_ops = {
 	.ndo_get_stats = ecm_ipa_get_stats,
 };
 
+<<<<<<< HEAD
 const struct file_operations ecm_ipa_debugfs_dma_ops = {
 	.open = ecm_ipa_debugfs_dma_open,
 	.read = ecm_ipa_debugfs_enable_read,
 	.write = ecm_ipa_debugfs_enable_write_dma,
 };
 
+=======
+>>>>>>> FETCH_HEAD
 const struct file_operations ecm_ipa_debugfs_atomic_ops = {
 	.open = ecm_ipa_debugfs_atomic_open,
 	.read = ecm_ipa_debugfs_atomic_read,
 };
 
+<<<<<<< HEAD
 const struct file_operations ecm_ipa_debugfs_stall_ops = {
 	.open = ecm_ipa_debugfs_stall_open,
 	.write = ecm_ipa_debugfs_stall_write,
 };
 
+=======
+>>>>>>> FETCH_HEAD
 static void ecm_ipa_msg_free_cb(void *buff, u32 len, u32 type)
 {
 	kfree(buff);
@@ -286,9 +315,12 @@ int ecm_ipa_init(struct ecm_ipa_params *params)
 	ECM_IPA_DEBUG("ecm_ipa_ctx (private) = %p\n", ecm_ipa_ctx);
 
 	ecm_ipa_ctx->net = net;
+<<<<<<< HEAD
 	ecm_ipa_ctx->tx_enable = true;
 	ecm_ipa_ctx->rx_enable = true;
 	ecm_ipa_ctx->rm_enable = true;
+=======
+>>>>>>> FETCH_HEAD
 	ecm_ipa_ctx->outstanding_high = DEFAULT_OUTSTANDING_HIGH;
 	ecm_ipa_ctx->outstanding_low = DEFAULT_OUTSTANDING_LOW;
 	atomic_set(&ecm_ipa_ctx->outstanding_pkts, 0);
@@ -604,12 +636,15 @@ static netdev_tx_t ecm_ipa_start_xmit(struct sk_buff *skb,
 		return NETDEV_TX_BUSY;
 	}
 
+<<<<<<< HEAD
 	if (unlikely(tx_filter(skb))) {
 		dev_kfree_skb_any(skb);
 		ECM_IPA_DEBUG("packet got filtered out on Tx path\n");
 		status = NETDEV_TX_OK;
 		goto out;
 	}
+=======
+>>>>>>> FETCH_HEAD
 	ret = resource_request(ecm_ipa_ctx);
 	if (ret) {
 		ECM_IPA_DEBUG("Waiting to resource\n");
@@ -681,11 +716,14 @@ static void ecm_ipa_packet_receive_notify(void *priv,
 
 	skb->dev = ecm_ipa_ctx->net;
 	skb->protocol = eth_type_trans(skb, ecm_ipa_ctx->net);
+<<<<<<< HEAD
 	if (rx_filter(skb)) {
 		ECM_IPA_DEBUG("packet got filtered out on Rx path\n");
 		dev_kfree_skb_any(skb);
 		return;
 	}
+=======
+>>>>>>> FETCH_HEAD
 
 	result = netif_rx(skb);
 	if (result)
@@ -1148,6 +1186,7 @@ static void ecm_ipa_destory_rm_resource(struct ecm_ipa_dev *ecm_ipa_ctx)
 	ECM_IPA_LOG_EXIT();
 }
 
+<<<<<<< HEAD
 static bool rx_filter(struct sk_buff *skb)
 {
 	struct ecm_ipa_dev *ecm_ipa_ctx = netdev_priv(skb->dev);
@@ -1175,15 +1214,25 @@ static int resource_request(struct ecm_ipa_dev *ecm_ipa_ctx)
 			IPA_RM_RESOURCE_STD_ECM_PROD);
 out:
 	return result;
+=======
+static int resource_request(struct ecm_ipa_dev *ecm_ipa_ctx)
+{
+	return ipa_rm_inactivity_timer_request_resource(
+		IPA_RM_RESOURCE_STD_ECM_PROD);
+>>>>>>> FETCH_HEAD
 }
 
 static void resource_release(struct ecm_ipa_dev *ecm_ipa_ctx)
 {
+<<<<<<< HEAD
 	if (!rm_enabled(ecm_ipa_ctx))
 		goto out;
 	ipa_rm_inactivity_timer_release_resource(IPA_RM_RESOURCE_STD_ECM_PROD);
 out:
 	return;
+=======
+	ipa_rm_inactivity_timer_release_resource(IPA_RM_RESOURCE_STD_ECM_PROD);
+>>>>>>> FETCH_HEAD
 }
 
 /**
@@ -1254,6 +1303,7 @@ static void ecm_ipa_tx_timeout(struct net_device *net)
 	net->stats.tx_errors++;
 }
 
+<<<<<<< HEAD
 static int ecm_ipa_debugfs_stall_open(struct inode *inode,
 	struct file *file)
 {
@@ -1293,6 +1343,8 @@ static ssize_t ecm_ipa_debugfs_stall_write(struct file *file,
 
 }
 
+=======
+>>>>>>> FETCH_HEAD
 static int ecm_ipa_debugfs_atomic_open(struct inode *inode, struct file *file)
 {
 	struct ecm_ipa_dev *ecm_ipa_ctx = inode->i_private;
@@ -1302,6 +1354,7 @@ static int ecm_ipa_debugfs_atomic_open(struct inode *inode, struct file *file)
 	return 0;
 }
 
+<<<<<<< HEAD
 static ssize_t ecm_ipa_debugfs_enable_write_dma(struct file *file,
 		const char __user *buf, size_t count, loff_t *ppos)
 {
@@ -1374,6 +1427,8 @@ static ssize_t ecm_ipa_debugfs_enable_read(struct file *file,
 	return size;
 }
 
+=======
+>>>>>>> FETCH_HEAD
 static ssize_t ecm_ipa_debugfs_atomic_read(struct file *file,
 		char __user *ubuf, size_t count, loff_t *ppos)
 {
@@ -1390,7 +1445,10 @@ static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx)
 {
 	const mode_t flags_read_write = S_IRUGO | S_IWUGO;
 	const mode_t flags_read_only = S_IRUGO;
+<<<<<<< HEAD
 	const mode_t flags_write_only = S_IWUGO;
+=======
+>>>>>>> FETCH_HEAD
 	struct dentry *file;
 
 	ECM_IPA_LOG_ENTRY();
@@ -1403,6 +1461,7 @@ static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx)
 		ECM_IPA_ERROR("could not create debugfs directory entry\n");
 		goto fail_directory;
 	}
+<<<<<<< HEAD
 	file = debugfs_create_bool("tx_enable", flags_read_write,
 			ecm_ipa_ctx->directory, &ecm_ipa_ctx->tx_enable);
 	if (!file) {
@@ -1421,6 +1480,8 @@ static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx)
 		ECM_IPA_ERROR("could not create debugfs rm file\n");
 		goto fail_file;
 	}
+=======
+>>>>>>> FETCH_HEAD
 	file = debugfs_create_u8("outstanding_high", flags_read_write,
 			ecm_ipa_ctx->directory, &ecm_ipa_ctx->outstanding_high);
 	if (!file) {
@@ -1433,6 +1494,7 @@ static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx)
 		ECM_IPA_ERROR("could not create outstanding_low file\n");
 		goto fail_file;
 	}
+<<<<<<< HEAD
 	file = debugfs_create_file("dma_enable", flags_read_write,
 			ecm_ipa_ctx->directory,
 			ecm_ipa_ctx, &ecm_ipa_debugfs_dma_ops);
@@ -1440,6 +1502,8 @@ static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx)
 		ECM_IPA_ERROR("could not create debugfs dma file\n");
 		goto fail_file;
 	}
+=======
+>>>>>>> FETCH_HEAD
 	file = debugfs_create_file("outstanding", flags_read_only,
 			ecm_ipa_ctx->directory,
 			ecm_ipa_ctx, &ecm_ipa_debugfs_atomic_ops);
@@ -1448,6 +1512,7 @@ static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx)
 		goto fail_file;
 	}
 
+<<<<<<< HEAD
 	file = debugfs_create_file("stall_ipa_rx_proc", flags_write_only,
 			ecm_ipa_ctx->directory,
 			ecm_ipa_ctx, &ecm_ipa_debugfs_stall_ops);
@@ -1456,6 +1521,9 @@ static int ecm_ipa_debugfs_init(struct ecm_ipa_dev *ecm_ipa_ctx)
 		goto fail_file;
 	}
 
+=======
+	ECM_IPA_DEBUG("debugfs entries were created\n");
+>>>>>>> FETCH_HEAD
 	ECM_IPA_LOG_EXIT();
 
 	return 0;
@@ -1519,6 +1587,7 @@ out:
 }
 
 /**
+<<<<<<< HEAD
  * ecm_ipa_ep_registers_dma_cfg() - configure the USB endpoints for ECM
  *	DMA
  * @usb_to_ipa_hdl: handle received from ipa_connect
@@ -1559,6 +1628,8 @@ out:
 }
 
 /**
+=======
+>>>>>>> FETCH_HEAD
  * ecm_ipa_set_device_ethernet_addr() - set device etherenet address
  * @dev_ethaddr: device etherenet address
  *

@@ -1266,15 +1266,29 @@ static ssize_t store_use_sched_load(
 
 	if (tunables->use_sched_load == (bool) val)
 		return count;
+<<<<<<< HEAD
+=======
+
+	tunables->use_sched_load = val;
+
+>>>>>>> FETCH_HEAD
 	if (val)
 		ret = cpufreq_interactive_enable_sched_input(tunables);
 	else
 		ret = cpufreq_interactive_disable_sched_input(tunables);
 
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
 	tunables->use_sched_load = val;
+=======
+	if (ret) {
+		tunables->use_sched_load = !val;
+		return ret;
+	}
+
+>>>>>>> FETCH_HEAD
 	return count;
 }
 

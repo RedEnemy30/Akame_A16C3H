@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2011-2014,2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -306,8 +310,13 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 	struct kgsl_iommu *iommu;
 	struct kgsl_iommu_unit *iommu_unit;
 	struct kgsl_iommu_device *iommu_dev;
+<<<<<<< HEAD
 	unsigned int ptbase, fsr;
 	unsigned int pid;
+=======
+	phys_addr_t ptbase;
+	unsigned int pid, fsr;
+>>>>>>> FETCH_HEAD
 	struct _mem_entry prev, next;
 	unsigned int fsynr0, fsynr1;
 	int write;
@@ -333,7 +342,11 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 
 	iommu_dev = get_iommu_device(iommu_unit, dev);
 	if (!iommu_dev) {
+<<<<<<< HEAD
 		KGSL_CORE_ERR("Invalid IOMMU device %p\n", dev);
+=======
+		KGSL_CORE_ERR("Invalid IOMMU device %pK\n", dev);
+>>>>>>> FETCH_HEAD
 		ret = -ENOSYS;
 		goto done;
 	}
@@ -374,12 +387,20 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 	if (adreno_dev->ft_pf_policy & KGSL_FT_PAGEFAULT_GPUHALT_ENABLE) {
 		adreno_set_gpu_fault(adreno_dev, ADRENO_IOMMU_PAGE_FAULT);
 		/* turn off GPU IRQ so we don't get faults from it too */
+<<<<<<< HEAD
 		kgsl_pwrctrl_irq(device, KGSL_PWRFLAGS_OFF);
+=======
+		kgsl_pwrctrl_change_state(device, KGSL_STATE_AWARE);
+>>>>>>> FETCH_HEAD
 		adreno_dispatcher_schedule(device);
 	}
 
 	ptbase = KGSL_IOMMU_GET_CTX_REG_Q(iommu, iommu_unit,
+<<<<<<< HEAD
 				iommu_dev->ctx_id, TTBR0);
+=======
+		iommu_dev->ctx_id, TTBR0) & KGSL_IOMMU_CTX_TTBR0_ADDR_MASK;
+>>>>>>> FETCH_HEAD
 
 	fsynr0 = KGSL_IOMMU_GET_CTX_REG(iommu, iommu_unit,
 		iommu_dev->ctx_id, FSYNR0);
@@ -402,8 +423,13 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 		KGSL_MEM_CRIT(iommu_dev->kgsldev,
 			"GPU PAGE FAULT: addr = %lX pid = %d\n", addr, pid);
 		KGSL_MEM_CRIT(iommu_dev->kgsldev,
+<<<<<<< HEAD
 		 "context = %d TTBR0 = %X FSR = %X FSYNR0 = %X FSYNR1 = %X(%s fault)\n",
 			iommu_dev->ctx_id, ptbase, fsr, fsynr0, fsynr1,
+=======
+		 "context = %d TTBR0 = %pa FSR = %X FSYNR0 = %X FSYNR1 = %X(%s fault)\n",
+			iommu_dev->ctx_id, &ptbase, fsr, fsynr0, fsynr1,
+>>>>>>> FETCH_HEAD
 			write ? "write" : "read");
 
 		_check_if_freed(iommu_dev, addr, pid);
@@ -723,8 +749,13 @@ static void kgsl_detach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 				iommu_detach_device(iommu_pt->domain,
 						iommu_unit->dev[j].dev);
 				iommu_unit->dev[j].attached = false;
+<<<<<<< HEAD
 				KGSL_MEM_INFO(mmu->device, "iommu %p detached "
 					"from user dev of MMU: %p\n",
+=======
+				KGSL_MEM_INFO(mmu->device, "iommu %pK detached "
+					"from user dev of MMU: %pK\n",
+>>>>>>> FETCH_HEAD
 					iommu_pt->domain, mmu);
 			}
 		}
@@ -788,7 +819,11 @@ static int kgsl_attach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 				}
 				iommu_unit->dev[j].attached = true;
 				KGSL_MEM_INFO(mmu->device,
+<<<<<<< HEAD
 				"iommu pt %p attached to dev %p, ctx_id %d\n",
+=======
+				"iommu pt %pK attached to dev %pK, ctx_id %d\n",
+>>>>>>> FETCH_HEAD
 				iommu_pt->domain, iommu_unit->dev[j].dev,
 				iommu_unit->dev[j].ctx_id);
 				/* Init IOMMU unit clks here */
@@ -800,6 +835,11 @@ static int kgsl_attach_pagetable_iommu_domain(struct kgsl_mmu *mmu)
 					iommu_unit->clks[2] = drvdata->aclk;
 					iommu_unit->clks[3] =
 							iommu->gtcu_iface_clk;
+<<<<<<< HEAD
+=======
+					iommu_unit->clks[4] =
+							iommu->gtbu_clk;
+>>>>>>> FETCH_HEAD
 				}
 			}
 		}
@@ -861,7 +901,11 @@ static int _get_iommu_ctxs(struct kgsl_mmu *mmu,
 		iommu_unit->dev[iommu_unit->dev_count].kgsldev = mmu->device;
 
 		KGSL_DRV_INFO(mmu->device,
+<<<<<<< HEAD
 				"Obtained dev handle %p for iommu context %s\n",
+=======
+				"Obtained dev handle %pK for iommu context %s\n",
+>>>>>>> FETCH_HEAD
 				iommu_unit->dev[iommu_unit->dev_count].dev,
 				data->iommu_ctxs[i].iommu_ctx_name);
 
@@ -1311,6 +1355,10 @@ static int kgsl_iommu_init(struct kgsl_mmu *mmu)
 	int status = 0;
 	struct kgsl_iommu *iommu;
 	struct platform_device *pdev = mmu->device->pdev;
+<<<<<<< HEAD
+=======
+	struct adreno_device *adreno_dev = ADRENO_DEVICE(mmu->device);
+>>>>>>> FETCH_HEAD
 	size_t secured_pool_sz = 0;
 
 	atomic_set(&mmu->fault, 0);
@@ -1334,6 +1382,16 @@ static int kgsl_iommu_init(struct kgsl_mmu *mmu)
 						"gtcu_iface_clk") >= 0)
 		iommu->gtcu_iface_clk = clk_get(&pdev->dev, "gtcu_iface_clk");
 
+<<<<<<< HEAD
+=======
+	/* TBU clk needs to be voted for TLB invalidate on A405 */
+	if (adreno_is_a405(adreno_dev)) {
+		iommu->gtbu_clk = clk_get(&pdev->dev, "gtbu_clk");
+		if (IS_ERR(iommu->gtbu_clk))
+			iommu->gtbu_clk = NULL;
+	}
+
+>>>>>>> FETCH_HEAD
 	mmu->pt_base = KGSL_MMU_MAPPED_MEM_BASE;
 	mmu->pt_size = (KGSL_MMU_MAPPED_MEM_SIZE - secured_pool_sz);
 
@@ -1685,7 +1743,11 @@ kgsl_iommu_unmap(struct kgsl_pagetable *pt,
 	} else
 		ret = iommu_unmap_range(iommu_pt->domain, gpuaddr, range);
 	if (ret) {
+<<<<<<< HEAD
 		KGSL_CORE_ERR("iommu_unmap_range(%p, %x, %d) failed "
+=======
+		KGSL_CORE_ERR("iommu_unmap_range(%pK, %x, %d) failed "
+>>>>>>> FETCH_HEAD
 			"with err: %d\n", iommu_pt->domain, gpuaddr,
 			range, ret);
 		return ret;
@@ -1797,7 +1859,11 @@ kgsl_iommu_map(struct kgsl_pagetable *pt,
 				sg_temp ? sg_temp : memdesc->sg,
 				size, protflags);
 	if (ret) {
+<<<<<<< HEAD
 		KGSL_CORE_ERR("iommu_map_range(%p, %x, %p, %zd, %x) err: %d\n",
+=======
+		KGSL_CORE_ERR("iommu_map_range(%pK, %x, %pK, %zd, %x) err: %d\n",
+>>>>>>> FETCH_HEAD
 			iommu_pt->domain, iommu_virt_addr,
 			sg_temp ? sg_temp : memdesc->sg, size,
 			protflags, ret);
@@ -1810,7 +1876,11 @@ kgsl_iommu_map(struct kgsl_pagetable *pt,
 				page_to_phys(kgsl_guard_page), PAGE_SIZE,
 				protflags & ~IOMMU_WRITE);
 		if (ret) {
+<<<<<<< HEAD
 			KGSL_CORE_ERR("iommu_map(%p, %zx, guard, %x) err: %d\n",
+=======
+			KGSL_CORE_ERR("iommu_map(%pK, %zx, guard, %x) err: %d\n",
+>>>>>>> FETCH_HEAD
 				iommu_pt->domain, iommu_virt_addr + size,
 				protflags & ~IOMMU_WRITE,
 				ret);

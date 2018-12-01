@@ -594,13 +594,17 @@ EXPORT_SYMBOL_GPL(cdc_ncm_select_altsetting);
 
 static int cdc_ncm_bind(struct usbnet *dev, struct usb_interface *intf)
 {
+<<<<<<< HEAD
 	int ret;
 
+=======
+>>>>>>> FETCH_HEAD
 	/* MBIM backwards compatible function? */
 	cdc_ncm_select_altsetting(dev, intf);
 	if (cdc_ncm_comm_intf_is_mbim(intf->cur_altsetting))
 		return -ENODEV;
 
+<<<<<<< HEAD
 	/* NCM data altsetting is always 1 */
 	ret = cdc_ncm_bind_common(dev, intf, 1);
 
@@ -612,6 +616,9 @@ static int cdc_ncm_bind(struct usbnet *dev, struct usb_interface *intf)
 	 */
 	usbnet_link_change(dev, 0, 0);
 	return ret;
+=======
+	return cdc_ncm_bind_common(dev, intf, CDC_NCM_DATA_ALTSETTING_NCM);
+>>>>>>> FETCH_HEAD
 }
 
 static void cdc_ncm_align_tail(struct sk_buff *skb, size_t modulus, size_t remainder, size_t max)
@@ -1157,7 +1164,12 @@ static void cdc_ncm_disconnect(struct usb_interface *intf)
 
 static const struct driver_info cdc_ncm_info = {
 	.description = "CDC NCM",
+<<<<<<< HEAD
 	.flags = FLAG_POINTTOPOINT | FLAG_NO_SETINT | FLAG_MULTI_PACKET,
+=======
+	.flags = FLAG_POINTTOPOINT | FLAG_NO_SETINT | FLAG_MULTI_PACKET
+                        | FLAG_LINK_INTR,
+>>>>>>> FETCH_HEAD
 	.bind = cdc_ncm_bind,
 	.unbind = cdc_ncm_unbind,
 	.check_connect = cdc_ncm_check_connect,
@@ -1171,7 +1183,11 @@ static const struct driver_info cdc_ncm_info = {
 static const struct driver_info wwan_info = {
 	.description = "Mobile Broadband Network Device",
 	.flags = FLAG_POINTTOPOINT | FLAG_NO_SETINT | FLAG_MULTI_PACKET
+<<<<<<< HEAD
 			| FLAG_WWAN,
+=======
+			| FLAG_LINK_INTR | FLAG_WWAN,
+>>>>>>> FETCH_HEAD
 	.bind = cdc_ncm_bind,
 	.unbind = cdc_ncm_unbind,
 	.check_connect = cdc_ncm_check_connect,
@@ -1185,7 +1201,11 @@ static const struct driver_info wwan_info = {
 static const struct driver_info wwan_noarp_info = {
 	.description = "Mobile Broadband Network Device (NO ARP)",
 	.flags = FLAG_POINTTOPOINT | FLAG_NO_SETINT | FLAG_MULTI_PACKET
+<<<<<<< HEAD
 			| FLAG_WWAN | FLAG_NOARP,
+=======
+			| FLAG_LINK_INTR | FLAG_WWAN | FLAG_NOARP,
+>>>>>>> FETCH_HEAD
 	.bind = cdc_ncm_bind,
 	.unbind = cdc_ncm_unbind,
 	.check_connect = cdc_ncm_check_connect,

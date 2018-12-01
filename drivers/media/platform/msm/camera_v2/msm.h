@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2014, 2017 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -104,6 +108,10 @@ struct msm_session {
 	struct msm_queue_head stream_q;
 	struct mutex lock;
 	struct mutex lock_q;
+<<<<<<< HEAD
+=======
+	rwlock_t stream_rwlock;
+>>>>>>> FETCH_HEAD
 };
 
 void msm_pm_qos_update_request(int val);
@@ -117,10 +125,19 @@ int msm_create_stream(unsigned int session_id,
 void msm_delete_stream(unsigned int session_id, unsigned int stream_id);
 int  msm_create_command_ack_q(unsigned int session_id, unsigned int stream_id);
 void msm_delete_command_ack_q(unsigned int session_id, unsigned int stream_id);
+<<<<<<< HEAD
 struct msm_stream *msm_get_stream(unsigned int session_id,
+=======
+struct msm_session *msm_get_session(unsigned int session_id);
+struct msm_stream *msm_get_stream(struct msm_session *session,
+>>>>>>> FETCH_HEAD
 	unsigned int stream_id);
 struct vb2_queue *msm_get_stream_vb2q(unsigned int session_id,
 	unsigned int stream_id);
 struct msm_stream *msm_get_stream_from_vb2q(struct vb2_queue *q);
+<<<<<<< HEAD
+=======
+struct msm_session *msm_get_session_from_vb2q(struct vb2_queue *q);
+>>>>>>> FETCH_HEAD
 struct msm_session *msm_session_find(unsigned int session_id);
 #endif /*_MSM_H */

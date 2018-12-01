@@ -147,7 +147,13 @@ static inline void snd_info_set_text_ops(struct snd_info_entry *entry,
 }
 
 int snd_info_check_reserved_words(const char *str);
+<<<<<<< HEAD
 
+=======
+struct snd_info_entry *snd_register_module_info(struct module *module,
+						const char *name,
+						struct snd_info_entry *parent);
+>>>>>>> FETCH_HEAD
 #else
 
 #define snd_seq_root NULL
@@ -177,7 +183,13 @@ static inline void snd_info_set_text_ops(struct snd_info_entry *entry __attribut
 					 void (*read)(struct snd_info_entry *, struct snd_info_buffer *)) {}
 
 static inline int snd_info_check_reserved_words(const char *str) { return 1; }
+<<<<<<< HEAD
 
+=======
+static inline struct snd_info_entry *snd_register_module_info(
+				struct module *module, const char *name,
+				struct snd_info_entry *parent) { return NULL; }
+>>>>>>> FETCH_HEAD
 #endif
 
 /*

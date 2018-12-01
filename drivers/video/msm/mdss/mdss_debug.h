@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2014, 2017 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -49,6 +53,10 @@ struct mdss_debug_base {
 	void __iomem *base;
 	size_t off;
 	size_t cnt;
+<<<<<<< HEAD
+=======
+	u8 cmd_data_type;
+>>>>>>> FETCH_HEAD
 	size_t max_offset;
 	char *buf;
 	size_t buf_len;

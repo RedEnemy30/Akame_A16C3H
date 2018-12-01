@@ -25,6 +25,10 @@
 #include <linux/export.h>
 #include <linux/debugfs.h>
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
+=======
+#include <linux/ratelimit.h>
+>>>>>>> FETCH_HEAD
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/pcm_params.h>
@@ -161,6 +165,10 @@ static int soc_pcm_open(struct snd_pcm_substream *substream)
 	struct snd_soc_dai_driver *cpu_dai_drv = cpu_dai->driver;
 	struct snd_soc_dai_driver *codec_dai_drv = codec_dai->driver;
 	int ret = 0;
+<<<<<<< HEAD
+=======
+	static DEFINE_RATELIMIT_STATE(rl, HZ/2, 1);
+>>>>>>> FETCH_HEAD
 
 	pm_runtime_get_sync(cpu_dai->dev);
 	pm_runtime_get_sync(codec_dai->dev);
@@ -182,8 +190,15 @@ static int soc_pcm_open(struct snd_pcm_substream *substream)
 	if (platform->driver->ops && platform->driver->ops->open) {
 		ret = platform->driver->ops->open(substream);
 		if (ret < 0) {
+<<<<<<< HEAD
 			dev_err(platform->dev, "ASoC: can't open platform"
 				" %s: %d\n", platform->name, ret);
+=======
+			if (__ratelimit(&rl))
+				dev_err(platform->dev,
+					"ASoC: can't open platform %s: %d\n",
+					platform->name, ret);
+>>>>>>> FETCH_HEAD
 			goto platform_err;
 		}
 	}
@@ -1200,6 +1215,10 @@ static int dpcm_fe_dai_startup(struct snd_pcm_substream *fe_substream)
 	struct snd_soc_pcm_runtime *fe = fe_substream->private_data;
 	struct snd_pcm_runtime *runtime = fe_substream->runtime;
 	int stream = fe_substream->stream, ret = 0;
+<<<<<<< HEAD
+=======
+	static DEFINE_RATELIMIT_STATE(rl, HZ/2, 1);
+>>>>>>> FETCH_HEAD
 
 	fe->dpcm[stream].runtime_update = SND_SOC_DPCM_UPDATE_FE;
 
@@ -1214,7 +1233,12 @@ static int dpcm_fe_dai_startup(struct snd_pcm_substream *fe_substream)
 	/* start the DAI frontend */
 	ret = soc_pcm_open(fe_substream);
 	if (ret < 0) {
+<<<<<<< HEAD
 		dev_err(fe->dev,"ASoC: failed to start FE %d\n", ret);
+=======
+		if (__ratelimit(&rl))
+			dev_err(fe->dev, "ASoC: failed to start FE %d\n", ret);
+>>>>>>> FETCH_HEAD
 		goto unwind;
 	}
 
@@ -1845,6 +1869,13 @@ void dpcm_be_dai_prepare_async(struct snd_soc_pcm_runtime *fe, int stream,
 							    dpcm, domain);
 		} else {
 			dpcm_async[i++] = dpcm;
+<<<<<<< HEAD
+=======
+			if (i == DPCM_MAX_BE_USERS) {
+				dev_dbg(fe->dev, "ASoC: MAX backend users!\n");
+				break;
+			}
+>>>>>>> FETCH_HEAD
 		}
 	}
 

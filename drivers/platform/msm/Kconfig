@@ -204,6 +204,7 @@ config MSM_BUS_SCALING
 		for the active devices needs without keeping the clocks at max
 		frequency when a slower speed is sufficient.
 
+<<<<<<< HEAD
 config MSM_BUSPM_DEV
 	tristate "MSM Bus Performance Monitor Kernel Module"
 	depends on MSM_BUS_SCALING
@@ -214,6 +215,8 @@ config MSM_BUSPM_DEV
 	  allocate physical memory which is used by bus performance hardware to
 	  dump performance data
 
+=======
+>>>>>>> FETCH_HEAD
 config BUS_TOPOLOGY_ADHOC
 	bool "ad-hoc bus scaling topology"
 	default n

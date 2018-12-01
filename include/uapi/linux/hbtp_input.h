@@ -7,6 +7,11 @@
 #define HBTP_ABS_MT_FIRST	ABS_MT_TOUCH_MAJOR
 #define HBTP_ABS_MT_LAST	ABS_MT_TOOL_Y
 
+<<<<<<< HEAD
+=======
+#define HBTP_EVENT_TYPE_DISPLAY	"EVENT_TYPE=HBTP_DISPLAY"
+
+>>>>>>> FETCH_HEAD
 struct hbtp_input_touch {
 	bool active;
 	__s32 tool;

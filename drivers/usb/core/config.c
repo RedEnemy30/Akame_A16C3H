@@ -511,15 +511,32 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 
 		} else if (header->bDescriptorType ==
 				USB_DT_INTERFACE_ASSOCIATION) {
+<<<<<<< HEAD
+=======
+			struct usb_interface_assoc_descriptor *d;
+
+			d = (struct usb_interface_assoc_descriptor *)header;
+			if (d->bLength < USB_DT_INTERFACE_ASSOCIATION_SIZE) {
+				dev_warn(ddev,
+					 "config %d has an invalid interface association descriptor of length %d, skipping\n",
+					 cfgno, d->bLength);
+				continue;
+			}
+
+>>>>>>> FETCH_HEAD
 			if (iad_num == USB_MAXIADS) {
 				dev_warn(ddev, "found more Interface "
 					       "Association Descriptors "
 					       "than allocated for in "
 					       "configuration %d\n", cfgno);
 			} else {
+<<<<<<< HEAD
 				config->intf_assoc[iad_num] =
 					(struct usb_interface_assoc_descriptor
 					*)header;
+=======
+				config->intf_assoc[iad_num] = d;
+>>>>>>> FETCH_HEAD
 				iad_num++;
 			}
 
@@ -624,18 +641,33 @@ void usb_destroy_configuration(struct usb_device *dev)
 		return;
 
 	if (dev->rawdescriptors) {
+<<<<<<< HEAD
 		for (i = 0; i < dev->descriptor.bNumConfigurations; i++)
+=======
+		for (i = 0; i < dev->descriptor.bNumConfigurations &&
+				i < USB_MAXCONFIG; i++)
+>>>>>>> FETCH_HEAD
 			kfree(dev->rawdescriptors[i]);
 
 		kfree(dev->rawdescriptors);
 		dev->rawdescriptors = NULL;
 	}
 
+<<<<<<< HEAD
 	for (c = 0; c < dev->descriptor.bNumConfigurations; c++) {
 		struct usb_host_config *cf = &dev->config[c];
 
 		kfree(cf->string);
 		for (i = 0; i < cf->desc.bNumInterfaces; i++) {
+=======
+	for (c = 0; c < dev->descriptor.bNumConfigurations &&
+			c < USB_MAXCONFIG; c++) {
+		struct usb_host_config *cf = &dev->config[c];
+
+		kfree(cf->string);
+		for (i = 0; i < cf->desc.bNumInterfaces &&
+				i < USB_MAXINTERFACES; i++) {
+>>>>>>> FETCH_HEAD
 			if (cf->intf_cache[i])
 				kref_put(&cf->intf_cache[i]->ref,
 					  usb_release_interface_cache);
@@ -820,10 +852,19 @@ int usb_get_bos_descriptor(struct usb_device *dev)
 	for (i = 0; i < num; i++) {
 		buffer += length;
 		cap = (struct usb_dev_cap_header *)buffer;
+<<<<<<< HEAD
 		length = cap->bLength;
 
 		if (total_len < length)
 			break;
+=======
+
+		if (total_len < sizeof(*cap) || total_len < cap->bLength) {
+			dev->bos->desc->bNumDeviceCaps = i;
+			break;
+		}
+		length = cap->bLength;
+>>>>>>> FETCH_HEAD
 		total_len -= length;
 
 		if (cap->bDescriptorType != USB_DT_DEVICE_CAPABILITY) {

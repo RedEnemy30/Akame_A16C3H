@@ -3046,7 +3046,11 @@ static struct snd_soc_dai_link apq8084_common_dai_links[] = {
 		.name = "APQ8084 Compr8",
 		.stream_name = "COMPR8",
 		.cpu_dai_name	= "MultiMedia8",
+<<<<<<< HEAD
 		.platform_name  = "msm-compr-dsp",
+=======
+		.platform_name  = "msm-compress-dsp",
+>>>>>>> FETCH_HEAD
 		.dynamic = 1,
 		.async_ops = ASYNC_DPCM_SND_SOC_PREPARE
 			| ASYNC_DPCM_SND_SOC_HW_PARAMS,

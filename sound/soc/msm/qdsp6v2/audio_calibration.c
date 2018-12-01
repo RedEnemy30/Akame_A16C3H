@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2014, 2016 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -18,6 +22,10 @@
 #include <linux/mutex.h>
 #include <linux/msm_ion.h>
 #include <linux/msm_audio_ion.h>
+<<<<<<< HEAD
+=======
+#include <linux/ratelimit.h>
+>>>>>>> FETCH_HEAD
 #include <sound/audio_calibration.h>
 #include <sound/audio_cal_utils.h>
 
@@ -295,6 +303,11 @@ static int call_set_cals(int32_t cal_type,
 	int				ret2 = 0;
 	struct list_head		*ptr, *next;
 	struct audio_cal_client_info	*client_info_node = NULL;
+<<<<<<< HEAD
+=======
+	static DEFINE_RATELIMIT_STATE(rl, HZ/2, 1);
+
+>>>>>>> FETCH_HEAD
 	pr_debug("%s cal type %d\n", __func__, cal_type);
 
 	list_for_each_safe(ptr, next,
@@ -309,7 +322,12 @@ static int call_set_cals(int32_t cal_type,
 		ret2 = client_info_node->callbacks->
 			set_cal(cal_type, cal_type_size, data);
 		if (ret2 < 0) {
+<<<<<<< HEAD
 			pr_err("%s: set_cal failed!\n", __func__);
+=======
+			if (__ratelimit(&rl))
+				pr_err("%s: set_cal failed!\n", __func__);
+>>>>>>> FETCH_HEAD
 			ret = ret2;
 		}
 	}
@@ -453,6 +471,15 @@ static long audio_cal_shared_ioctl(struct file *file, unsigned int cmd,
 			data->cal_type.cal_hdr.buffer_number);
 		ret = -EINVAL;
 		goto done;
+<<<<<<< HEAD
+=======
+	} else if ((data->hdr.cal_type_size + sizeof(data->hdr)) > size) {
+		pr_err("%s: cal type hdr size %zd + cal type size %d is greater than user buffer size %d\n",
+			__func__, sizeof(data->hdr), data->hdr.cal_type_size,
+			size);
+		ret = -EFAULT;
+		goto done;
+>>>>>>> FETCH_HEAD
 	}
 
 
@@ -490,7 +517,11 @@ static long audio_cal_shared_ioctl(struct file *file, unsigned int cmd,
 			goto unlock;
 		if (data == NULL)
 			goto unlock;
+<<<<<<< HEAD
 		if (copy_to_user((void *)arg, data,
+=======
+		if (copy_to_user(arg, data,
+>>>>>>> FETCH_HEAD
 			sizeof(data->hdr) + data->hdr.cal_type_size)) {
 			pr_err("%s: Could not copy cal type to user\n",
 				__func__);

@@ -1041,12 +1041,20 @@ static void ltr553_report_work(struct work_struct *work)
 	int rc;
 	unsigned int status;
 	u8 buf[7];
+<<<<<<< HEAD
+=======
+	int fake_interrupt = 0;
+>>>>>>> FETCH_HEAD
 
 	mutex_lock(&ltr->ops_lock);
 
 	/* avoid fake interrupt */
 	if (!ltr->power_enabled) {
 		dev_dbg(&ltr->i2c->dev, "fake interrupt triggered\n");
+<<<<<<< HEAD
+=======
+		fake_interrupt = 1;
+>>>>>>> FETCH_HEAD
 		goto exit;
 	}
 
@@ -1084,9 +1092,17 @@ exit:
 	}
 
 	/* clear interrupt */
+<<<<<<< HEAD
 	if (regmap_bulk_read(ltr->regmap, LTR553_REG_ALS_DATA_CH1_0,
 			buf, ARRAY_SIZE(buf)))
 		dev_err(&ltr->i2c->dev, "clear interrupt failed\n");
+=======
+	if (!fake_interrupt) {
+		if (regmap_bulk_read(ltr->regmap, LTR553_REG_ALS_DATA_CH1_0,
+					buf, ARRAY_SIZE(buf)))
+			dev_err(&ltr->i2c->dev, "clear interrupt failed\n");
+	}
+>>>>>>> FETCH_HEAD
 
 	mutex_unlock(&ltr->ops_lock);
 }
@@ -1143,6 +1159,11 @@ static int ltr553_enable_ps(struct ltr553_data *ltr, int enable)
 		}
 
 		ltr->ps_enabled = true;
+<<<<<<< HEAD
+=======
+		if (!ltr->als_enabled)
+			enable_irq(ltr->irq);
+>>>>>>> FETCH_HEAD
 
 	} else {
 		/* disable ps_sensor */
@@ -1155,6 +1176,11 @@ static int ltr553_enable_ps(struct ltr553_data *ltr, int enable)
 		}
 
 		ltr->ps_enabled = false;
+<<<<<<< HEAD
+=======
+		if (!ltr->als_enabled)
+			disable_irq(ltr->irq);
+>>>>>>> FETCH_HEAD
 	}
 exit:
 	return rc;
@@ -1212,6 +1238,11 @@ static int ltr553_enable_als(struct ltr553_data *ltr, int enable)
 		}
 
 		ltr->als_enabled = true;
+<<<<<<< HEAD
+=======
+		if (!ltr->ps_enabled)
+			enable_irq(ltr->irq);
+>>>>>>> FETCH_HEAD
 	} else {
 		/* disable als sensor */
 		rc = regmap_write(ltr->regmap, LTR553_REG_ALS_CTL,
@@ -1223,6 +1254,11 @@ static int ltr553_enable_als(struct ltr553_data *ltr, int enable)
 		}
 
 		ltr->als_enabled = false;
+<<<<<<< HEAD
+=======
+		if (!ltr->ps_enabled)
+			disable_irq(ltr->irq);
+>>>>>>> FETCH_HEAD
 	}
 
 exit:
@@ -1960,6 +1996,10 @@ static int ltr553_probe(struct i2c_client *client,
 		/* device wakeup initialization */
 		device_init_wakeup(&client->dev, 1);
 
+<<<<<<< HEAD
+=======
+		disable_irq(ltr->irq);
+>>>>>>> FETCH_HEAD
 		ltr->workqueue = alloc_workqueue("ltr553_workqueue",
 				WQ_NON_REENTRANT | WQ_FREEZABLE, 0);
 		INIT_WORK(&ltr->report_work, ltr553_report_work);
@@ -2131,13 +2171,21 @@ static int ltr553_suspend(struct device *dev)
 		}
 	} else {
 		/* power off */
+<<<<<<< HEAD
 		disable_irq(ltr->irq);
+=======
+		if (ltr->als_enabled)
+			disable_irq(ltr->irq);
+>>>>>>> FETCH_HEAD
 		if (ltr->power_enabled) {
 			res = sensor_power_config(dev, power_config,
 					ARRAY_SIZE(power_config), false);
 			if (res) {
 				dev_err(dev, "failed to suspend ltr553\n");
+<<<<<<< HEAD
 				enable_irq(ltr->irq);
+=======
+>>>>>>> FETCH_HEAD
 				goto exit;
 			}
 		}
@@ -2204,8 +2252,11 @@ static int ltr553_resume(struct device *dev)
 				goto exit_power_off;
 			}
 		}
+<<<<<<< HEAD
 
 		enable_irq(ltr->irq);
+=======
+>>>>>>> FETCH_HEAD
 	}
 
 	return res;

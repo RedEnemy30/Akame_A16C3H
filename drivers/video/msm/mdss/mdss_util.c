@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 
 /* Copyright (c) 2007-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2007-2014,2016 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -33,7 +37,11 @@ int mdss_register_irq(struct mdss_hw *hw)
 	if (!mdss_irq_handlers[hw->hw_ndx])
 		mdss_irq_handlers[hw->hw_ndx] = hw;
 	else
+<<<<<<< HEAD
 		pr_err("panel %d's irq at %p is already registered\n",
+=======
+		pr_err("panel %d's irq at %pK is already registered\n",
+>>>>>>> FETCH_HEAD
 			hw->hw_ndx, hw->irq_handler);
 	spin_unlock_irqrestore(&mdss_lock, irq_flags);
 
@@ -151,6 +159,10 @@ struct mdss_util_intf mdss_util = {
 	.bus_bandwidth_ctrl = NULL,
 	.bus_scale_set_quota = NULL,
 	.panel_intf_type = NULL,
+<<<<<<< HEAD
+=======
+	.dyn_clk_gating_ctrl = NULL,
+>>>>>>> FETCH_HEAD
 	.mdp_probe_done = false
 };
 

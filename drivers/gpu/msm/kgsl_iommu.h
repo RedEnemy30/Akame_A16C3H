@@ -108,7 +108,11 @@ enum kgsl_iommu_units {
 };
 
 /* Max number of iommu clks per IOMMU unit */
+<<<<<<< HEAD
 #define KGSL_IOMMU_MAX_CLKS 4
+=======
+#define KGSL_IOMMU_MAX_CLKS 5
+>>>>>>> FETCH_HEAD
 
 enum kgsl_iommu_context_id {
 	KGSL_IOMMU_CONTEXT_USER = 0,
@@ -260,6 +264,10 @@ struct kgsl_iommu {
 	unsigned int sync_lock_offset;
 	bool sync_lock_initialized;
 	struct clk *gtcu_iface_clk;
+<<<<<<< HEAD
+=======
+	struct clk *gtbu_clk;
+>>>>>>> FETCH_HEAD
 };
 
 /*

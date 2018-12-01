@@ -6,7 +6,11 @@
  * Copyright (C) 2008 Nokia Corporation
  * Copyright (C) 2009 Samsung Electronics
  *			Author: Michal Nazarewicz (mina86@mina86.com)
+<<<<<<< HEAD
  * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2
@@ -1301,8 +1305,11 @@ rndis_qc_bind_config_vendor(struct usb_configuration *c, u8 ethaddr[ETH_ALEN],
 	rndis->port.func.suspend = rndis_qc_suspend;
 	rndis->port.func.resume = rndis_qc_resume;
 
+<<<<<<< HEAD
 	_rndis_qc = rndis;
 
+=======
+>>>>>>> FETCH_HEAD
 	if (rndis->xport == USB_GADGET_XPORT_BAM2BAM_IPA) {
 		status = rndis_ipa_init(&rndis_ipa_params);
 		if (status) {
@@ -1318,6 +1325,11 @@ rndis_qc_bind_config_vendor(struct usb_configuration *c, u8 ethaddr[ETH_ALEN],
 		goto fail;
 	}
 
+<<<<<<< HEAD
+=======
+	_rndis_qc = rndis;
+
+>>>>>>> FETCH_HEAD
 	return 0;
 
 fail:
@@ -1329,15 +1341,28 @@ fail:
 
 static int rndis_qc_open_dev(struct inode *ip, struct file *fp)
 {
+<<<<<<< HEAD
 	pr_info("Open rndis QC driver\n");
 
 	if (!_rndis_qc) {
 		pr_err("rndis_qc_dev not created yet\n");
 		return -ENODEV;
+=======
+	int ret = 0;
+	unsigned long flags;
+	pr_info("Open rndis QC driver\n");
+
+	spin_lock_irqsave(&rndis_lock, flags);
+	if (!_rndis_qc) {
+		pr_err("rndis_qc_dev not created yet\n");
+		ret = -ENODEV;
+		goto fail;
+>>>>>>> FETCH_HEAD
 	}
 
 	if (rndis_qc_lock(&_rndis_qc->open_excl)) {
 		pr_err("Already opened\n");
+<<<<<<< HEAD
 		return -EBUSY;
 	}
 
@@ -1345,20 +1370,50 @@ static int rndis_qc_open_dev(struct inode *ip, struct file *fp)
 	pr_info("rndis QC file opened\n");
 
 	return 0;
+=======
+		ret = -EBUSY;
+		goto fail;
+	}
+
+	fp->private_data = _rndis_qc;
+fail:
+	spin_unlock_irqrestore(&rndis_lock, flags);
+
+	if (!ret)
+		pr_info("rndis QC file opened\n");
+
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 static int rndis_qc_release_dev(struct inode *ip, struct file *fp)
 {
+<<<<<<< HEAD
 	struct f_rndis_qc	*rndis = fp->private_data;
 
 	pr_info("Close rndis QC file\n");
 	rndis_qc_unlock(&rndis->open_excl);
 
+=======
+	unsigned long flags;
+	pr_info("Close rndis QC file\n");
+
+	spin_lock_irqsave(&rndis_lock, flags);
+
+	if (!_rndis_qc) {
+		pr_err("rndis_qc_dev not present\n");
+		spin_unlock_irqrestore(&rndis_lock, flags);
+		return -ENODEV;
+	}
+	rndis_qc_unlock(&_rndis_qc->open_excl);
+	spin_unlock_irqrestore(&rndis_lock, flags);
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 
 static long rndis_qc_ioctl(struct file *fp, unsigned cmd, unsigned long arg)
 {
+<<<<<<< HEAD
 	struct f_rndis_qc	*rndis = fp->private_data;
 	int ret = 0;
 
@@ -1366,37 +1421,94 @@ static long rndis_qc_ioctl(struct file *fp, unsigned cmd, unsigned long arg)
 
 	if (rndis_qc_lock(&rndis->ioctl_excl))
 		return -EBUSY;
+=======
+	u8 qc_max_pkt_per_xfer = 0;
+	u32 qc_max_pkt_size = 0;
+	int ret = 0;
+	unsigned long flags;
+
+	spin_lock_irqsave(&rndis_lock, flags);
+	if (!_rndis_qc) {
+		pr_err("rndis_qc_dev not present\n");
+		ret = -ENODEV;
+		goto fail;
+	}
+
+	qc_max_pkt_per_xfer = _rndis_qc->ul_max_pkt_per_xfer;
+	qc_max_pkt_size = _rndis_qc->max_pkt_size;
+
+	if (rndis_qc_lock(&_rndis_qc->ioctl_excl)) {
+		ret = -EBUSY;
+		goto fail;
+	}
+
+	spin_unlock_irqrestore(&rndis_lock, flags);
+
+	pr_info("Received command %d\n", cmd);
+>>>>>>> FETCH_HEAD
 
 	switch (cmd) {
 	case RNDIS_QC_GET_MAX_PKT_PER_XFER:
 		ret = copy_to_user((void __user *)arg,
+<<<<<<< HEAD
 					&rndis->ul_max_pkt_per_xfer,
 					sizeof(rndis->ul_max_pkt_per_xfer));
+=======
+					&qc_max_pkt_per_xfer,
+					sizeof(qc_max_pkt_per_xfer));
+>>>>>>> FETCH_HEAD
 		if (ret) {
 			pr_err("copying to user space failed\n");
 			ret = -EFAULT;
 		}
 		pr_info("Sent UL max packets per xfer %d\n",
+<<<<<<< HEAD
 				rndis->ul_max_pkt_per_xfer);
 		break;
 	case RNDIS_QC_GET_MAX_PKT_SIZE:
 		ret = copy_to_user((void __user *)arg,
 					&rndis->max_pkt_size,
 					sizeof(rndis->max_pkt_size));
+=======
+				qc_max_pkt_per_xfer);
+		break;
+	case RNDIS_QC_GET_MAX_PKT_SIZE:
+		ret = copy_to_user((void __user *)arg,
+					&qc_max_pkt_size,
+					sizeof(qc_max_pkt_size));
+>>>>>>> FETCH_HEAD
 		if (ret) {
 			pr_err("copying to user space failed\n");
 			ret = -EFAULT;
 		}
 		pr_debug("Sent max packet size %d\n",
+<<<<<<< HEAD
 				rndis->max_pkt_size);
+=======
+				qc_max_pkt_size);
+>>>>>>> FETCH_HEAD
 		break;
 	default:
 		pr_err("Unsupported IOCTL\n");
 		ret = -EINVAL;
 	}
 
+<<<<<<< HEAD
 	rndis_qc_unlock(&rndis->ioctl_excl);
 
+=======
+	spin_lock_irqsave(&rndis_lock, flags);
+
+	if (!_rndis_qc) {
+		pr_err("rndis_qc_dev not present\n");
+		ret = -ENODEV;
+		goto fail;
+	}
+	rndis_qc_unlock(&_rndis_qc->ioctl_excl);
+
+fail:
+	spin_unlock_irqrestore(&rndis_lock, flags);
+>>>>>>> FETCH_HEAD
 	return ret;
 }
 
@@ -1419,10 +1531,18 @@ static int rndis_qc_init(void)
 
 	pr_info("initialize rndis QC instance\n");
 
+<<<<<<< HEAD
 	ret = misc_register(&rndis_qc_device);
 	if (ret)
 		pr_err("rndis QC driver failed to register\n");
 	spin_lock_init(&rndis_lock);
+=======
+	spin_lock_init(&rndis_lock);
+
+	ret = misc_register(&rndis_qc_device);
+	if (ret)
+		pr_err("rndis QC driver failed to register\n");
+>>>>>>> FETCH_HEAD
 
 	ret = bam_data_setup(RNDIS_QC_NO_PORTS);
 	if (ret) {

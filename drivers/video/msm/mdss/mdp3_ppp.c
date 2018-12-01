@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2007, 2013-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2007, 2013-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  * Copyright (C) 2007 Google Incorporated
  *
  * This software is licensed under the terms of the GNU General Public
@@ -37,6 +41,10 @@
 #define MDP_PPP_MAX_BPP 4
 #define MDP_PPP_DYNAMIC_FACTOR 3
 #define MDP_PPP_MAX_READ_WRITE 3
+<<<<<<< HEAD
+=======
+#define MDP_PPP_MAX_WIDTH	0xFFF
+>>>>>>> FETCH_HEAD
 #define ENABLE_SOLID_FILL	0x2
 #define DISABLE_SOLID_FILL	0x0
 #define BLEND_LATENCY		3
@@ -148,6 +156,14 @@ int mdp3_ppp_get_img(struct mdp_img *img, struct mdp_blit_req *req,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	if (img->width > MDP_PPP_MAX_WIDTH) {
+		pr_err("%s incorrect width %d\n", __func__, img->width);
+		return -EINVAL;
+	}
+
+>>>>>>> FETCH_HEAD
 	fb_data.flags = img->priv;
 	fb_data.memory_id = img->memory_id;
 	fb_data.offset = 0;
@@ -446,6 +462,22 @@ bool mdp3_is_scale(struct mdp_blit_req *req)
 	return false;
 }
 
+<<<<<<< HEAD
+=======
+static u64 mdp3_clk_round_off(u64 clk_rate)
+{
+	u64 clk_round_off;
+
+	if (clk_rate < MDP_CORE_CLK_RATE_SVS)
+		clk_round_off = MDP_CORE_CLK_RATE_SVS;
+	else if (clk_rate < MDP_CORE_CLK_RATE_SUPER_SVS)
+		clk_round_off = MDP_CORE_CLK_RATE_SUPER_SVS;
+	else
+		clk_round_off = MDP_CORE_CLK_RATE_MAX;
+	return clk_round_off;
+}
+
+>>>>>>> FETCH_HEAD
 u32 mdp3_clk_calc(struct msm_fb_data_type *mfd,
 				struct blit_req_list *lreq, u32 fps)
 {
@@ -479,8 +511,13 @@ u32 mdp3_clk_calc(struct msm_fb_data_type *mfd,
 							req->dst_rect.h;
 			}
 			scale = max(scale_x, scale_y);
+<<<<<<< HEAD
 			scale = scale >= 100 ? scale : 100;
 		}
+=======
+		}
+		scale = scale >= 100 ? scale : 100;
+>>>>>>> FETCH_HEAD
 		if (mdp3_is_blend(req))
 			scale = max(scale, blend_l);
 
@@ -493,6 +530,7 @@ u32 mdp3_clk_calc(struct msm_fb_data_type *mfd,
 	mdp_clk_rate += (ppp_res.solid_fill_pixel * fps);
 	mdp_clk_rate = fudge_factor(mdp_clk_rate, CLK_FUDGE_NUM, CLK_FUDGE_DEN);
 	pr_debug("mdp_clk_rate for ppp = %llu\n", mdp_clk_rate);
+<<<<<<< HEAD
 
 	if (mdp_clk_rate < MDP_CORE_CLK_RATE_SVS)
 		mdp_clk_rate = MDP_CORE_CLK_RATE_SVS;
@@ -500,6 +538,9 @@ u32 mdp3_clk_calc(struct msm_fb_data_type *mfd,
 		mdp_clk_rate = MDP_CORE_CLK_RATE_SUPER_SVS;
 	else
 		mdp_clk_rate = MDP_CORE_CLK_RATE_MAX;
+=======
+	mdp_clk_rate = mdp3_clk_round_off(mdp_clk_rate);
+>>>>>>> FETCH_HEAD
 
 	return mdp_clk_rate;
 }
@@ -532,6 +573,11 @@ int mdp3_calc_ppp_res(struct msm_fb_data_type *mfd,  struct blit_req_list *lreq)
 	int i, lcount = 0;
 	struct mdp_blit_req *req;
 	struct bpp_info bpp;
+<<<<<<< HEAD
+=======
+	u64 old_solid_fill_pixel = 0;
+	u64 new_solid_fill_pixel = 0;
+>>>>>>> FETCH_HEAD
 	u64 src_read_bw = 0;
 	u32 bg_read_bw = 0;
 	u32 dst_write_bw = 0;
@@ -550,12 +596,23 @@ int mdp3_calc_ppp_res(struct msm_fb_data_type *mfd,  struct blit_req_list *lreq)
 	if (lreq->req_list[0].flags & MDP_SOLID_FILL) {
 		req = &(lreq->req_list[0]);
 		mdp3_get_bpp_info(req->dst.format, &bpp);
+<<<<<<< HEAD
 		ppp_res.solid_fill_pixel += req->dst_rect.w * req->dst_rect.h;
 		ppp_res.solid_fill_byte += req->dst_rect.w * req->dst_rect.h *
 						bpp.bpp_num / bpp.bpp_den;
 		if ((panel_info->yres/2 > req->dst_rect.h) ||
 			(mdp3_res->solid_fill_vote_en)) {
 			pr_debug("Solid fill less than H/2 or fill vote %d\n",
+=======
+		old_solid_fill_pixel = ppp_res.solid_fill_pixel;
+		new_solid_fill_pixel = req->dst_rect.w * req->dst_rect.h;
+		ppp_res.solid_fill_pixel += new_solid_fill_pixel;
+		ppp_res.solid_fill_byte += req->dst_rect.w * req->dst_rect.h *
+						bpp.bpp_num / bpp.bpp_den;
+		if ((old_solid_fill_pixel >= new_solid_fill_pixel) ||
+			(mdp3_res->solid_fill_vote_en)) {
+			pr_debug("Last fill pixels are higher or fill_en %d\n",
+>>>>>>> FETCH_HEAD
 				mdp3_res->solid_fill_vote_en);
 			ATRACE_END(__func__);
 			return 0;
@@ -573,7 +630,16 @@ int mdp3_calc_ppp_res(struct msm_fb_data_type *mfd,  struct blit_req_list *lreq)
 			else
 				fps = panel_info->mipi.frame_rate;
 		}
+<<<<<<< HEAD
 
+=======
+		if (!(check_if_rgb(req->src.format))) {
+			/* Set max fps if video is not full screen */
+			if((req->dst_rect.w < panel_info->xres) ||
+				( req->dst_rect.h < panel_info->yres))
+				fps = panel_info->mipi.frame_rate;
+		}
+>>>>>>> FETCH_HEAD
 		mdp3_get_bpp_info(req->src.format, &bpp);
 		if (lreq->req_list[i].flags & MDP_SMART_BLIT) {
 			/*

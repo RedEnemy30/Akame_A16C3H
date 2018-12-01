@@ -59,10 +59,18 @@ struct req_crypt_result {
 
 static struct dm_dev *dev;
 static struct kmem_cache *_req_crypt_io_pool;
+<<<<<<< HEAD
+=======
+static struct kmem_cache *_req_dm_scatterlist_pool;
+>>>>>>> FETCH_HEAD
 static sector_t start_sector_orig;
 static struct workqueue_struct *req_crypt_queue;
 static mempool_t *req_io_pool;
 static mempool_t *req_page_pool;
+<<<<<<< HEAD
+=======
+static mempool_t *req_scatterlist_pool;
+>>>>>>> FETCH_HEAD
 static bool is_fde_enabled;
 static struct crypto_ablkcipher *tfm;
 
@@ -312,14 +320,23 @@ static void req_cryptd_crypt_read_convert(struct req_dm_crypt_io *io)
 	crypto_ablkcipher_clear_flags(tfm, ~0);
 	crypto_ablkcipher_setkey(tfm, NULL, KEY_SIZE_XTS);
 
+<<<<<<< HEAD
 	req_sg_read = kzalloc(sizeof(struct scatterlist) *
 			MAX_SG_LIST, GFP_KERNEL);
+=======
+	req_sg_read = (struct scatterlist *)mempool_alloc(req_scatterlist_pool,
+								GFP_KERNEL);
+>>>>>>> FETCH_HEAD
 	if (!req_sg_read) {
 		DMERR("%s req_sg_read allocation failed\n",
 						__func__);
 		err = DM_REQ_CRYPT_ERROR;
 		goto ablkcipher_req_alloc_failure;
 	}
+<<<<<<< HEAD
+=======
+	memset(req_sg_read, 0, sizeof(struct scatterlist) * MAX_SG_LIST);
+>>>>>>> FETCH_HEAD
 
 	total_sg_len = blk_rq_map_sg(clone->q, clone, req_sg_read);
 	if ((total_sg_len <= 0) || (total_sg_len > MAX_SG_LIST)) {
@@ -371,9 +388,13 @@ ablkcipher_req_alloc_failure:
 
 	if (req)
 		ablkcipher_request_free(req);
+<<<<<<< HEAD
 
 	kfree(req_sg_read);
 
+=======
+	mempool_free(req_sg_read, req_scatterlist_pool);
+>>>>>>> FETCH_HEAD
 submit_request:
 	if (io)
 		io->error = err;
@@ -499,23 +520,39 @@ static void req_cryptd_crypt_write_convert(struct req_dm_crypt_io *io)
 	crypto_ablkcipher_clear_flags(tfm, ~0);
 	crypto_ablkcipher_setkey(tfm, NULL, KEY_SIZE_XTS);
 
+<<<<<<< HEAD
 	req_sg_in = kzalloc(sizeof(struct scatterlist) * MAX_SG_LIST,
 			GFP_KERNEL);
+=======
+	req_sg_in = (struct scatterlist *)mempool_alloc(req_scatterlist_pool,
+								GFP_KERNEL);
+>>>>>>> FETCH_HEAD
 	if (!req_sg_in) {
 		DMERR("%s req_sg_in allocation failed\n",
 					__func__);
 		error = DM_REQ_CRYPT_ERROR;
 		goto ablkcipher_req_alloc_failure;
 	}
+<<<<<<< HEAD
 
 	req_sg_out = kzalloc(sizeof(struct scatterlist) * MAX_SG_LIST,
 			GFP_KERNEL);
+=======
+	memset(req_sg_in, 0, sizeof(struct scatterlist) * MAX_SG_LIST);
+
+	req_sg_out = (struct scatterlist *)mempool_alloc(req_scatterlist_pool,
+								GFP_KERNEL);
+>>>>>>> FETCH_HEAD
 	if (!req_sg_out) {
 		DMERR("%s req_sg_out allocation failed\n",
 					__func__);
 		error = DM_REQ_CRYPT_ERROR;
 		goto ablkcipher_req_alloc_failure;
 	}
+<<<<<<< HEAD
+=======
+	memset(req_sg_out, 0, sizeof(struct scatterlist) * MAX_SG_LIST);
+>>>>>>> FETCH_HEAD
 
 	total_sg_len_req_in = blk_rq_map_sg(clone->q, clone, req_sg_in);
 	if ((total_sg_len_req_in <= 0) ||
@@ -626,11 +663,16 @@ ablkcipher_req_alloc_failure:
 		}
 	}
 
+<<<<<<< HEAD
 
 	kfree(req_sg_in);
 
 	kfree(req_sg_out);
 
+=======
+	mempool_free(req_sg_in, req_scatterlist_pool);
+	mempool_free(req_sg_out, req_scatterlist_pool);
+>>>>>>> FETCH_HEAD
 submit_request:
 	if (io)
 		io->error = error;
@@ -857,6 +899,14 @@ static void req_crypt_dtr(struct dm_target *ti)
 		mempool_destroy(req_io_pool);
 		req_io_pool = NULL;
 	}
+<<<<<<< HEAD
+=======
+
+	if (req_scatterlist_pool) {
+		mempool_destroy(req_scatterlist_pool);
+		req_scatterlist_pool = NULL;
+	}
+>>>>>>> FETCH_HEAD
 	mutex_lock(&engine_list_mutex);
 	kfree(pfe_eng);
 	pfe_eng = NULL;
@@ -872,7 +922,11 @@ static void req_crypt_dtr(struct dm_target *ti)
 		destroy_workqueue(req_crypt_queue);
 		req_crypt_queue = NULL;
 	}
+<<<<<<< HEAD
 
+=======
+	kmem_cache_destroy(_req_dm_scatterlist_pool);
+>>>>>>> FETCH_HEAD
 	kmem_cache_destroy(_req_crypt_io_pool);
 	if (dev) {
 		dm_put_device(ti, dev);
@@ -949,6 +1003,17 @@ static int req_crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 		goto ctr_exit;
 	}
 
+<<<<<<< HEAD
+=======
+	_req_dm_scatterlist_pool = kmem_cache_create("req_dm_scatterlist",
+				sizeof(struct scatterlist) * MAX_SG_LIST,
+				 __alignof__(struct scatterlist), 0, NULL);
+	if (!_req_dm_scatterlist_pool) {
+		err = DM_REQ_CRYPT_ERROR;
+		goto ctr_exit;
+	}
+
+>>>>>>> FETCH_HEAD
 	req_crypt_queue = alloc_workqueue("req_cryptd",
 					WQ_UNBOUND |
 					WQ_CPU_INTENSIVE |
@@ -1037,6 +1102,14 @@ static int req_crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 		err =  DM_REQ_CRYPT_ERROR;
 		goto ctr_exit;
 	}
+<<<<<<< HEAD
+=======
+
+	req_scatterlist_pool = mempool_create_slab_pool(MIN_IOS,
+					_req_dm_scatterlist_pool);
+	BUG_ON(!req_scatterlist_pool);
+
+>>>>>>> FETCH_HEAD
 	err = 0;
 
 	DMINFO("%s: Mapping block_device %s to dm-req-crypt ok!\n",

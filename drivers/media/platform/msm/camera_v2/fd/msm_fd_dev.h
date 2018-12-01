@@ -158,6 +158,10 @@ struct fd_ctx {
 	struct msm_fd_stats *stats;
 	struct msm_fd_buf_handle work_buf;
 	struct completion *wait_stop_stream;
+<<<<<<< HEAD
+=======
+	struct mutex lock;
+>>>>>>> FETCH_HEAD
 };
 
 /*
@@ -212,6 +216,10 @@ enum msm_fd_mem_resources {
 struct msm_fd_device {
 	struct mutex lock;
 	spinlock_t slock;
+<<<<<<< HEAD
+=======
+	struct mutex recovery_lock;
+>>>>>>> FETCH_HEAD
 	int ref_count;
 
 	int irq_num;

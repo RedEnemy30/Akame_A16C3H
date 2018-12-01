@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2014, 2018, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -342,10 +346,13 @@ static int parse_cluster_params(struct device_node *node, struct lpm_cluster *c)
 	return 0;
 failed:
 	pr_err("%s(): Failed reading %s\n", __func__, key);
+<<<<<<< HEAD
 	kfree(c->name);
 	kfree(c->lpm_dev);
 	c->name = NULL;
 	c->lpm_dev = NULL;
+=======
+>>>>>>> FETCH_HEAD
 	return ret;
 }
 
@@ -452,8 +459,11 @@ static int parse_cluster_level(struct device_node *node,
 	return 0;
 failed:
 	pr_err("Failed %s() ret = %d\n", __func__, ret);
+<<<<<<< HEAD
 	kfree(level->mode);
 	level->mode = NULL;
+=======
+>>>>>>> FETCH_HEAD
 	return ret;
 }
 
@@ -526,7 +536,10 @@ static int parse_cpu_levels(struct device_node *node, struct lpm_cluster *c)
 {
 	struct device_node *n;
 	int ret = -ENOMEM;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> FETCH_HEAD
 
 	c->cpu = devm_kzalloc(&lpm_pdev->dev, sizeof(*c->cpu), GFP_KERNEL);
 	if (!c->cpu)
@@ -562,18 +575,22 @@ static int parse_cpu_levels(struct device_node *node, struct lpm_cluster *c)
 	}
 	return 0;
 failed:
+<<<<<<< HEAD
 	for (i = 0; i < c->cpu->nlevels; i++) {
 		kfree(c->cpu->levels[i].name);
 		c->cpu->levels[i].name = NULL;
 	}
 	kfree(c->cpu);
 	c->cpu = NULL;
+=======
+>>>>>>> FETCH_HEAD
 	pr_err("%s(): Failed with error code:%d\n", __func__, ret);
 	return ret;
 }
 
 void free_cluster_node(struct lpm_cluster *cluster)
 {
+<<<<<<< HEAD
 	struct list_head *list;
 	int i;
 
@@ -600,6 +617,15 @@ void free_cluster_node(struct lpm_cluster *cluster)
 	cluster->cpu = NULL;
 	cluster->name = NULL;
 	cluster->lpm_dev = NULL;
+=======
+	struct lpm_cluster *cl, *m;
+
+	list_for_each_entry_safe(cl, m, &cluster->child, list) {
+		list_del(&cl->list);
+		free_cluster_node(cl);
+	};
+
+>>>>>>> FETCH_HEAD
 	cluster->ndevices = 0;
 }
 
@@ -673,6 +699,11 @@ struct lpm_cluster *parse_cluster(struct device_node *node,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	c->last_level = c->nlevels-1;
+
+>>>>>>> FETCH_HEAD
 	return c;
 
 failed_parse_cluster:
@@ -681,9 +712,13 @@ failed_parse_cluster:
 		list_del(&c->list);
 	free_cluster_node(c);
 failed_parse_params:
+<<<<<<< HEAD
 	c->parent = NULL;
 	pr_err("Failed parse params\n");
 	kfree(c);
+=======
+	pr_err("Failed parse params\n");
+>>>>>>> FETCH_HEAD
 	return NULL;
 }
 

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2014, 2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -649,7 +653,11 @@ static int mdp3_dmap_update(struct mdp3_dma *dma, void *buf,
 	int cb_type = MDP3_DMA_CALLBACK_TYPE_VSYNC;
 	struct mdss_panel_data *panel;
 	int rc = 0;
+<<<<<<< HEAD
 	int rerty_count = 2;
+=======
+	int retry_count = 2;
+>>>>>>> FETCH_HEAD
 
 	ATRACE_BEGIN(__func__);
 	pr_debug("mdp3_dmap_update\n");
@@ -661,17 +669,30 @@ static int mdp3_dmap_update(struct mdp3_dma *dma, void *buf,
 retry_dma_done:
 			rc = wait_for_completion_timeout(&dma->dma_comp,
 				KOFF_TIMEOUT);
+<<<<<<< HEAD
 			if (rc <= 0 && --rerty_count) {
+=======
+			if (rc <= 0 && --retry_count) {
+>>>>>>> FETCH_HEAD
 				int  vsync_status = MDP3_REG_READ(MDP3_REG_INTR_STATUS) &
 							(1 << MDP3_INTR_DMA_P_DONE);
 				if (!vsync_status) {
 					pr_err("%s cmd time out retry count = %d\n",
+<<<<<<< HEAD
 						__func__, rerty_count);
 					goto retry_dma_done;
 				}
 				rc = -1;
 				ATRACE_END("mdp3_wait_for_dma_comp");
 			}
+=======
+						__func__, retry_count);
+					goto retry_dma_done;
+				}
+				rc = -1;
+			}
+			ATRACE_END("mdp3_wait_for_dma_comp");
+>>>>>>> FETCH_HEAD
 		}
 	}
 	if (dma->update_src_cfg) {
@@ -721,12 +742,20 @@ retry_dma_done:
 retry_vsync:
 		rc = wait_for_completion_timeout(&dma->vsync_comp,
 			KOFF_TIMEOUT);
+<<<<<<< HEAD
 		if (rc <= 0 && --rerty_count) {
+=======
+		if (rc <= 0 && --retry_count) {
+>>>>>>> FETCH_HEAD
 		    int  vsync_status = MDP3_REG_READ(MDP3_REG_INTR_STATUS) &
 					(1 << MDP3_INTR_LCDC_START_OF_FRAME);
 		    if (!vsync_status) {
 			pr_err("mdp3_dmap_update trying again count = %d\n",
+<<<<<<< HEAD
 			       rerty_count);
+=======
+			       retry_count);
+>>>>>>> FETCH_HEAD
 			goto retry_vsync;
 		    }
 		    rc = -1;
@@ -954,6 +983,13 @@ bool mdp3_dmap_busy(void)
 	return val & MDP3_DMA_P_BUSY_BIT;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * During underrun DMA_P registers are reset. Reprogramming CSC to prevent
+ * black screen
+ */
+>>>>>>> FETCH_HEAD
 static void mdp3_dmap_underrun_worker(struct work_struct *work)
 {
 	struct mdp3_dma *dma;
@@ -1167,6 +1203,10 @@ int dsi_video_config(struct mdp3_intf *intf, struct mdp3_intf_cfg *cfg)
 	MDP3_REG_WRITE(MDP3_REG_DSI_VIDEO_VSYNC_PULSE_WIDTH,
 			v->vsync_pulse_width);
 	temp = v->display_start_x | (v->display_end_x << 16);
+<<<<<<< HEAD
+=======
+
+>>>>>>> FETCH_HEAD
 	MDP3_REG_WRITE(MDP3_REG_DSI_VIDEO_DISPLAY_HCTL, temp);
 	MDP3_REG_WRITE(MDP3_REG_DSI_VIDEO_DISPLAY_V_START, v->display_start_y);
 	MDP3_REG_WRITE(MDP3_REG_DSI_VIDEO_DISPLAY_V_END, v->display_end_y);
@@ -1191,6 +1231,10 @@ int dsi_video_config(struct mdp3_intf *intf, struct mdp3_intf_cfg *cfg)
 	MDP3_REG_WRITE(MDP3_REG_DSI_VIDEO_CTL_POLARITY, temp);
 
 	v->underflow_color |= 0x80000000;
+<<<<<<< HEAD
+=======
+	MDP3_REG_WRITE(MDP3_REG_DSI_VIDEO_BORDER_COLOR, v->border_color);
+>>>>>>> FETCH_HEAD
 	MDP3_REG_WRITE(MDP3_REG_DSI_VIDEO_UNDERFLOW_CTL, v->underflow_color);
 
 	return 0;

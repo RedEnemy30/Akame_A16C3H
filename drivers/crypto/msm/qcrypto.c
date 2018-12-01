@@ -1,6 +1,10 @@
 /* Qualcomm Crypto driver
  *
+<<<<<<< HEAD
  * Copyright (c) 2010-2015, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2010-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1248,6 +1252,10 @@ static void _qcrypto_tfm_complete(struct crypto_priv *cp, u32 type,
 	struct qcrypto_resp_ctx *arsp;
 	struct list_head *plist;
 	struct crypto_async_request *areq;
+<<<<<<< HEAD
+=======
+	bool pending_list;
+>>>>>>> FETCH_HEAD
 
 	switch (type) {
 	case CRYPTO_ALG_TYPE_AHASH:
@@ -1263,6 +1271,10 @@ again:
 	spin_lock_irqsave(&cp->lock, flags);
 	if (list_empty(plist)) {
 		arsp = NULL; /* nothing to do */
+<<<<<<< HEAD
+=======
+		pending_list = false;
+>>>>>>> FETCH_HEAD
 	} else {
 		arsp = list_first_entry(plist,
 				struct  qcrypto_resp_ctx, list);
@@ -1270,12 +1282,24 @@ again:
 			arsp = NULL;  /* still in progress */
 		else
 			list_del(&arsp->list); /* request is complete */
+<<<<<<< HEAD
+=======
+		if (list_empty(plist))
+			pending_list = false;
+		else
+			pending_list = true;
+>>>>>>> FETCH_HEAD
 	}
 	spin_unlock_irqrestore(&cp->lock, flags);
 	if (arsp) {
 		areq = arsp->async_req;
 		areq->complete(areq, arsp->res);
+<<<<<<< HEAD
 		goto again;
+=======
+		if (pending_list)
+			goto again;
+>>>>>>> FETCH_HEAD
 	}
 }
 
@@ -1870,12 +1894,21 @@ static int _qcrypto_process_aead(struct  crypto_engine *pengine,
 			 * include  assoicated data, ciphering data stream,
 			 * generated MAC, and CCM padding.
 			 */
+<<<<<<< HEAD
 			if ((MAX_ALIGN_SIZE * 2 > ULONG_MAX - req->assoclen) ||
 				((MAX_ALIGN_SIZE * 2 + req->assoclen) >
 						ULONG_MAX - qreq.ivsize) ||
 				((MAX_ALIGN_SIZE * 2 + req->assoclen
 					+ qreq.ivsize)
 						> ULONG_MAX - req->cryptlen)) {
+=======
+			if ((MAX_ALIGN_SIZE * 2 > UINT_MAX - req->assoclen) ||
+				((MAX_ALIGN_SIZE * 2 + req->assoclen) >
+						UINT_MAX - qreq.ivsize) ||
+				((MAX_ALIGN_SIZE * 2 + req->assoclen
+					+ qreq.ivsize)
+						> UINT_MAX - req->cryptlen)) {
+>>>>>>> FETCH_HEAD
 				pr_err("Integer overflow on aead req length.\n");
 				return -EINVAL;
 			}
@@ -3499,6 +3532,10 @@ static int _sha1_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 							unsigned int len)
 {
 	struct qcrypto_sha_ctx *sha_ctx = crypto_tfm_ctx(&tfm->base);
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> FETCH_HEAD
 	memset(&sha_ctx->authkey[0], 0, SHA1_BLOCK_SIZE);
 	if (len <= SHA1_BLOCK_SIZE) {
 		memcpy(&sha_ctx->authkey[0], key, len);
@@ -3506,16 +3543,29 @@ static int _sha1_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 	} else {
 		sha_ctx->alg = QCE_HASH_SHA1;
 		sha_ctx->diglen = SHA1_DIGEST_SIZE;
+<<<<<<< HEAD
 		_sha_hmac_setkey(tfm, key, len);
 		sha_ctx->authkey_in_len = SHA1_BLOCK_SIZE;
 	}
 	return 0;
+=======
+		ret = _sha_hmac_setkey(tfm, key, len);
+		if (ret)
+			pr_err("SHA1 hmac setkey failed\n");
+		sha_ctx->authkey_in_len = SHA1_BLOCK_SIZE;
+	}
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 static int _sha256_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 							unsigned int len)
 {
 	struct qcrypto_sha_ctx *sha_ctx = crypto_tfm_ctx(&tfm->base);
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> FETCH_HEAD
 
 	memset(&sha_ctx->authkey[0], 0, SHA256_BLOCK_SIZE);
 	if (len <= SHA256_BLOCK_SIZE) {
@@ -3524,11 +3574,21 @@ static int _sha256_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 	} else {
 		sha_ctx->alg = QCE_HASH_SHA256;
 		sha_ctx->diglen = SHA256_DIGEST_SIZE;
+<<<<<<< HEAD
 		_sha_hmac_setkey(tfm, key, len);
 		sha_ctx->authkey_in_len = SHA256_BLOCK_SIZE;
 	}
 
 	return 0;
+=======
+		ret = _sha_hmac_setkey(tfm, key, len);
+		if (ret)
+			pr_err("SHA256 hmac setkey failed\n");
+		sha_ctx->authkey_in_len = SHA256_BLOCK_SIZE;
+	}
+
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 static int _sha_hmac_init_ihash(struct ahash_request *req,
@@ -5036,9 +5096,15 @@ static ssize_t _debug_stats_read(struct file *file, char __user *buf,
 
 	len = _disp_stats(qcrypto);
 
+<<<<<<< HEAD
 	rc = simple_read_from_buffer((void __user *) buf, len,
 			ppos, (void *) _debug_read_buf, len);
 
+=======
+	if (len <= count)
+		rc = simple_read_from_buffer((void __user *) buf, len,
+			ppos, (void *) _debug_read_buf, len);
+>>>>>>> FETCH_HEAD
 	return rc;
 }
 

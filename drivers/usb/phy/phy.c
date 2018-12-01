@@ -329,6 +329,11 @@ int usb_add_phy(struct usb_phy *x, enum usb_phy_type type)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	ATOMIC_INIT_NOTIFIER_HEAD(&x->notifier);
+
+>>>>>>> FETCH_HEAD
 	spin_lock_irqsave(&phy_lock, flags);
 
 	list_for_each_entry(phy, &phy_list, head) {
@@ -367,6 +372,11 @@ int usb_add_phy_dev(struct usb_phy *x)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	ATOMIC_INIT_NOTIFIER_HEAD(&x->notifier);
+
+>>>>>>> FETCH_HEAD
 	spin_lock_irqsave(&phy_lock, flags);
 	list_for_each_entry(phy_bind, &phy_bind_list, list)
 		if (!(strcmp(phy_bind->phy_dev_name, dev_name(x->dev))))

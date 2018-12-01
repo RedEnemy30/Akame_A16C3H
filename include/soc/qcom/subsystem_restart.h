@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2014-2015, 2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -18,6 +22,10 @@
 #include <linux/interrupt.h>
 
 struct subsys_device;
+<<<<<<< HEAD
+=======
+extern struct bus_type subsys_bus_type;
+>>>>>>> FETCH_HEAD
 
 enum {
 	RESET_SOC = 0,
@@ -58,6 +66,10 @@ struct subsys_desc {
 	int (*powerup)(const struct subsys_desc *desc);
 	void (*crash_shutdown)(const struct subsys_desc *desc);
 	int (*ramdump)(int, const struct subsys_desc *desc);
+<<<<<<< HEAD
+=======
+	void (*free_memory)(const struct subsys_desc *desc);
+>>>>>>> FETCH_HEAD
 	irqreturn_t (*err_fatal_handler) (int irq, void *dev_id);
 	irqreturn_t (*stop_ack_handler) (int irq, void *dev_id);
 	irqreturn_t (*wdog_bite_handler) (int irq, void *dev_id);
@@ -69,6 +81,10 @@ struct subsys_desc {
 	unsigned int wdog_bite_irq;
 	int force_stop_gpio;
 	int ramdump_disable_gpio;
+<<<<<<< HEAD
+=======
+	int shutdown_ack_gpio;
+>>>>>>> FETCH_HEAD
 	int ramdump_disable;
 	bool no_auth;
 	int ssctl_instance_id;
@@ -109,6 +125,10 @@ extern void subsys_set_crash_status(struct subsys_device *dev, bool crashed);
 extern bool subsys_get_crash_status(struct subsys_device *dev);
 void notify_proxy_vote(struct device *device);
 void notify_proxy_unvote(struct device *device);
+<<<<<<< HEAD
+=======
+extern int wait_for_shutdown_ack(struct subsys_desc *desc);
+>>>>>>> FETCH_HEAD
 #else
 
 static inline int subsys_get_restart_level(struct subsys_device *dev)
@@ -155,6 +175,13 @@ static inline bool subsys_get_crash_status(struct subsys_device *dev)
 }
 static inline void notify_proxy_vote(struct device *device) { }
 static inline void notify_proxy_unvote(struct device *device) { }
+<<<<<<< HEAD
+=======
+static inline int wait_for_shutdown_ack(struct subsys_desc *desc)
+{
+	return -ENOSYS;
+}
+>>>>>>> FETCH_HEAD
 #endif /* CONFIG_MSM_SUBSYSTEM_RESTART */
 
 #endif

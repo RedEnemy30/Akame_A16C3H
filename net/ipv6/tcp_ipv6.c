@@ -133,6 +133,10 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
 	struct ipv6_pinfo *np = inet6_sk(sk);
 	struct tcp_sock *tp = tcp_sk(sk);
 	struct in6_addr *saddr = NULL, *final_p, final;
+<<<<<<< HEAD
+=======
+	struct ipv6_txoptions *opt;
+>>>>>>> FETCH_HEAD
 	struct rt6_info *rt;
 	struct flowi6 fl6;
 	struct dst_entry *dst;
@@ -254,7 +258,12 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
 	fl6.fl6_sport = inet->inet_sport;
 	fl6.flowi6_uid = sock_i_uid(sk);
 
+<<<<<<< HEAD
 	final_p = fl6_update_dst(&fl6, np->opt, &final);
+=======
+	opt = rcu_dereference_protected(np->opt, sock_owned_by_user(sk));
+	final_p = fl6_update_dst(&fl6, opt, &final);
+>>>>>>> FETCH_HEAD
 
 	security_sk_classify_flow(sk, flowi6_to_flowi(&fl6));
 
@@ -283,9 +292,15 @@ static int tcp_v6_connect(struct sock *sk, struct sockaddr *uaddr,
 		tcp_fetch_timewait_stamp(sk, dst);
 
 	icsk->icsk_ext_hdr_len = 0;
+<<<<<<< HEAD
 	if (np->opt)
 		icsk->icsk_ext_hdr_len = (np->opt->opt_flen +
 					  np->opt->opt_nflen);
+=======
+	if (opt)
+		icsk->icsk_ext_hdr_len = opt->opt_flen +
+					 opt->opt_nflen;
+>>>>>>> FETCH_HEAD
 
 	tp->rx_opt.mss_clamp = IPV6_MIN_MTU - sizeof(struct tcphdr) - sizeof(struct ipv6hdr);
 
@@ -481,7 +496,12 @@ static int tcp_v6_send_synack(struct sock *sk, struct dst_entry *dst,
 
 		fl6->daddr = treq->rmt_addr;
 		skb_set_queue_mapping(skb, queue_mapping);
+<<<<<<< HEAD
 		err = ip6_xmit(sk, skb, fl6, np->opt, np->tclass);
+=======
+		err = ip6_xmit(sk, skb, fl6, rcu_dereference(np->opt),
+			       np->tclass);
+>>>>>>> FETCH_HEAD
 		err = net_xmit_eval(err);
 	}
 
@@ -1090,6 +1110,10 @@ static struct sock * tcp_v6_syn_recv_sock(struct sock *sk, struct sk_buff *skb,
 	struct inet6_request_sock *treq;
 	struct ipv6_pinfo *newnp, *np = inet6_sk(sk);
 	struct tcp6_sock *newtcp6sk;
+<<<<<<< HEAD
+=======
+	struct ipv6_txoptions *opt;
+>>>>>>> FETCH_HEAD
 	struct inet_sock *newinet;
 	struct tcp_sock *newtp;
 	struct sock *newsk;
@@ -1129,6 +1153,10 @@ static struct sock * tcp_v6_syn_recv_sock(struct sock *sk, struct sk_buff *skb,
 		newtp->af_specific = &tcp_sock_ipv6_mapped_specific;
 #endif
 
+<<<<<<< HEAD
+=======
+		newnp->ipv6_mc_list = NULL;
+>>>>>>> FETCH_HEAD
 		newnp->ipv6_ac_list = NULL;
 		newnp->ipv6_fl_list = NULL;
 		newnp->pktoptions  = NULL;
@@ -1196,6 +1224,10 @@ static struct sock * tcp_v6_syn_recv_sock(struct sock *sk, struct sk_buff *skb,
 	   First: no IPv4 options.
 	 */
 	newinet->inet_opt = NULL;
+<<<<<<< HEAD
+=======
+	newnp->ipv6_mc_list = NULL;
+>>>>>>> FETCH_HEAD
 	newnp->ipv6_ac_list = NULL;
 	newnp->ipv6_fl_list = NULL;
 
@@ -1223,6 +1255,7 @@ static struct sock * tcp_v6_syn_recv_sock(struct sock *sk, struct sk_buff *skb,
 	   but we make one more one thing there: reattach optmem
 	   to newsk.
 	 */
+<<<<<<< HEAD
 	if (np->opt)
 		newnp->opt = ipv6_dup_options(newsk, np->opt);
 
@@ -1230,6 +1263,17 @@ static struct sock * tcp_v6_syn_recv_sock(struct sock *sk, struct sk_buff *skb,
 	if (newnp->opt)
 		inet_csk(newsk)->icsk_ext_hdr_len = (newnp->opt->opt_nflen +
 						     newnp->opt->opt_flen);
+=======
+	opt = rcu_dereference(np->opt);
+	if (opt) {
+		opt = ipv6_dup_options(newsk, opt);
+		RCU_INIT_POINTER(newnp->opt, opt);
+	}
+	inet_csk(newsk)->icsk_ext_hdr_len = 0;
+	if (opt)
+		inet_csk(newsk)->icsk_ext_hdr_len = opt->opt_nflen +
+						    opt->opt_flen;
+>>>>>>> FETCH_HEAD
 
 	tcp_mtup_init(newsk);
 	tcp_sync_mss(newsk, dst_mtu(dst));
@@ -1762,6 +1806,10 @@ static void get_tcp6_sock(struct seq_file *seq, struct sock *sp, int i)
 	const struct tcp_sock *tp = tcp_sk(sp);
 	const struct inet_connection_sock *icsk = inet_csk(sp);
 	const struct ipv6_pinfo *np = inet6_sk(sp);
+<<<<<<< HEAD
+=======
+	__u8 state = sp->sk_state;
+>>>>>>> FETCH_HEAD
 
 	dest  = &np->daddr;
 	src   = &np->rcv_saddr;
@@ -1782,6 +1830,12 @@ static void get_tcp6_sock(struct seq_file *seq, struct sock *sp, int i)
 		timer_expires = jiffies;
 	}
 
+<<<<<<< HEAD
+=======
+	if (inet->transparent)
+		state |= 0x80;
+
+>>>>>>> FETCH_HEAD
 	seq_printf(seq,
 		   "%4d: %08X%08X%08X%08X:%04X %08X%08X%08X%08X:%04X "
 		   "%02X %08X:%08X %02X:%08lX %08X %5d %8d %lu %d %pK %lu %lu %u %u %d\n",
@@ -1790,7 +1844,11 @@ static void get_tcp6_sock(struct seq_file *seq, struct sock *sp, int i)
 		   src->s6_addr32[2], src->s6_addr32[3], srcp,
 		   dest->s6_addr32[0], dest->s6_addr32[1],
 		   dest->s6_addr32[2], dest->s6_addr32[3], destp,
+<<<<<<< HEAD
 		   sp->sk_state,
+=======
+		   state,
+>>>>>>> FETCH_HEAD
 		   tp->write_seq-tp->snd_una,
 		   (sp->sk_state == TCP_LISTEN) ? sp->sk_ack_backlog : (tp->rcv_nxt - tp->copied_seq),
 		   timer_active,
@@ -1948,6 +2006,10 @@ struct proto tcpv6_prot = {
 	.proto_cgroup		= tcp_proto_cgroup,
 #endif
 	.clear_sk		= tcp_v6_clear_sk,
+<<<<<<< HEAD
+=======
+	.diag_destroy		= tcp_abort,
+>>>>>>> FETCH_HEAD
 };
 
 static const struct inet6_protocol tcpv6_protocol = {

@@ -117,6 +117,11 @@ enum {
 	FUSE_I_ADVISE_RDPLUS,
 	/** An operation changing file size is in progress  */
 	FUSE_I_SIZE_UNSTABLE,
+<<<<<<< HEAD
+=======
+	/** i_mtime has been updated locally; a flush to userspace needed */
+	FUSE_I_MTIME_DIRTY,
+>>>>>>> FETCH_HEAD
 };
 
 struct fuse_conn;
@@ -155,6 +160,13 @@ struct fuse_file {
 
 	/** Has flock been performed on this file? */
 	bool flock:1;
+<<<<<<< HEAD
+=======
+
+	/* the read write file */
+	struct file *rw_lower_file;
+	bool shortcircuit_enabled;
+>>>>>>> FETCH_HEAD
 };
 
 /** One input argument of a request */
@@ -359,6 +371,12 @@ struct fuse_req {
 
 	/** Request is stolen from fuse_file->reserved_req */
 	struct file *stolen_file;
+<<<<<<< HEAD
+=======
+
+	/** fuse shortcircuit file  */
+	struct file *private_lower_rw_file;
+>>>>>>> FETCH_HEAD
 };
 
 /**
@@ -478,6 +496,15 @@ struct fuse_conn {
 	/** Set if bdi is valid */
 	unsigned bdi_initialized:1;
 
+<<<<<<< HEAD
+=======
+	/** write-back cache policy (default is write-through) */
+	unsigned writeback_cache:1;
+
+	/** Shortcircuited IO. */
+	unsigned shortcircuit_io:1;
+
+>>>>>>> FETCH_HEAD
 	/*
 	 * The following bitfields are only for optimization purposes
 	 * and hence races in setting them will not cause malfunction
@@ -786,6 +813,11 @@ void fuse_invalidate_attr(struct inode *inode);
 
 void fuse_invalidate_entry_cache(struct dentry *entry);
 
+<<<<<<< HEAD
+=======
+void fuse_invalidate_atime(struct inode *inode);
+
+>>>>>>> FETCH_HEAD
 /**
  * Acquire reference to fuse_conn
  */
@@ -856,9 +888,26 @@ int fuse_reverse_inval_entry(struct super_block *sb, u64 parent_nodeid,
 
 int fuse_do_open(struct fuse_conn *fc, u64 nodeid, struct file *file,
 		 bool isdir);
+<<<<<<< HEAD
 ssize_t fuse_direct_io(struct fuse_io_priv *io, const struct iovec *iov,
 		       unsigned long nr_segs, size_t count, loff_t *ppos,
 		       int write);
+=======
+
+/**
+ * fuse_direct_io() flags
+ */
+
+/** If set, it is WRITE; otherwise - READ */
+#define FUSE_DIO_WRITE (1 << 0)
+
+/** CUSE pass fuse_direct_io() a file which f_mapping->host is not from FUSE */
+#define FUSE_DIO_CUSE  (1 << 1)
+
+ssize_t fuse_direct_io(struct fuse_io_priv *io, const struct iovec *iov,
+		       unsigned long nr_segs, size_t count, loff_t *ppos,
+		       int flags);
+>>>>>>> FETCH_HEAD
 long fuse_do_ioctl(struct file *file, unsigned int cmd, unsigned long arg,
 		   unsigned int flags);
 long fuse_ioctl_common(struct file *file, unsigned int cmd,
@@ -866,7 +915,13 @@ long fuse_ioctl_common(struct file *file, unsigned int cmd,
 unsigned fuse_file_poll(struct file *file, poll_table *wait);
 int fuse_dev_release(struct inode *inode, struct file *file);
 
+<<<<<<< HEAD
 void fuse_write_update_size(struct inode *inode, loff_t pos);
+=======
+bool fuse_write_update_size(struct inode *inode, loff_t pos);
+
+int fuse_flush_mtime(struct file *file, bool nofail);
+>>>>>>> FETCH_HEAD
 
 int fuse_do_setattr(struct inode *inode, struct iattr *attr,
 		    struct file *file);

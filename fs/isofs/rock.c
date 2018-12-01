@@ -30,6 +30,10 @@ struct rock_state {
 	int cont_size;
 	int cont_extent;
 	int cont_offset;
+<<<<<<< HEAD
+=======
+        int cont_loops;
+>>>>>>> FETCH_HEAD
 	struct inode *inode;
 };
 
@@ -73,6 +77,13 @@ static void init_rock_state(struct rock_state *rs, struct inode *inode)
 	rs->inode = inode;
 }
 
+<<<<<<< HEAD
+=======
+/* Maximum number of Rock Ridge continuation entries */
+#define RR_MAX_CE_ENTRIES 32
+
+
+>>>>>>> FETCH_HEAD
 /*
  * Returns 0 if the caller should continue scanning, 1 if the scan must end
  * and -ve on error.
@@ -105,6 +116,11 @@ static int rock_continue(struct rock_state *rs)
 			goto out;
 		}
 		ret = -EIO;
+<<<<<<< HEAD
+=======
+                if (++rs->cont_loops >= RR_MAX_CE_ENTRIES)
+                goto out;
+>>>>>>> FETCH_HEAD
 		bh = sb_bread(rs->inode->i_sb, rs->cont_extent);
 		if (bh) {
 			memcpy(rs->buffer, bh->b_data + rs->cont_offset,

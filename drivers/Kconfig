@@ -52,6 +52,11 @@ source "drivers/i2c/Kconfig"
 
 source "drivers/slimbus/Kconfig"
 
+<<<<<<< HEAD
+=======
+source "drivers/soundwire/Kconfig"
+
+>>>>>>> FETCH_HEAD
 source "drivers/spi/Kconfig"
 
 source "drivers/spmi/Kconfig"

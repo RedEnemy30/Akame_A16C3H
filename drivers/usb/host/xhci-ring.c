@@ -610,7 +610,11 @@ void xhci_find_new_dequeue_state(struct xhci_hcd *xhci,
 	xhci_dbg(xhci, "Cycle state = 0x%x\n", state->new_cycle_state);
 
 	/* Don't update the ring cycle state for the producer (us). */
+<<<<<<< HEAD
 	xhci_dbg(xhci, "New dequeue segment = %p (virtual)\n",
+=======
+	xhci_dbg(xhci, "New dequeue segment = %pK (virtual)\n",
+>>>>>>> FETCH_HEAD
 			state->new_deq_seg);
 	addr = xhci_trb_virt_to_dma(state->new_deq_seg, state->new_deq_ptr);
 	xhci_dbg(xhci, "New dequeue pointer = 0x%llx (DMA)\n",
@@ -642,8 +646,13 @@ static void td_to_noop(struct xhci_hcd *xhci, struct xhci_ring *ep_ring,
 				cur_trb->generic.field[3] ^=
 					cpu_to_le32(TRB_CYCLE);
 			xhci_dbg(xhci, "Cancel (unchain) link TRB\n");
+<<<<<<< HEAD
 			xhci_dbg(xhci, "Address = %p (0x%llx dma); "
 					"in seg %p (0x%llx dma)\n",
+=======
+			xhci_dbg(xhci, "Address = %pK (0x%llx dma); "
+					"in seg %pK (0x%llx dma)\n",
+>>>>>>> FETCH_HEAD
 					cur_trb,
 					(unsigned long long)xhci_trb_virt_to_dma(cur_seg, cur_trb),
 					cur_seg,
@@ -682,8 +691,13 @@ void xhci_queue_new_dequeue_state(struct xhci_hcd *xhci,
 {
 	struct xhci_virt_ep *ep = &xhci->devs[slot_id]->eps[ep_index];
 
+<<<<<<< HEAD
 	xhci_dbg(xhci, "Set TR Deq Ptr cmd, new deq seg = %p (0x%llx dma), "
 			"new deq ptr = %p (0x%llx dma), new cycle = %u\n",
+=======
+	xhci_dbg(xhci, "Set TR Deq Ptr cmd, new deq seg = %pK (0x%llx dma), "
+			"new deq ptr = %pK (0x%llx dma), new cycle = %u\n",
+>>>>>>> FETCH_HEAD
 			deq_state->new_deq_seg,
 			(unsigned long long)deq_state->new_deq_seg->dma,
 			deq_state->new_deq_ptr,
@@ -841,7 +855,11 @@ static void handle_stopped_endpoint(struct xhci_hcd *xhci,
 			 * short, don't muck with the stream ID after
 			 * submission.
 			 */
+<<<<<<< HEAD
 			xhci_warn(xhci, "WARN Cancelled URB %p "
+=======
+			xhci_warn(xhci, "WARN Cancelled URB %pK "
+>>>>>>> FETCH_HEAD
 					"has invalid stream ID %u.\n",
 					cur_td->urb,
 					cur_td->urb->stream_id);
@@ -1168,7 +1186,11 @@ static void handle_set_deq_completion(struct xhci_hcd *xhci,
 		} else {
 			xhci_warn(xhci, "Mismatch between completed Set TR Deq "
 					"Ptr command & xHCI internal state.\n");
+<<<<<<< HEAD
 			xhci_warn(xhci, "ep deq seg = %p, deq ptr = %p\n",
+=======
+			xhci_warn(xhci, "ep deq seg = %pK, deq ptr = %pK\n",
+>>>>>>> FETCH_HEAD
 					dev->eps[ep_index].queued_deq_seg,
 					dev->eps[ep_index].queued_deq_ptr);
 		}
@@ -1278,7 +1300,11 @@ static void xhci_cmd_to_noop(struct xhci_hcd *xhci, struct xhci_cd *cur_cd)
 			xhci->cmd_ring->dequeue, &cycle_state);
 
 	if (!cur_seg) {
+<<<<<<< HEAD
 		xhci_warn(xhci, "Command ring mismatch, dequeue = %p %llx (dma)\n",
+=======
+		xhci_warn(xhci, "Command ring mismatch, dequeue = %pK %llx (dma)\n",
+>>>>>>> FETCH_HEAD
 				xhci->cmd_ring->dequeue,
 				(unsigned long long)
 				xhci_trb_virt_to_dma(xhci->cmd_ring->deq_seg,
@@ -2649,7 +2675,11 @@ cleanup:
 						 URB_SHORT_NOT_OK)) ||
 					(status != 0 &&
 					 !usb_endpoint_xfer_isoc(&urb->ep->desc)))
+<<<<<<< HEAD
 				xhci_dbg(xhci, "Giveback URB %p, len = %d, "
+=======
+				xhci_dbg(xhci, "Giveback URB %pK, len = %d, "
+>>>>>>> FETCH_HEAD
 						"expected = %d, status = %d\n",
 						urb, urb->actual_length,
 						urb->transfer_buffer_length,
@@ -4187,7 +4217,11 @@ static int queue_set_tr_deq(struct xhci_hcd *xhci, int slot_id,
 	addr = xhci_trb_virt_to_dma(deq_seg, deq_ptr);
 	if (addr == 0) {
 		xhci_warn(xhci, "WARN Cannot submit Set TR Deq Ptr\n");
+<<<<<<< HEAD
 		xhci_warn(xhci, "WARN deq seg = %p, deq pt = %p\n",
+=======
+		xhci_warn(xhci, "WARN deq seg = %pK, deq pt = %pK\n",
+>>>>>>> FETCH_HEAD
 				deq_seg, deq_ptr);
 		return 0;
 	}

@@ -227,9 +227,12 @@ static void msm_restart_prepare(const char *cmd)
 			(in_panic || restart_mode == RESTART_DLOAD));
 #endif
 
+<<<<<<< HEAD
 	need_warm_reset = (get_dload_mode() ||
 				(cmd != NULL && cmd[0] != '\0'));
 
+=======
+>>>>>>> FETCH_HEAD
 	if (qpnp_pon_check_hard_reset_stored()) {
 		/* Set warm reset as true when device is in dload mode
 		 *  or device doesn't boot up into recovery, bootloader or rtc.
@@ -240,6 +243,12 @@ static void msm_restart_prepare(const char *cmd)
 			strcmp(cmd, "bootloader") &&
 			strcmp(cmd, "rtc")))
 			need_warm_reset = true;
+<<<<<<< HEAD
+=======
+	} else {
+		need_warm_reset = (get_dload_mode() ||
+				(cmd != NULL && cmd[0] != '\0'));
+>>>>>>> FETCH_HEAD
 	}
 
 	/* Hard reset the PMIC unless memory contents must be maintained. */
@@ -262,6 +271,21 @@ static void msm_restart_prepare(const char *cmd)
 			qpnp_pon_set_restart_reason(
 				PON_RESTART_REASON_RTC);
 			__raw_writel(0x77665503, restart_reason);
+<<<<<<< HEAD
+=======
+                } else if (!strcmp(cmd, "dm-verity device corrupted")) {
+                        qpnp_pon_set_restart_reason(
+                                PON_RESTART_REASON_DMVERITY_CORRUPTED);
+                        __raw_writel(0x77665508, restart_reason);
+                } else if (!strcmp(cmd, "dm-verity enforcing")) {
+                        qpnp_pon_set_restart_reason(
+                                PON_RESTART_REASON_DMVERITY_ENFORCE);
+                        __raw_writel(0x77665509, restart_reason);
+                } else if (!strcmp(cmd, "keys clear")) {
+                        qpnp_pon_set_restart_reason(
+                                PON_RESTART_REASON_KEYS_CLEAR);
+                        __raw_writel(0x7766550a, restart_reason);
+>>>>>>> FETCH_HEAD
 		} else if (!strncmp(cmd, "oem-", 4)) {
 			unsigned long code;
 			int ret;

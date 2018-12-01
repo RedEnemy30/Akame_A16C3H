@@ -108,13 +108,22 @@ static u32 wmi_addr_remap(u32 x)
 /**
  * Check address validity for WMI buffer; remap if needed
  * @ptr - internal (linker) fw/ucode address
+<<<<<<< HEAD
+=======
+ * @size - if non zero, validate the block does not
+ *  exceed the device memory (bar)
+>>>>>>> FETCH_HEAD
  *
  * Valid buffer should be DWORD aligned
  *
  * return address for accessing buffer from the host;
  * if buffer is not valid, return NULL.
  */
+<<<<<<< HEAD
 void __iomem *wmi_buffer(struct wil6210_priv *wil, __le32 ptr_)
+=======
+void __iomem *wmi_buffer_block(struct wil6210_priv *wil, __le32 ptr_, u32 size)
+>>>>>>> FETCH_HEAD
 {
 	u32 off;
 	u32 ptr = le32_to_cpu(ptr_);
@@ -129,10 +138,23 @@ void __iomem *wmi_buffer(struct wil6210_priv *wil, __le32 ptr_)
 	off = HOSTADDR(ptr);
 	if (off > WIL6210_MEM_SIZE - 4)
 		return NULL;
+<<<<<<< HEAD
+=======
+	if (size && ((off + size > WIL6210_MEM_SIZE) || (off + size < off)))
+		return NULL;
+>>>>>>> FETCH_HEAD
 
 	return wil->csr + off;
 }
 
+<<<<<<< HEAD
+=======
+void __iomem *wmi_buffer(struct wil6210_priv *wil, __le32 ptr_)
+{
+	return wmi_buffer_block(wil, ptr_, 0);
+}
+
+>>>>>>> FETCH_HEAD
 /**
  * Check address validity
  */
@@ -968,10 +990,25 @@ int wmi_set_ie(struct wil6210_priv *wil, u8 type, u16 ie_len, const void *ie)
 {
 	int rc;
 	u16 len = sizeof(struct wmi_set_appie_cmd) + ie_len;
+<<<<<<< HEAD
 	struct wmi_set_appie_cmd *cmd = kzalloc(len, GFP_KERNEL);
 
 	if (!cmd)
 		return -ENOMEM;
+=======
+	struct wmi_set_appie_cmd *cmd;
+
+	if (len < ie_len) {
+		rc = -EINVAL;
+		goto out;
+	}
+
+	cmd = kzalloc(len, GFP_KERNEL);
+	if (!cmd) {
+		rc = -ENOMEM;
+		goto out;
+	}
+>>>>>>> FETCH_HEAD
 	if (!ie)
 		ie_len = 0;
 
@@ -982,6 +1019,10 @@ int wmi_set_ie(struct wil6210_priv *wil, u8 type, u16 ie_len, const void *ie)
 	rc = wmi_send(wil, WMI_SET_APPIE_CMDID, cmd, len);
 	kfree(cmd);
 
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> FETCH_HEAD
 	return rc;
 }
 

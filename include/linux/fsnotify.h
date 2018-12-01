@@ -308,6 +308,7 @@ static inline void fsnotify_change(struct dentry *dentry, unsigned int ia_valid)
 	}
 }
 
+<<<<<<< HEAD
 #if defined(CONFIG_FSNOTIFY)	/* notify helpers */
 
 /*
@@ -339,4 +340,6 @@ static inline void fsnotify_oldname_free(const unsigned char *old_name)
 
 #endif	/*  CONFIG_FSNOTIFY */
 
+=======
+>>>>>>> FETCH_HEAD
 #endif	/* _LINUX_FS_NOTIFY_H */

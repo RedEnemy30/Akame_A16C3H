@@ -128,9 +128,16 @@
 
 &soc {
 	i2c@78b6000 {
+<<<<<<< HEAD
                 nq@2b {
 			qcom,clk-gpio = <&pm8909_gpios 2 0>;
 		       };
 	};
 
+=======
+		nq@28 {
+			qcom,nq-clkreq = <&pm8909_gpios 2 0>;
+		};
+	};
+>>>>>>> FETCH_HEAD
 };

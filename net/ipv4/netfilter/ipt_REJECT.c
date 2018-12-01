@@ -129,6 +129,7 @@ static void send_reset(struct sk_buff *oldskb, int hook)
 static inline void send_unreach(struct sk_buff *skb_in, int code)
 {
 	icmp_send(skb_in, ICMP_DEST_UNREACH, code, 0);
+<<<<<<< HEAD
 #ifdef CONFIG_IP_NF_TARGET_REJECT_SKERR
 	if (skb_in->sk) {
 		skb_in->sk->sk_err = icmp_err_convert[code].errno;
@@ -137,6 +138,8 @@ static inline void send_unreach(struct sk_buff *skb_in, int code)
 			skb_in->sk->sk_err, skb_in, skb_in->sk);
 	}
 #endif
+=======
+>>>>>>> FETCH_HEAD
 }
 
 static unsigned int

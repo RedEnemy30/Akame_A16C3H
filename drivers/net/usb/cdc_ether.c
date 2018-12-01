@@ -191,7 +191,11 @@ int usbnet_generic_cdc_bind(struct usbnet *dev, struct usb_interface *intf)
 						info->u->bSlaveInterface0);
 			if (!info->control || !info->data) {
 				dev_dbg(&intf->dev,
+<<<<<<< HEAD
 					"master #%u/%p slave #%u/%p\n",
+=======
+					"master #%u/%pK slave #%u/%pK\n",
+>>>>>>> FETCH_HEAD
 					info->u->bMasterInterface0,
 					info->control,
 					info->u->bSlaveInterface0,
@@ -287,7 +291,11 @@ next_desc:
 		info->data = usb_ifnum_to_if(dev->udev, 1);
 		if (!info->control || !info->data || info->control != intf) {
 			dev_dbg(&intf->dev,
+<<<<<<< HEAD
 				"rndis: master #0/%p slave #1/%p\n",
+=======
+				"rndis: master #0/%pK slave #1/%pK\n",
+>>>>>>> FETCH_HEAD
 				info->control,
 				info->data);
 			goto bad_desc;

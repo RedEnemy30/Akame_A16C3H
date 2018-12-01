@@ -305,8 +305,15 @@ static int adf_buffer_map(struct adf_device *dev, struct adf_buffer *buf,
 	}
 
 done:
+<<<<<<< HEAD
 	if (ret < 0)
 		adf_buffer_mapping_cleanup(mapping, buf);
+=======
+	if (ret < 0) {
+		adf_buffer_mapping_cleanup(mapping, buf);
+		memset(mapping, 0, sizeof(*mapping));
+	}
+>>>>>>> FETCH_HEAD
 
 	return ret;
 }

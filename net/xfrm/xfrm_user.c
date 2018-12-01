@@ -390,7 +390,19 @@ static inline int xfrm_replay_verify_len(struct xfrm_replay_state_esn *replay_es
 	up = nla_data(rp);
 	ulen = xfrm_replay_state_esn_len(up);
 
+<<<<<<< HEAD
 	if (nla_len(rp) < ulen || xfrm_replay_state_esn_len(replay_esn) != ulen)
+=======
+	/* Check the overall length and the internal bitmap length to avoid
+	 * potential overflow.
+         */
+	if (nla_len(rp) < ulen ||
+	    xfrm_replay_state_esn_len(replay_esn) != ulen ||
+	    replay_esn->bmp_len != up->bmp_len)
+		return -EINVAL;
+
+	if (up->replay_window > up->bmp_len * sizeof(__u32) * 8)
+>>>>>>> FETCH_HEAD
 		return -EINVAL;
 
 	return 0;
@@ -1265,11 +1277,20 @@ static void copy_templates(struct xfrm_policy *xp, struct xfrm_user_tmpl *ut,
 
 static int validate_tmpl(int nr, struct xfrm_user_tmpl *ut, u16 family)
 {
+<<<<<<< HEAD
+=======
+	u16 prev_family;
+>>>>>>> FETCH_HEAD
 	int i;
 
 	if (nr > XFRM_MAX_DEPTH)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	prev_family = family;
+
+>>>>>>> FETCH_HEAD
 	for (i = 0; i < nr; i++) {
 		/* We never validated the ut->family value, so many
 		 * applications simply leave it at zero.  The check was
@@ -1281,6 +1302,15 @@ static int validate_tmpl(int nr, struct xfrm_user_tmpl *ut, u16 family)
 		if (!ut[i].family)
 			ut[i].family = family;
 
+<<<<<<< HEAD
+=======
+		if ((ut[i].mode == XFRM_MODE_TRANSPORT) &&
+		    (ut[i].family != prev_family))
+			return -EINVAL;
+
+		prev_family = ut[i].family;
+
+>>>>>>> FETCH_HEAD
 		switch (ut[i].family) {
 		case AF_INET:
 			break;

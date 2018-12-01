@@ -110,6 +110,10 @@ enum msm_usb_phy_type {
 
 #define IDEV_ACA_CHG_MAX	1500
 #define IDEV_ACA_CHG_LIMIT	500
+<<<<<<< HEAD
+=======
+#define IDEV_HVDCP_CHG_MAX	1800
+>>>>>>> FETCH_HEAD
 
 /**
  * Different states involved in USB charger detection.
@@ -216,6 +220,17 @@ enum usb_ctrl {
 };
 
 /**
+<<<<<<< HEAD
+=======
+ * USB ID state
+ */
+enum usb_id_state {
+	USB_ID_GROUND = 0,
+	USB_ID_FLOAT,
+};
+
+/**
+>>>>>>> FETCH_HEAD
  * struct msm_otg_platform_data - platform device data
  *              for msm_otg driver.
  * @phy_init_seq: PHY configuration sequence. val, reg pairs
@@ -266,6 +281,13 @@ enum usb_ctrl {
  * @bool disable_retention_with_vdd_min: Indicates whether to enable
 		allowing VDDmin without putting PHY into retention.
  * @usb_id_gpio: Gpio used for USB ID detection.
+<<<<<<< HEAD
+=======
+ * @hub_reset_gpio: Gpio used for hub reset.
+ * @switch_sel_gpio: Gpio used for controlling switch that
+		routing D+/D- from the USB HUB to the USB jack type B
+		for peripheral mode.
+>>>>>>> FETCH_HEAD
  * @bool phy_dvdd_always_on: PHY DVDD is supplied by always on PMIC LDO.
  */
 struct msm_otg_platform_data {
@@ -298,6 +320,11 @@ struct msm_otg_platform_data {
 	bool enable_ahb2ahb_bypass;
 	bool disable_retention_with_vdd_min;
 	int usb_id_gpio;
+<<<<<<< HEAD
+=======
+	int hub_reset_gpio;
+	int switch_sel_gpio;
+>>>>>>> FETCH_HEAD
 	bool phy_dvdd_always_on;
 	struct clk *system_clk;
 };
@@ -413,6 +440,10 @@ struct msm_otg_platform_data {
  * @dbg_idx: Dynamic debug buffer Index.
  * @dbg_lock: Dynamic debug buffer Lock.
  * @buf: Dynamic Debug Buffer.
+<<<<<<< HEAD
+=======
+ * @id_state: Indicates USBID line status.
+>>>>>>> FETCH_HEAD
  */
 struct msm_otg {
 	struct usb_phy phy;
@@ -553,6 +584,10 @@ struct msm_otg {
 	struct qpnp_vadc_chip	*vadc_dev;
 	int ext_id_irq;
 	bool phy_irq_pending;
+<<<<<<< HEAD
+=======
+	bool rm_pulldown;
+>>>>>>> FETCH_HEAD
 	wait_queue_head_t	host_suspend_wait;
 /* Maximum debug message length */
 #define DEBUG_MSG_LEN   128UL
@@ -561,6 +596,10 @@ struct msm_otg {
 	unsigned int dbg_idx;
 	rwlock_t dbg_lock;
 	char (buf[DEBUG_MAX_MSG])[DEBUG_MSG_LEN];   /* buffer */
+<<<<<<< HEAD
+=======
+	enum usb_id_state id_state;
+>>>>>>> FETCH_HEAD
 };
 
 struct ci13xxx_platform_data {

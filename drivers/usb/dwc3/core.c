@@ -328,7 +328,11 @@ int dwc3_event_buffers_setup(struct dwc3 *dwc)
 
 	for (n = 0; n < dwc->num_event_buffers; n++) {
 		evt = dwc->ev_buffs[n];
+<<<<<<< HEAD
 		dev_dbg(dwc->dev, "Event buf %p dma %08llx length %d\n",
+=======
+		dev_dbg(dwc->dev, "Event buf %pK dma %08llx length %d\n",
+>>>>>>> FETCH_HEAD
 				evt->buf, (unsigned long long) evt->dma,
 				evt->length);
 

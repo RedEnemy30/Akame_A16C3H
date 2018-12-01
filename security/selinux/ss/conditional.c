@@ -15,6 +15,10 @@
 
 #include "security.h"
 #include "conditional.h"
+<<<<<<< HEAD
+=======
+#include "services.h"
+>>>>>>> FETCH_HEAD
 
 /*
  * cond_evaluate_expr evaluates a conditional expr
@@ -617,10 +621,35 @@ int cond_write_list(struct policydb *p, struct cond_node *list, void *fp)
 
 	return 0;
 }
+<<<<<<< HEAD
 /* Determine whether additional permissions are granted by the conditional
  * av table, and if so, add them to the result
  */
 void cond_compute_av(struct avtab *ctab, struct avtab_key *key, struct av_decision *avd)
+=======
+
+void cond_compute_xperms(struct avtab *ctab, struct avtab_key *key,
+		struct extended_perms_decision *xpermd)
+{
+	struct avtab_node *node;
+
+	if (!ctab || !key || !xpermd)
+		return;
+
+	for (node = avtab_search_node(ctab, key); node;
+			node = avtab_search_node_next(node, key->specified)) {
+		if (node->key.specified & AVTAB_ENABLED)
+			services_compute_xperms_decision(xpermd, node);
+	}
+	return;
+
+}
+/* Determine whether additional permissions are granted by the conditional
+ * av table, and if so, add them to the result
+ */
+void cond_compute_av(struct avtab *ctab, struct avtab_key *key,
+		struct av_decision *avd, struct extended_perms *xperms)
+>>>>>>> FETCH_HEAD
 {
 	struct avtab_node *node;
 
@@ -631,7 +660,11 @@ void cond_compute_av(struct avtab *ctab, struct avtab_key *key, struct av_decisi
 				node = avtab_search_node_next(node, key->specified)) {
 		if ((u16)(AVTAB_ALLOWED|AVTAB_ENABLED) ==
 		    (node->key.specified & (AVTAB_ALLOWED|AVTAB_ENABLED)))
+<<<<<<< HEAD
 			avd->allowed |= node->datum.data;
+=======
+			avd->allowed |= node->datum.u.data;
+>>>>>>> FETCH_HEAD
 		if ((u16)(AVTAB_AUDITDENY|AVTAB_ENABLED) ==
 		    (node->key.specified & (AVTAB_AUDITDENY|AVTAB_ENABLED)))
 			/* Since a '0' in an auditdeny mask represents a
@@ -639,10 +672,20 @@ void cond_compute_av(struct avtab *ctab, struct avtab_key *key, struct av_decisi
 			 * the '&' operand to ensure that all '0's in the mask
 			 * are retained (much unlike the allow and auditallow cases).
 			 */
+<<<<<<< HEAD
 			avd->auditdeny &= node->datum.data;
 		if ((u16)(AVTAB_AUDITALLOW|AVTAB_ENABLED) ==
 		    (node->key.specified & (AVTAB_AUDITALLOW|AVTAB_ENABLED)))
 			avd->auditallow |= node->datum.data;
+=======
+			avd->auditdeny &= node->datum.u.data;
+		if ((u16)(AVTAB_AUDITALLOW|AVTAB_ENABLED) ==
+		    (node->key.specified & (AVTAB_AUDITALLOW|AVTAB_ENABLED)))
+			avd->auditallow |= node->datum.u.data;
+		if (xperms && (node->key.specified & AVTAB_ENABLED) &&
+				(node->key.specified & AVTAB_XPERMS))
+			services_compute_xperms_drivers(xperms, node);
+>>>>>>> FETCH_HEAD
 	}
 	return;
 }

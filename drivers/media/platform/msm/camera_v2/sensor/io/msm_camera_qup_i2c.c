@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011, 2013-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2011, 2013-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -102,7 +106,11 @@ int32_t msm_camera_qup_i2c_read(struct msm_camera_i2c_client *client,
 	enum msm_camera_i2c_data_type data_type)
 {
 	int32_t rc = -EFAULT;
+<<<<<<< HEAD
 	unsigned char buf[client->addr_type+data_type];
+=======
+	unsigned char *buf = NULL;
+>>>>>>> FETCH_HEAD
 
 	if ((client->addr_type != MSM_CAMERA_I2C_BYTE_ADDR
 		&& client->addr_type != MSM_CAMERA_I2C_WORD_ADDR)
@@ -110,6 +118,20 @@ int32_t msm_camera_qup_i2c_read(struct msm_camera_i2c_client *client,
 		&& data_type != MSM_CAMERA_I2C_WORD_DATA))
 		return rc;
 
+<<<<<<< HEAD
+=======
+	if (client->addr_type > UINT_MAX - data_type) {
+		pr_err("%s: integer overflow prevented\n", __func__);
+		return rc;
+	}
+
+	buf = kzalloc(client->addr_type+data_type, GFP_KERNEL);
+	if (!buf) {
+		pr_err("%s:%d no memory\n", __func__, __LINE__);
+		return -ENOMEM;
+	}
+
+>>>>>>> FETCH_HEAD
 	if (client->addr_type == MSM_CAMERA_I2C_BYTE_ADDR) {
 		buf[0] = addr;
 	} else if (client->addr_type == MSM_CAMERA_I2C_WORD_ADDR) {
@@ -119,6 +141,11 @@ int32_t msm_camera_qup_i2c_read(struct msm_camera_i2c_client *client,
 	rc = msm_camera_qup_i2c_rxdata(client, buf, data_type);
 	if (rc < 0) {
 		S_I2C_DBG("%s fail\n", __func__);
+<<<<<<< HEAD
+=======
+		kfree(buf);
+		buf = NULL;
+>>>>>>> FETCH_HEAD
 		return rc;
 	}
 
@@ -128,6 +155,11 @@ int32_t msm_camera_qup_i2c_read(struct msm_camera_i2c_client *client,
 		*data = buf[0] << 8 | buf[1];
 
 	S_I2C_DBG("%s addr = 0x%x data: 0x%x\n", __func__, addr, *data);
+<<<<<<< HEAD
+=======
+	kfree(buf);
+	buf = NULL;
+>>>>>>> FETCH_HEAD
 	return rc;
 }
 
@@ -135,7 +167,11 @@ int32_t msm_camera_qup_i2c_read_seq(struct msm_camera_i2c_client *client,
 	uint32_t addr, uint8_t *data, uint32_t num_byte)
 {
 	int32_t rc = -EFAULT;
+<<<<<<< HEAD
 	unsigned char buf[client->addr_type+num_byte];
+=======
+	unsigned char *buf = NULL;
+>>>>>>> FETCH_HEAD
 	int i;
 
 	if ((client->addr_type != MSM_CAMERA_I2C_BYTE_ADDR
@@ -143,6 +179,25 @@ int32_t msm_camera_qup_i2c_read_seq(struct msm_camera_i2c_client *client,
 		|| num_byte == 0)
 		return rc;
 
+<<<<<<< HEAD
+=======
+	if (num_byte > I2C_REG_DATA_MAX) {
+		pr_err("%s: Error num_byte:0x%x exceeds 8K max supported:0x%x\n",
+			__func__, num_byte, I2C_REG_DATA_MAX);
+		return rc;
+	}
+	if (client->addr_type > UINT_MAX - num_byte) {
+		pr_err("%s: integer overflow prevented\n", __func__);
+		return rc;
+	}
+
+	buf = kzalloc(client->addr_type+num_byte, GFP_KERNEL);
+	if (!buf) {
+		pr_err("%s:%d no memory\n", __func__, __LINE__);
+		return -ENOMEM;
+	}
+
+>>>>>>> FETCH_HEAD
 	if (client->addr_type == MSM_CAMERA_I2C_BYTE_ADDR) {
 		buf[0] = addr;
 	} else if (client->addr_type == MSM_CAMERA_I2C_WORD_ADDR) {
@@ -152,6 +207,11 @@ int32_t msm_camera_qup_i2c_read_seq(struct msm_camera_i2c_client *client,
 	rc = msm_camera_qup_i2c_rxdata(client, buf, num_byte);
 	if (rc < 0) {
 		S_I2C_DBG("%s fail\n", __func__);
+<<<<<<< HEAD
+=======
+		kfree(buf);
+		buf = NULL;
+>>>>>>> FETCH_HEAD
 		return rc;
 	}
 
@@ -161,6 +221,11 @@ int32_t msm_camera_qup_i2c_read_seq(struct msm_camera_i2c_client *client,
 		S_I2C_DBG("Byte %d: 0x%x\n", i, buf[i]);
 		S_I2C_DBG("Data: 0x%x\n", data[i]);
 	}
+<<<<<<< HEAD
+=======
+	kfree(buf);
+	buf = NULL;
+>>>>>>> FETCH_HEAD
 	return rc;
 }
 
@@ -516,6 +581,15 @@ int32_t msm_camera_qup_i2c_write_seq_table(struct msm_camera_i2c_client *client,
 	client_addr_type = client->addr_type;
 	client->addr_type = write_setting->addr_type;
 
+<<<<<<< HEAD
+=======
+	if (reg_setting->reg_data_size > I2C_SEQ_REG_DATA_MAX) {
+		pr_err("%s: number of bytes %u exceeding the max supported %d\n",
+		__func__, reg_setting->reg_data_size, I2C_SEQ_REG_DATA_MAX);
+		return rc;
+	}
+
+>>>>>>> FETCH_HEAD
 	for (i = 0; i < write_setting->size; i++) {
 		rc = msm_camera_qup_i2c_write_seq(client, reg_setting->reg_addr,
 			reg_setting->reg_data, reg_setting->reg_data_size);

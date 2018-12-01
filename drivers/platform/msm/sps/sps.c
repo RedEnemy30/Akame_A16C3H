@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2011-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -101,6 +105,10 @@ static char *debugfs_buf;
 static u32 debugfs_buf_size;
 static u32 debugfs_buf_used;
 static int wraparound;
+<<<<<<< HEAD
+=======
+static struct mutex sps_debugfs_lock;
+>>>>>>> FETCH_HEAD
 
 struct dentry *dent;
 struct dentry *dfile_info;
@@ -118,6 +126,10 @@ static struct sps_bam *phy2bam(phys_addr_t phys_addr);
 /* record debug info for debugfs */
 void sps_debugfs_record(const char *msg)
 {
+<<<<<<< HEAD
+=======
+	mutex_lock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 	if (debugfs_record_enabled) {
 		if (debugfs_buf_used + MAX_MSG_LEN >= debugfs_buf_size) {
 			debugfs_buf_used = 0;
@@ -131,6 +143,10 @@ void sps_debugfs_record(const char *msg)
 					debugfs_buf_size - debugfs_buf_used,
 					"\n**** end line of sps log ****\n\n");
 	}
+<<<<<<< HEAD
+=======
+	mutex_unlock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 }
 
 /* read the recorded debug info to userspace */
@@ -140,6 +156,10 @@ static ssize_t sps_read_info(struct file *file, char __user *ubuf,
 	int ret = 0;
 	int size;
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 	if (debugfs_record_enabled) {
 		if (wraparound)
 			size = debugfs_buf_size - MAX_MSG_LEN;
@@ -149,6 +169,10 @@ static ssize_t sps_read_info(struct file *file, char __user *ubuf,
 		ret = simple_read_from_buffer(ubuf, count, ppos,
 				debugfs_buf, size);
 	}
+<<<<<<< HEAD
+=======
+	mutex_unlock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 
 	return ret;
 }
@@ -164,9 +188,16 @@ static ssize_t sps_set_info(struct file *file, const char __user *buf,
 	int i;
 	u32 buf_size_kb = 0;
 	u32 new_buf_size;
+<<<<<<< HEAD
 
 	memset(str, 0, sizeof(str));
 	missing = copy_from_user(str, buf, sizeof(str));
+=======
+	u32 size = sizeof(str) < count ? sizeof(str) : count;
+
+	memset(str, 0, sizeof(str));
+	missing = copy_from_user(str, buf, size);
+>>>>>>> FETCH_HEAD
 	if (missing)
 		return -EFAULT;
 
@@ -193,11 +224,19 @@ static ssize_t sps_set_info(struct file *file, const char __user *buf,
 
 	new_buf_size = buf_size_kb * SZ_1K;
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 	if (debugfs_record_enabled) {
 		if (debugfs_buf_size == new_buf_size) {
 			/* need do nothing */
 			pr_info("sps:debugfs: input buffer size "
 				"is the same as before.\n");
+<<<<<<< HEAD
+=======
+			mutex_unlock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 			return count;
 		} else {
 			/* release the current buffer */
@@ -217,12 +256,20 @@ static ssize_t sps_set_info(struct file *file, const char __user *buf,
 	if (!debugfs_buf) {
 		debugfs_buf_size = 0;
 		pr_err("sps:fail to allocate memory for debug_fs.\n");
+<<<<<<< HEAD
+=======
+		mutex_unlock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 		return -ENOMEM;
 	}
 
 	debugfs_buf_used = 0;
 	wraparound = false;
 	debugfs_record_enabled = true;
+<<<<<<< HEAD
+=======
+	mutex_unlock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 
 	return count;
 }
@@ -254,9 +301,16 @@ static ssize_t sps_set_logging_option(struct file *file, const char __user *buf,
 	char str[MAX_MSG_LEN];
 	int i;
 	u8 option = 0;
+<<<<<<< HEAD
 
 	memset(str, 0, sizeof(str));
 	missing = copy_from_user(str, buf, sizeof(str));
+=======
+	u32 size = sizeof(str) < count ? sizeof(str) : count;
+
+	memset(str, 0, sizeof(str));
+	missing = copy_from_user(str, buf, size);
+>>>>>>> FETCH_HEAD
 	if (missing)
 		return -EFAULT;
 
@@ -270,6 +324,10 @@ static ssize_t sps_set_logging_option(struct file *file, const char __user *buf,
 		return count;
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 	if (((option == 0) || (option == 2)) &&
 		((logging_option == 1) || (logging_option == 3))) {
 		debugfs_record_enabled = false;
@@ -281,6 +339,10 @@ static ssize_t sps_set_logging_option(struct file *file, const char __user *buf,
 	}
 
 	logging_option = option;
+<<<<<<< HEAD
+=======
+	mutex_unlock(&sps_debugfs_lock);
+>>>>>>> FETCH_HEAD
 
 	return count;
 }
@@ -303,9 +365,16 @@ static ssize_t sps_set_bam_addr(struct file *file, const char __user *buf,
 	struct sps_bam *bam;
 	u32 num_pipes = 0;
 	void *vir_addr;
+<<<<<<< HEAD
 
 	memset(str, 0, sizeof(str));
 	missing = copy_from_user(str, buf, sizeof(str));
+=======
+	u32 size = sizeof(str) < count ? sizeof(str) : count;
+
+	memset(str, 0, sizeof(str));
+	missing = copy_from_user(str, buf, size);
+>>>>>>> FETCH_HEAD
 	if (missing)
 		return -EFAULT;
 
@@ -607,6 +676,11 @@ static void sps_debugfs_init(void)
 		goto bam_addr_err;
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_init(&sps_debugfs_lock);
+
+>>>>>>> FETCH_HEAD
 	return;
 
 bam_addr_err:
@@ -2196,6 +2270,10 @@ EXPORT_SYMBOL(sps_register_bam_device);
 int sps_deregister_bam_device(unsigned long dev_handle)
 {
 	struct sps_bam *bam;
+<<<<<<< HEAD
+=======
+	int n;
+>>>>>>> FETCH_HEAD
 
 	SPS_DBG2("sps:%s.", __func__);
 
@@ -2212,6 +2290,15 @@ int sps_deregister_bam_device(unsigned long dev_handle)
 
 	SPS_DBG2("sps:SPS deregister BAM: phys %pa.", &bam->props.phys_addr);
 
+<<<<<<< HEAD
+=======
+	if (bam->props.options & SPS_BAM_HOLD_MEM) {
+		for (n = 0; n < BAM_MAX_PIPES; n++)
+			if (bam->desc_cache_pointers[n] != NULL)
+				kfree(bam->desc_cache_pointers[n]);
+	}
+
+>>>>>>> FETCH_HEAD
 	/* If this BAM is attached to a BAM-DMA, init the BAM-DMA device */
 #ifdef CONFIG_SPS_SUPPORT_BAMDMA
 	if ((bam->props.options & SPS_BAM_OPT_BAMDMA)) {

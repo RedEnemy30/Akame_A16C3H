@@ -398,8 +398,12 @@ static struct {
 	int	user_cal_read;
 	int	user_cal_available;
 	u32	user_cal_rcvd;
+<<<<<<< HEAD
 	int	user_cal_exp_size;
 	int	device_opened;
+=======
+	u32	user_cal_exp_size;
+>>>>>>> FETCH_HEAD
 	int	iris_xo_mode_set;
 	int	fw_vbatt_state;
 	char	wlan_nv_macAddr[WLAN_MAC_ADDR_SIZE];
@@ -1122,6 +1126,28 @@ void wcnss_reset_intr(void)
 }
 EXPORT_SYMBOL(wcnss_reset_intr);
 
+<<<<<<< HEAD
+=======
+void wcnss_reset_fiq(bool clk_chk_en)
+{
+	if (wcnss_hardware_type() == WCNSS_PRONTO_HW) {
+		if (clk_chk_en) {
+			wcnss_log_debug_regs_on_bite();
+		} else {
+			wcnss_pronto_log_debug_regs();
+			if (wcnss_get_mux_control())
+				wcnss_log_iris_regs();
+		}
+		/* Insert memory barrier before writing fiq register */
+		wmb();
+		__raw_writel(1 << 16, penv->fiq_reg);
+	} else {
+		wcnss_riva_log_debug_regs();
+	}
+}
+EXPORT_SYMBOL(wcnss_reset_fiq);
+
+>>>>>>> FETCH_HEAD
 static int wcnss_create_sysfs(struct device *dev)
 {
 	int ret;
@@ -2013,21 +2039,37 @@ void extract_cal_data(int len)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&penv->dev_lock);
+>>>>>>> FETCH_HEAD
 	rc = smd_read(penv->smd_ch, (unsigned char *)&calhdr,
 			sizeof(struct cal_data_params));
 	if (rc < sizeof(struct cal_data_params)) {
 		pr_err("wcnss: incomplete cal header read from smd\n");
+<<<<<<< HEAD
+=======
+		mutex_unlock(&penv->dev_lock);
+>>>>>>> FETCH_HEAD
 		return;
 	}
 
 	if (penv->fw_cal_exp_frag != calhdr.frag_number) {
 		pr_err("wcnss: Invalid frgament");
+<<<<<<< HEAD
 		goto exit;
+=======
+		goto unlock_exit;
+>>>>>>> FETCH_HEAD
 	}
 
 	if (calhdr.frag_size > WCNSS_MAX_FRAME_SIZE) {
 		pr_err("wcnss: Invalid fragment size");
+<<<<<<< HEAD
 		goto exit;
+=======
+		goto unlock_exit;
+>>>>>>> FETCH_HEAD
 	}
 
 	if (penv->fw_cal_available) {
@@ -2036,8 +2078,14 @@ void extract_cal_data(int len)
 		penv->fw_cal_exp_frag++;
 		if (calhdr.msg_flags & LAST_FRAGMENT) {
 			penv->fw_cal_exp_frag = 0;
+<<<<<<< HEAD
 			goto exit;
 		}
+=======
+			goto unlock_exit;
+		}
+		mutex_unlock(&penv->dev_lock);
+>>>>>>> FETCH_HEAD
 		return;
 	}
 
@@ -2045,7 +2093,11 @@ void extract_cal_data(int len)
 		if (calhdr.total_size > MAX_CALIBRATED_DATA_SIZE) {
 			pr_err("wcnss: Invalid cal data size %d",
 				calhdr.total_size);
+<<<<<<< HEAD
 			goto exit;
+=======
+			goto unlock_exit;
+>>>>>>> FETCH_HEAD
 		}
 		kfree(penv->fw_cal_data);
 		penv->fw_cal_rcvd = 0;
@@ -2053,11 +2105,18 @@ void extract_cal_data(int len)
 				GFP_KERNEL);
 		if (penv->fw_cal_data == NULL) {
 			smd_read(penv->smd_ch, NULL, calhdr.frag_size);
+<<<<<<< HEAD
 			goto exit;
 		}
 	}
 
 	mutex_lock(&penv->dev_lock);
+=======
+			goto unlock_exit;
+		}
+	}
+
+>>>>>>> FETCH_HEAD
 	if (penv->fw_cal_rcvd + calhdr.frag_size >
 			MAX_CALIBRATED_DATA_SIZE) {
 		pr_err("calibrated data size is more than expected %d",
@@ -2092,8 +2151,11 @@ void extract_cal_data(int len)
 
 unlock_exit:
 	mutex_unlock(&penv->dev_lock);
+<<<<<<< HEAD
 
 exit:
+=======
+>>>>>>> FETCH_HEAD
 	wcnss_send_cal_rsp(fw_status);
 	return;
 }
@@ -2648,6 +2710,10 @@ wcnss_trigger_config(struct platform_device *pdev)
 {
 	int ret;
 	int rc;
+<<<<<<< HEAD
+=======
+	struct clk *snoc_qosgen;
+>>>>>>> FETCH_HEAD
 	struct qcom_wcnss_opts *pdata;
 	struct resource *res;
 	int is_pronto_vt;
@@ -2980,6 +3046,21 @@ wcnss_trigger_config(struct platform_device *pdev)
 		penv->fw_vbatt_state = WCNSS_CONFIG_UNSPECIFIED;
 	}
 
+<<<<<<< HEAD
+=======
+	snoc_qosgen = clk_get(&pdev->dev, "snoc_qosgen");
+
+	if (IS_ERR(snoc_qosgen)) {
+		pr_err("Couldn't get snoc_qosgen\n");
+	} else {
+		if (clk_prepare_enable(snoc_qosgen)) {
+			pr_err("snoc_qosgen enable failed\n");
+		} else {
+			pr_info("snoc_qosgen configured successfully\n");
+		}
+	}
+
+>>>>>>> FETCH_HEAD
 	if (penv->wlan_config.is_pronto_v3) {
 		penv->vadc_dev = qpnp_get_vadc(&penv->pdev->dev, "wcnss");
 
@@ -3019,6 +3100,13 @@ wcnss_trigger_config(struct platform_device *pdev)
 	/* Remove pm_qos request */
 	wcnss_disable_pc_remove_req();
 
+<<<<<<< HEAD
+=======
+	if (of_property_read_bool(pdev->dev.of_node,
+		"qcom,wlan-indication-enabled"))
+		wcnss_en_wlan_led_trigger();
+
+>>>>>>> FETCH_HEAD
 	return 0;
 
 fail_ioremap2:
@@ -3039,6 +3127,43 @@ fail_gpio_res:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+/* wlan prop driver cannot invoke cancel_work_sync
+ * function directly, so to invoke this function it
+ * call wcnss_flush_work function
+ */
+void wcnss_flush_work(struct work_struct *work)
+{
+	struct work_struct *cnss_work = work;
+	if (cnss_work != NULL)
+		cancel_work_sync(cnss_work);
+}
+EXPORT_SYMBOL(wcnss_flush_work);
+
+/* wlan prop driver cannot invoke show_stack
+ * function directly, so to invoke this function it
+ * call wcnss_dump_stack function
+ */
+void wcnss_dump_stack(struct task_struct *task)
+{
+	show_stack(task, NULL);
+}
+EXPORT_SYMBOL(wcnss_dump_stack);
+
+/* wlan prop driver cannot invoke cancel_delayed_work_sync
+ * function directly, so to invoke this function it call
+ * wcnss_flush_delayed_work function
+ */
+void wcnss_flush_delayed_work(struct delayed_work *dwork)
+{
+	struct delayed_work *cnss_dwork = dwork;
+	if (cnss_dwork != NULL)
+		cancel_delayed_work_sync(cnss_dwork);
+}
+EXPORT_SYMBOL(wcnss_flush_delayed_work);
+
+>>>>>>> FETCH_HEAD
 static int wcnss_node_open(struct inode *inode, struct file *file)
 {
 	struct platform_device *pdev;
@@ -3055,6 +3180,7 @@ static int wcnss_node_open(struct inode *inode, struct file *file)
 			return -EFAULT;
 	}
 
+<<<<<<< HEAD
 	mutex_lock(&penv->dev_lock);
 	penv->user_cal_rcvd = 0;
 	penv->user_cal_read = 0;
@@ -3063,6 +3189,8 @@ static int wcnss_node_open(struct inode *inode, struct file *file)
 	penv->device_opened = 1;
 	mutex_unlock(&penv->dev_lock);
 
+=======
+>>>>>>> FETCH_HEAD
 	return rc;
 }
 
@@ -3071,7 +3199,11 @@ static ssize_t wcnss_wlan_read(struct file *fp, char __user
 {
 	int rc = 0;
 
+<<<<<<< HEAD
 	if (!penv || !penv->device_opened)
+=======
+	if (!penv)
+>>>>>>> FETCH_HEAD
 		return -EFAULT;
 
 	rc = wait_event_interruptible(penv->read_wait, penv->fw_cal_rcvd
@@ -3108,6 +3240,7 @@ static ssize_t wcnss_wlan_write(struct file *fp, const char __user
 			*user_buffer, size_t count, loff_t *position)
 {
 	int rc = 0;
+<<<<<<< HEAD
 	u32 size = 0;
 
 	if (!penv || !penv->device_opened || penv->user_cal_available)
@@ -3148,15 +3281,76 @@ static ssize_t wcnss_wlan_write(struct file *fp, const char __user
 		penv->user_cal_rcvd += count;
 		rc += count;
 	}
+=======
+	char *cal_data = NULL;
+
+	if (!penv || penv->user_cal_available)
+		return -EFAULT;
+
+	if (!penv->user_cal_rcvd && count >= 4 && !penv->user_cal_exp_size) {
+		mutex_lock(&penv->dev_lock);
+		rc = copy_from_user((void *)&penv->user_cal_exp_size,
+				    user_buffer, 4);
+		if (!penv->user_cal_exp_size ||
+		    penv->user_cal_exp_size > MAX_CALIBRATED_DATA_SIZE) {
+			pr_err(DEVICE " invalid size to write %d\n",
+			       penv->user_cal_exp_size);
+			penv->user_cal_exp_size = 0;
+			mutex_unlock(&penv->dev_lock);
+			return -EFAULT;
+		}
+		mutex_unlock(&penv->dev_lock);
+		return count;
+	} else if (!penv->user_cal_rcvd && count < 4) {
+		return -EFAULT;
+	}
+
+	mutex_lock(&penv->dev_lock);
+	if ((UINT32_MAX - count < penv->user_cal_rcvd) ||
+		(penv->user_cal_exp_size < count + penv->user_cal_rcvd)) {
+		pr_err(DEVICE " invalid size to write %zu\n", count +
+				penv->user_cal_rcvd);
+		mutex_unlock(&penv->dev_lock);
+		return -ENOMEM;
+	}
+
+	cal_data = kmalloc(count, GFP_KERNEL);
+	if (!cal_data) {
+		mutex_unlock(&penv->dev_lock);
+		return -ENOMEM;
+	}
+
+	rc = copy_from_user(cal_data, user_buffer, count);
+	if (!rc) {
+		memcpy(penv->user_cal_data + penv->user_cal_rcvd,
+		       cal_data, count);
+		penv->user_cal_rcvd += count;
+		rc += count;
+	}
+
+	kfree(cal_data);
+>>>>>>> FETCH_HEAD
 	if (penv->user_cal_rcvd == penv->user_cal_exp_size) {
 		penv->user_cal_available = true;
 		pr_info_ratelimited("wcnss: user cal written");
 	}
+<<<<<<< HEAD
 
 exit:
 	return rc;
 }
 
+=======
+	mutex_unlock(&penv->dev_lock);
+
+	return rc;
+}
+
+static int wcnss_node_release(struct inode *inode, struct file *file)
+{
+	return 0;
+}
+>>>>>>> FETCH_HEAD
 
 static int wcnss_notif_cb(struct notifier_block *this, unsigned long code,
 				void *ss_handle)
@@ -3215,6 +3409,10 @@ static const struct file_operations wcnss_node_fops = {
 	.open = wcnss_node_open,
 	.read = wcnss_wlan_read,
 	.write = wcnss_wlan_write,
+<<<<<<< HEAD
+=======
+	.release = wcnss_node_release,
+>>>>>>> FETCH_HEAD
 };
 
 static struct miscdevice wcnss_misc = {
@@ -3242,6 +3440,16 @@ wcnss_wlan_probe(struct platform_device *pdev)
 	}
 	penv->pdev = pdev;
 
+<<<<<<< HEAD
+=======
+	penv->user_cal_data =
+		devm_kzalloc(&pdev->dev, MAX_CALIBRATED_DATA_SIZE, GFP_KERNEL);
+	if (!penv->user_cal_data) {
+		dev_err(&pdev->dev, "Failed to alloc memory for cal data.\n");
+		return -ENOMEM;
+	}
+
+>>>>>>> FETCH_HEAD
 	/* register sysfs entries */
 	ret = wcnss_create_sysfs(&pdev->dev);
 	if (ret) {
@@ -3262,6 +3470,14 @@ wcnss_wlan_probe(struct platform_device *pdev)
 	mutex_init(&penv->pm_qos_mutex);
 	init_waitqueue_head(&penv->read_wait);
 
+<<<<<<< HEAD
+=======
+	penv->user_cal_rcvd = 0;
+	penv->user_cal_read = 0;
+	penv->user_cal_exp_size = 0;
+	penv->user_cal_available = false;
+
+>>>>>>> FETCH_HEAD
 	/* Since we were built into the kernel we'll be called as part
 	 * of kernel initialization.  We don't know if userspace
 	 * applications are available to service PIL at this time

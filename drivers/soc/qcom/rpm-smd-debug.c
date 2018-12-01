@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2014, 2017,  The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -47,9 +51,15 @@ static ssize_t rsc_ops_write(struct file *fp, const char __user *user_buffer,
 {
 	char buf[MAX_MSG_BUFFER], rsc_type_str[6] = {}, rpm_set[8] = {},
 						key_str[6] = {};
+<<<<<<< HEAD
 	int i, pos, set = -1, nelems;
 	char *cmp;
 	uint32_t rsc_type, rsc_id, key, data;
+=======
+	int i, pos = -1, set = -1, nelems = -1;
+	char *cmp;
+	uint32_t rsc_type = 0, rsc_id = 0, key = 0, data = 0;
+>>>>>>> FETCH_HEAD
 	struct msm_rpm_request *req;
 
 	rpm_send_msg_usage_count++;
@@ -64,8 +74,17 @@ static ssize_t rsc_ops_write(struct file *fp, const char __user *user_buffer,
 	buf[count] = '\0';
 	cmp = strstrip(buf);
 
+<<<<<<< HEAD
 	sscanf(cmp, "%7s %5s %u %d %n", rpm_set, rsc_type_str, &rsc_id,
 							&nelems, &pos);
+=======
+	if (sscanf(cmp, "%7s %5s %u %d %n", rpm_set, rsc_type_str,
+				&rsc_id, &nelems, &pos) != 4) {
+		pr_err("Invalid number of arguments passed\n");
+		goto err;
+	}
+
+>>>>>>> FETCH_HEAD
 	if (strlen(rpm_set) > 6 || strlen(rsc_type_str) > 4) {
 		pr_err("Invalid value of set or resource type\n");
 		goto err;
@@ -93,19 +112,42 @@ static ssize_t rsc_ops_write(struct file *fp, const char __user *user_buffer,
 
 	for (i = 0; i < nelems; i++) {
 		cmp += pos;
+<<<<<<< HEAD
 		sscanf(cmp, "%5s %n", key_str, &pos);
 		if (strlen(key_str) > 4) {
 			pr_err("Key value cannot be more than 4 charecters");
 			goto err;
+=======
+		if (sscanf(cmp, "%5s %n", key_str, &pos) != 1) {
+			pr_err("Invalid number of arguments passed\n");
+			goto err_request;
+		}
+
+		if (strlen(key_str) > 4) {
+			pr_err("Key value cannot be more than 4 charecters");
+			goto err_request;
+>>>>>>> FETCH_HEAD
 		}
 		key = string_to_uint(key_str);
 		if (!key) {
 			pr_err("Key values entered incorrectly\n");
+<<<<<<< HEAD
 			goto err;
 		}
 
 		cmp += pos;
 		sscanf(cmp, "%u %n", &data, &pos);
+=======
+			goto err_request;
+		}
+
+		cmp += pos;
+		if (sscanf(cmp, "%u %n", &data, &pos) != 1) {
+			pr_err("Invalid number of arguments passed\n");
+			goto err_request;
+		}
+
+>>>>>>> FETCH_HEAD
 		if (msm_rpm_add_kvp_data(req, key,
 				(void *)&data, sizeof(data)))
 			goto err_request;

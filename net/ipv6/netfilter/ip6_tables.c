@@ -195,11 +195,20 @@ get_entry(const void *base, unsigned int offset)
 
 /* All zeroes == unconditional rule. */
 /* Mildly perf critical (only if packet tracing is on) */
+<<<<<<< HEAD
 static inline bool unconditional(const struct ip6t_ip6 *ipv6)
 {
 	static const struct ip6t_ip6 uncond;
 
 	return memcmp(ipv6, &uncond, sizeof(uncond)) == 0;
+=======
+static inline bool unconditional(const struct ip6t_entry *e)
+{
+	static const struct ip6t_ip6 uncond;
+
+	return e->target_offset == sizeof(struct ip6t_entry) &&
+	       memcmp(&e->ipv6, &uncond, sizeof(uncond)) == 0;
+>>>>>>> FETCH_HEAD
 }
 
 static inline const struct xt_entry_target *
@@ -255,11 +264,18 @@ get_chainname_rulenum(const struct ip6t_entry *s, const struct ip6t_entry *e,
 	} else if (s == e) {
 		(*rulenum)++;
 
+<<<<<<< HEAD
 		if (s->target_offset == sizeof(struct ip6t_entry) &&
 		    strcmp(t->target.u.kernel.target->name,
 			   XT_STANDARD_TARGET) == 0 &&
 		    t->verdict < 0 &&
 		    unconditional(&s->ipv6)) {
+=======
+		if (unconditional(s) &&
+		    strcmp(t->target.u.kernel.target->name,
+			   XT_STANDARD_TARGET) == 0 &&
+		    t->verdict < 0) {
+>>>>>>> FETCH_HEAD
 			/* Tail of chains: STANDARD target (return/policy) */
 			*comment = *chainname == hookname
 				? comments[NF_IP6_TRACE_COMMENT_POLICY]
@@ -482,11 +498,18 @@ mark_source_chains(const struct xt_table_info *newinfo,
 			e->comefrom |= ((1 << hook) | (1 << NF_INET_NUMHOOKS));
 
 			/* Unconditional return/END. */
+<<<<<<< HEAD
 			if ((e->target_offset == sizeof(struct ip6t_entry) &&
 			     (strcmp(t->target.u.user.name,
 				     XT_STANDARD_TARGET) == 0) &&
 			     t->verdict < 0 &&
 			     unconditional(&e->ipv6)) || visited) {
+=======
+			if ((unconditional(e) &&
+			     (strcmp(t->target.u.user.name,
+				     XT_STANDARD_TARGET) == 0) &&
+			     t->verdict < 0) || visited) {
+>>>>>>> FETCH_HEAD
 				unsigned int oldpos, size;
 
 				if ((strcmp(t->target.u.user.name,
@@ -575,6 +598,7 @@ static void cleanup_match(struct xt_entry_match *m, struct net *net)
 }
 
 static int
+<<<<<<< HEAD
 check_entry(const struct ip6t_entry *e, const char *name)
 {
 	const struct xt_entry_target *t;
@@ -583,6 +607,14 @@ check_entry(const struct ip6t_entry *e, const char *name)
 		duprintf("ip_tables: ip check failed %p %s.\n", e, name);
 		return -EINVAL;
 	}
+=======
+check_entry(const struct ip6t_entry *e)
+{
+	const struct xt_entry_target *t;
+
+	if (!ip6_checkentry(&e->ipv6))
+		return -EINVAL;
+>>>>>>> FETCH_HEAD
 
 	if (e->target_offset + sizeof(struct xt_entry_target) >
 	    e->next_offset)
@@ -673,10 +705,13 @@ find_check_entry(struct ip6t_entry *e, struct net *net, const char *name,
 	struct xt_mtchk_param mtpar;
 	struct xt_entry_match *ematch;
 
+<<<<<<< HEAD
 	ret = check_entry(e, name);
 	if (ret)
 		return ret;
 
+=======
+>>>>>>> FETCH_HEAD
 	j = 0;
 	mtpar.net	= net;
 	mtpar.table     = name;
@@ -720,7 +755,11 @@ static bool check_underflow(const struct ip6t_entry *e)
 	const struct xt_entry_target *t;
 	unsigned int verdict;
 
+<<<<<<< HEAD
 	if (!unconditional(&e->ipv6))
+=======
+	if (!unconditional(e))
+>>>>>>> FETCH_HEAD
 		return false;
 	t = ip6t_get_target_c(e);
 	if (strcmp(t->u.user.name, XT_STANDARD_TARGET) != 0)
@@ -740,9 +779,17 @@ check_entry_size_and_hooks(struct ip6t_entry *e,
 			   unsigned int valid_hooks)
 {
 	unsigned int h;
+<<<<<<< HEAD
 
 	if ((unsigned long)e % __alignof__(struct ip6t_entry) != 0 ||
 	    (unsigned char *)e + sizeof(struct ip6t_entry) >= limit) {
+=======
+	int err;
+
+	if ((unsigned long)e % __alignof__(struct ip6t_entry) != 0 ||
+	    (unsigned char *)e + sizeof(struct ip6t_entry) >= limit ||
+	    (unsigned char *)e + e->next_offset > limit) {
+>>>>>>> FETCH_HEAD
 		duprintf("Bad offset %p\n", e);
 		return -EINVAL;
 	}
@@ -754,6 +801,13 @@ check_entry_size_and_hooks(struct ip6t_entry *e,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	err = check_entry(e);
+	if (err)
+		return err;
+
+>>>>>>> FETCH_HEAD
 	/* Check hooks & underflows */
 	for (h = 0; h < NF_INET_NUMHOOKS; h++) {
 		if (!(valid_hooks & (1 << h)))
@@ -762,9 +816,15 @@ check_entry_size_and_hooks(struct ip6t_entry *e,
 			newinfo->hook_entry[h] = hook_entries[h];
 		if ((unsigned char *)e - base == underflows[h]) {
 			if (!check_underflow(e)) {
+<<<<<<< HEAD
 				pr_err("Underflows must be unconditional and "
 				       "use the STANDARD target with "
 				       "ACCEPT/DROP\n");
+=======
+				pr_debug("Underflows must be unconditional and "
+					 "use the STANDARD target with "
+					 "ACCEPT/DROP\n");
+>>>>>>> FETCH_HEAD
 				return -EINVAL;
 			}
 			newinfo->underflow[h] = underflows[h];
@@ -1502,7 +1562,12 @@ check_compat_entry_size_and_hooks(struct compat_ip6t_entry *e,
 
 	duprintf("check_compat_entry_size_and_hooks %p\n", e);
 	if ((unsigned long)e % __alignof__(struct compat_ip6t_entry) != 0 ||
+<<<<<<< HEAD
 	    (unsigned char *)e + sizeof(struct compat_ip6t_entry) >= limit) {
+=======
+	    (unsigned char *)e + sizeof(struct compat_ip6t_entry) >= limit ||
+	    (unsigned char *)e + e->next_offset > limit) {
+>>>>>>> FETCH_HEAD
 		duprintf("Bad offset %p, limit = %p\n", e, limit);
 		return -EINVAL;
 	}
@@ -1515,7 +1580,11 @@ check_compat_entry_size_and_hooks(struct compat_ip6t_entry *e,
 	}
 
 	/* For purposes of check_entry casting the compat entry is fine */
+<<<<<<< HEAD
 	ret = check_entry((struct ip6t_entry *)e, name);
+=======
+	ret = check_entry((struct ip6t_entry *)e);
+>>>>>>> FETCH_HEAD
 	if (ret)
 		return ret;
 

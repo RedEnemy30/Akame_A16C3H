@@ -163,6 +163,10 @@ struct mpu6050_sensor {
 	struct mutex op_lock;
 	enum inv_devices chip_type;
 	struct workqueue_struct *data_wq;
+<<<<<<< HEAD
+=======
+	struct work_struct resume_work;
+>>>>>>> FETCH_HEAD
 	struct delayed_work fifo_flush_work;
 	struct mpu_reg_map reg;
 	struct mpu_chip_config cfg;
@@ -342,6 +346,10 @@ static int mpu6050_set_fifo(struct mpu6050_sensor *sensor,
 static void mpu6050_flush_fifo(struct mpu6050_sensor *sensor);
 static int mpu6050_config_sample_rate(struct mpu6050_sensor *sensor);
 static void mpu6050_acc_data_process(struct mpu6050_sensor *sensor);
+<<<<<<< HEAD
+=======
+static void mpu6050_resume_work_fn(struct work_struct *work);
+>>>>>>> FETCH_HEAD
 
 static inline void mpu6050_set_fifo_start_time(struct mpu6050_sensor *sensor)
 {
@@ -836,18 +844,30 @@ static int gyro_poll_thread(void *data)
 	u32 shift;
 	ktime_t timestamp;
 
+<<<<<<< HEAD
 	while(1)
 	{
 		wait_event_interruptible(sensor->gyro_wq,
 			((sensor->gyro_wkp_flag != 0) || kthread_should_stop()));
+=======
+	while (1) {
+		wait_event_interruptible(sensor->gyro_wq,
+			((sensor->gyro_wkp_flag != 0) ||
+				kthread_should_stop()));
+>>>>>>> FETCH_HEAD
 		sensor->gyro_wkp_flag = 0;
 
 		if (kthread_should_stop())
 			break;
 
 		mutex_lock(&sensor->op_lock);
+<<<<<<< HEAD
 		if(sensor->gyro_delay_change) {
 			if(sensor->gyro_poll_ms <= POLL_MS_100HZ)
+=======
+		if (sensor->gyro_delay_change) {
+			if (sensor->gyro_poll_ms <= POLL_MS_100HZ)
+>>>>>>> FETCH_HEAD
 				set_wake_up_idle(true);
 			else
 				set_wake_up_idle(false);
@@ -882,18 +902,30 @@ static int accel_poll_thread(void *data)
 	u32 shift;
 	ktime_t timestamp;
 
+<<<<<<< HEAD
 	while(1)
 	{
 		wait_event_interruptible(sensor->accel_wq,
 			((sensor->accel_wkp_flag != 0) || kthread_should_stop()));
+=======
+	while (1) {
+		wait_event_interruptible(sensor->accel_wq,
+			((sensor->accel_wkp_flag != 0) ||
+				kthread_should_stop()));
+>>>>>>> FETCH_HEAD
 		sensor->accel_wkp_flag = 0;
 
 		if (kthread_should_stop())
 			break;
 
 		mutex_lock(&sensor->op_lock);
+<<<<<<< HEAD
 		if(sensor->accel_delay_change) {
 			if(sensor->accel_poll_ms <= POLL_MS_100HZ)
+=======
+		if (sensor->accel_delay_change) {
+			if (sensor->accel_poll_ms <= POLL_MS_100HZ)
+>>>>>>> FETCH_HEAD
 				set_wake_up_idle(true);
 			else
 				set_wake_up_idle(false);
@@ -1107,7 +1139,12 @@ static int mpu6050_gyro_enable(struct mpu6050_sensor *sensor, bool on)
 
 		sensor->cfg.enable = 1;
 	} else {
+<<<<<<< HEAD
 
+=======
+		if (work_pending(&sensor->resume_work))
+			cancel_work_sync(&sensor->resume_work);
+>>>>>>> FETCH_HEAD
 		ret = mpu6050_switch_engine(sensor, false,
 			BIT_PWR_GYRO_STBY_MASK);
 		if (ret)
@@ -1407,7 +1444,12 @@ static int mpu6050_gyro_set_enable(struct mpu6050_sensor *sensor, bool enable)
 			ktime_t ktime;
 			ktime = ktime_set(0,
 					sensor->gyro_poll_ms * NSEC_PER_MSEC);
+<<<<<<< HEAD
 			hrtimer_start(&sensor->gyro_timer, ktime, HRTIMER_MODE_REL);
+=======
+			hrtimer_start(&sensor->gyro_timer, ktime,
+					HRTIMER_MODE_REL);
+>>>>>>> FETCH_HEAD
 		}
 		atomic_set(&sensor->gyro_en, 1);
 	} else {
@@ -1858,6 +1900,10 @@ static int mpu6050_gyro_cdev_set_latency(struct sensors_classdev *sensors_cdev,
 			struct mpu6050_sensor, gyro_cdev);
 
 	mutex_lock(&sensor->op_lock);
+<<<<<<< HEAD
+=======
+
+>>>>>>> FETCH_HEAD
 	if (max_latency <= sensor->gyro_poll_ms)
 		sensor->batch_gyro = false;
 	else
@@ -2003,6 +2049,11 @@ static int mpu6050_accel_enable(struct mpu6050_sensor *sensor, bool on)
 
 		sensor->cfg.enable = 1;
 	} else {
+<<<<<<< HEAD
+=======
+		if (work_pending(&sensor->resume_work))
+			cancel_work_sync(&sensor->resume_work);
+>>>>>>> FETCH_HEAD
 		ret = mpu6050_switch_engine(sensor, false,
 			BIT_PWR_ACCEL_STBY_MASK);
 		if (ret)
@@ -2145,7 +2196,12 @@ static int mpu6050_accel_set_enable(struct mpu6050_sensor *sensor, bool enable)
 			ktime_t ktime;
 			ktime = ktime_set(0,
 					sensor->accel_poll_ms * NSEC_PER_MSEC);
+<<<<<<< HEAD
 			hrtimer_start(&sensor->accel_timer, ktime, HRTIMER_MODE_REL);
+=======
+			hrtimer_start(&sensor->accel_timer, ktime,
+					HRTIMER_MODE_REL);
+>>>>>>> FETCH_HEAD
 		}
 		atomic_set(&sensor->accel_en, 1);
 	} else {
@@ -3113,6 +3169,10 @@ static int mpu6050_probe(struct i2c_client *client,
 	}
 
 	INIT_DELAYED_WORK(&sensor->fifo_flush_work, mpu6050_fifo_flush_fn);
+<<<<<<< HEAD
+=======
+	INIT_WORK(&sensor->resume_work, mpu6050_resume_work_fn);
+>>>>>>> FETCH_HEAD
 
 	hrtimer_init(&sensor->gyro_timer, CLOCK_BOOTTIME, HRTIMER_MODE_REL);
 	sensor->gyro_timer.function = gyro_timer_handle;
@@ -3125,7 +3185,12 @@ static int mpu6050_probe(struct i2c_client *client,
 	sensor->accel_wkp_flag = 0;
 
 	sensor->gyr_task = kthread_run(gyro_poll_thread, sensor, "sns_gyro");
+<<<<<<< HEAD
 	sensor->accel_task = kthread_run(accel_poll_thread, sensor, "sns_accel");
+=======
+	sensor->accel_task = kthread_run(accel_poll_thread, sensor,
+						"sns_accel");
+>>>>>>> FETCH_HEAD
 
 	ret = input_register_device(sensor->accel_dev);
 	if (ret) {
@@ -3268,6 +3333,97 @@ static int mpu6050_remove(struct i2c_client *client)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void mpu6050_resume_work_fn(struct work_struct *work)
+{
+	struct mpu6050_sensor *sensor;
+	int ret = 0;
+	sensor = container_of(work,
+			struct mpu6050_sensor, resume_work);
+
+	mutex_lock(&sensor->op_lock);
+	if ((sensor->batch_accel) || (sensor->batch_gyro)) {
+		mpu6050_set_interrupt(sensor,
+				BIT_FIFO_OVERFLOW, true);
+		mpu6050_sche_next_flush(sensor);
+	}
+
+	if (sensor->cfg.mot_det_on) {
+		/* keep accel on and config motion detection wakeup */
+		irq_set_irq_wake(sensor->client->irq, 0);
+		mpu6050_set_motion_det(sensor, false);
+		mpu6050_set_interrupt(sensor,
+				BIT_DATA_RDY_EN, true);
+		dev_dbg(&sensor->client->dev,
+				"Disable motion detection success\n");
+		goto exit;
+	}
+
+	/* Keep sensor power on to prevent bad power state */
+	ret = mpu6050_power_ctl(sensor, true);
+	if (ret < 0) {
+		dev_err(&sensor->client->dev, "Power on mpu6050 failed\n");
+		goto exit;
+	}
+	/* Reset sensor to recovery from unexpected state */
+	mpu6050_reset_chip(sensor);
+
+	ret = mpu6050_restore_context(sensor);
+	if (ret < 0) {
+		dev_err(&sensor->client->dev, "Failed to restore context\n");
+		goto exit;
+	}
+
+	/* Enter sleep mode if both accel and gyro are not enabled */
+	ret = mpu6050_set_power_mode(sensor, sensor->cfg.enable);
+	if (ret < 0) {
+		dev_err(&sensor->client->dev, "Failed to set power mode enable=%d\n",
+				sensor->cfg.enable);
+		goto exit;
+	}
+
+	if (sensor->cfg.gyro_enable) {
+		ret = mpu6050_gyro_enable(sensor, true);
+		if (ret < 0) {
+			dev_err(&sensor->client->dev, "Failed to enable gyro\n");
+			goto exit;
+		}
+
+		if (sensor->use_poll) {
+			ktime_t ktime;
+			ktime = ktime_set(0,
+					sensor->gyro_poll_ms * NSEC_PER_MSEC);
+			hrtimer_start(&sensor->gyro_timer, ktime,
+					HRTIMER_MODE_REL);
+		}
+	}
+
+	if (sensor->cfg.accel_enable) {
+		ret = mpu6050_accel_enable(sensor, true);
+		if (ret < 0) {
+			dev_err(&sensor->client->dev, "Failed to enable accel\n");
+			goto exit;
+		}
+
+		if (sensor->use_poll) {
+			ktime_t ktime;
+			ktime = ktime_set(0,
+					sensor->accel_poll_ms * NSEC_PER_MSEC);
+			hrtimer_start(&sensor->accel_timer, ktime,
+					HRTIMER_MODE_REL);
+		}
+	}
+
+	if (!sensor->use_poll)
+		enable_irq(sensor->client->irq);
+
+exit:
+	mutex_unlock(&sensor->op_lock);
+	dev_dbg(&sensor->client->dev, "Resume complete, ret = %d\n", ret);
+}
+
+>>>>>>> FETCH_HEAD
 #ifdef CONFIG_PM
 /**
  * mpu6050_suspend() - called on device suspend
@@ -3282,6 +3438,12 @@ static int mpu6050_suspend(struct device *dev)
 	int ret = 0;
 
 	mutex_lock(&sensor->op_lock);
+<<<<<<< HEAD
+=======
+	if (!(sensor->cfg.gyro_enable) && !(sensor->cfg.accel_enable))
+		goto exit;
+
+>>>>>>> FETCH_HEAD
 	if ((sensor->batch_accel) || (sensor->batch_gyro)) {
 		mpu6050_set_interrupt(sensor,
 				BIT_FIFO_OVERFLOW, false);
@@ -3341,6 +3503,7 @@ static int mpu6050_resume(struct device *dev)
 {
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mpu6050_sensor *sensor = i2c_get_clientdata(client);
+<<<<<<< HEAD
 	int ret = 0;
 
 	mutex_lock(&sensor->op_lock);
@@ -3421,6 +3584,17 @@ exit:
 	mutex_unlock(&sensor->op_lock);
 	dev_dbg(&client->dev, "Resume complete, ret = %d\n", ret);
 	return ret;
+=======
+
+	mutex_lock(&sensor->op_lock);
+
+	if (sensor->cfg.gyro_enable || sensor->cfg.accel_enable)
+		queue_work(sensor->data_wq, &sensor->resume_work);
+
+	mutex_unlock(&sensor->op_lock);
+
+	return 0;
+>>>>>>> FETCH_HEAD
 }
 #endif
 

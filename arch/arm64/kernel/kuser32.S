@@ -28,7 +28,11 @@
  * See Documentation/arm/kernel_user_helpers.txt for formal definitions.
  */
 
+<<<<<<< HEAD
 #include <asm/unistd32.h>
+=======
+#include <asm/unistd.h>
+>>>>>>> FETCH_HEAD
 
 	.align	5
 	.globl	__kuser_helper_start

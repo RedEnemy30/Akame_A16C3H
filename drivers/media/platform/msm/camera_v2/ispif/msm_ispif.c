@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -59,7 +63,11 @@ static void msm_ispif_io_dump_reg(struct ispif_device *ispif)
 
 
 static inline int msm_ispif_is_intf_valid(uint32_t csid_version,
+<<<<<<< HEAD
 	uint8_t intf_type)
+=======
+	enum msm_ispif_vfe_intf intf_type)
+>>>>>>> FETCH_HEAD
 {
         return ((csid_version <= CSID_VERSION_V22 && intf_type != VFE0) ||
                 (intf_type >= VFE_MAX)) ? false : true;
@@ -106,9 +114,15 @@ static struct msm_cam_clk_info ispif_8974_reset_clk_info[] = {
 	{"camss_csi_vfe1_clk", NO_SET_RATE},
 };
 
+<<<<<<< HEAD
 static int msm_ispif_reset_hw(struct ispif_device *ispif)
 {
 	int rc = 0;
+=======
+static int msm_ispif_reset_hw(struct ispif_device *ispif, int release)
+{
+	int rc = 0, i;
+>>>>>>> FETCH_HEAD
 	long timeout = 0;
 	struct clk *reset_clk[ARRAY_SIZE(ispif_8974_reset_clk_info)];
 	struct clk *reset_clk1[ARRAY_SIZE(ispif_8626_reset_clk_info)];
@@ -133,6 +147,20 @@ static int msm_ispif_reset_hw(struct ispif_device *ispif)
 		ispif->clk_idx = 1;
 	}
 
+<<<<<<< HEAD
+=======
+	if (release) {
+		for (i = 0; i < ispif->vfe_info.num_vfe; i++) {
+			msm_camera_io_w_mb(ISPIF_STOP_INTF_IMMEDIATELY,
+				ispif->base + ISPIF_VFE_m_INTF_CMD_0(i));
+			msm_camera_io_w_mb(ISPIF_STOP_INTF_IMMEDIATELY,
+				ispif->base + ISPIF_VFE_m_INTF_CMD_1(i));
+		}
+		msm_camera_io_w_mb(ISPIF_IRQ_GLOBAL_CLEAR_CMD,
+			ispif->base + ISPIF_IRQ_GLOBAL_CLEAR_CMD_ADDR);
+	}
+
+>>>>>>> FETCH_HEAD
 	init_completion(&ispif->reset_complete[VFE0]);
 	if (ispif->hw_num_isps > 1)
 		init_completion(&ispif->reset_complete[VFE1]);
@@ -258,11 +286,14 @@ static int msm_ispif_clk_ahb_enable(struct ispif_device *ispif, int enable)
 {
 	int rc = 0;
 
+<<<<<<< HEAD
 	if (ispif->csid_version < CSID_VERSION_V30) {
 		/* Older ISPIF versiond don't need ahb clokc */
 		return 0;
 	}
 
+=======
+>>>>>>> FETCH_HEAD
 	rc = msm_ispif_get_ahb_clk_info(ispif, ispif->pdev,
 		ispif_8974_ahb_clk_info);
 	if (rc < 0) {
@@ -309,7 +340,11 @@ static int msm_ispif_reset(struct ispif_device *ispif)
 			ispif->base + ISPIF_VFE_m_INTF_CMD_0(i));
 		msm_camera_io_w(ISPIF_STOP_INTF_IMMEDIATELY,
 			ispif->base + ISPIF_VFE_m_INTF_CMD_1(i));
+<<<<<<< HEAD
 		pr_debug("%s: base %lx", __func__, (unsigned long)ispif->base);
+=======
+		pr_debug("%s: base %pK", __func__, ispif->base);
+>>>>>>> FETCH_HEAD
 		msm_camera_io_w(0, ispif->base +
 			ISPIF_VFE_m_PIX_INTF_n_CID_MASK(i, 0));
 		msm_camera_io_w(0, ispif->base +
@@ -343,7 +378,11 @@ static int msm_ispif_subdev_g_chip_ident(struct v4l2_subdev *sd,
 }
 
 static void msm_ispif_sel_csid_core(struct ispif_device *ispif,
+<<<<<<< HEAD
 	uint8_t intftype, uint8_t csid, uint8_t vfe_intf)
+=======
+	uint8_t intftype, uint8_t csid, enum msm_ispif_vfe_intf vfe_intf)
+>>>>>>> FETCH_HEAD
 {
 	uint32_t data;
 
@@ -358,6 +397,7 @@ static void msm_ispif_sel_csid_core(struct ispif_device *ispif,
 	switch (intftype) {
 	case PIX0:
 		data &= ~(BIT(1) | BIT(0));
+<<<<<<< HEAD
 		data |= csid;
 		break;
 	case RDI0:
@@ -375,6 +415,25 @@ static void msm_ispif_sel_csid_core(struct ispif_device *ispif,
 	case RDI2:
 		data &= ~(BIT(21) | BIT(20));
 		data |= (csid << 20);
+=======
+		data |= (uint32_t)csid;
+		break;
+	case RDI0:
+		data &= ~(BIT(5) | BIT(4));
+		data |= (uint32_t)(csid << 4);
+		break;
+	case PIX1:
+		data &= ~(BIT(9) | BIT(8));
+		data |= (uint32_t)(csid << 8);
+		break;
+	case RDI1:
+		data &= ~(BIT(13) | BIT(12));
+		data |= (uint32_t)(csid << 12);
+		break;
+	case RDI2:
+		data &= ~(BIT(21) | BIT(20));
+		data |= (uint32_t)(csid << 20);
+>>>>>>> FETCH_HEAD
 		break;
 	}
 
@@ -383,7 +442,11 @@ static void msm_ispif_sel_csid_core(struct ispif_device *ispif,
 }
 
 static void msm_ispif_enable_crop(struct ispif_device *ispif,
+<<<<<<< HEAD
 	uint8_t intftype, uint8_t vfe_intf, uint16_t start_pixel,
+=======
+	uint8_t intftype, enum msm_ispif_vfe_intf vfe_intf, uint16_t start_pixel,
+>>>>>>> FETCH_HEAD
 	uint16_t end_pixel)
 {
 	uint32_t data;
@@ -415,7 +478,11 @@ static void msm_ispif_enable_crop(struct ispif_device *ispif,
 }
 
 static void msm_ispif_enable_intf_cids(struct ispif_device *ispif,
+<<<<<<< HEAD
 	uint8_t intftype, uint16_t cid_mask, uint8_t vfe_intf, uint8_t enable)
+=======
+	uint8_t intftype, uint16_t cid_mask, enum msm_ispif_vfe_intf vfe_intf, uint8_t enable)
+>>>>>>> FETCH_HEAD
 {
 	uint32_t intf_addr, data;
 
@@ -450,14 +517,24 @@ static void msm_ispif_enable_intf_cids(struct ispif_device *ispif,
 
 	data = msm_camera_io_r(ispif->base + intf_addr);
 	if (enable)
+<<<<<<< HEAD
 		data |= cid_mask;
 	else
 		data &= ~cid_mask;
+=======
+		data |= (uint32_t)cid_mask;
+	else
+		data &= ~((uint32_t)cid_mask);
+>>>>>>> FETCH_HEAD
 	msm_camera_io_w_mb(data, ispif->base + intf_addr);
 }
 
 static int msm_ispif_validate_intf_status(struct ispif_device *ispif,
+<<<<<<< HEAD
 	uint8_t intftype, uint8_t vfe_intf)
+=======
+	uint8_t intftype, enum msm_ispif_vfe_intf vfe_intf)
+>>>>>>> FETCH_HEAD
 {
 	int rc = 0;
 	uint32_t data = 0;
@@ -497,7 +574,11 @@ static int msm_ispif_validate_intf_status(struct ispif_device *ispif,
 }
 
 static void msm_ispif_select_clk_mux(struct ispif_device *ispif,
+<<<<<<< HEAD
 	uint8_t intftype, uint8_t csid, uint8_t vfe_intf)
+=======
+	uint8_t intftype, uint8_t csid, enum msm_ispif_vfe_intf vfe_intf)
+>>>>>>> FETCH_HEAD
 {
 	uint32_t data = 0;
 
@@ -556,7 +637,11 @@ static uint16_t msm_ispif_get_cids_mask_from_cfg(
 
 	BUG_ON(!entry);
 
+<<<<<<< HEAD
 	for (i = 0; i < entry->num_cids; i++)
+=======
+	for (i = 0; i < entry->num_cids && i < MAX_CID_CH_V2; i++)
+>>>>>>> FETCH_HEAD
 		cids_mask |= (1 << entry->cids[i]);
 
 	return cids_mask;
@@ -573,6 +658,15 @@ static int msm_ispif_config(struct ispif_device *ispif,
 	BUG_ON(!ispif);
 	BUG_ON(!params);
 
+<<<<<<< HEAD
+=======
+	if (!ispif->base) {
+		pr_err("%s: ispif base is NULL\n", __func__);
+		rc = -EPERM;
+		return rc;
+	}
+
+>>>>>>> FETCH_HEAD
 	if (ispif->ispif_state != ISPIF_POWER_UP) {
 		pr_err("%s: ispif invalid state %d\n", __func__,
 			ispif->ispif_state);
@@ -690,7 +784,11 @@ static void msm_ispif_intf_cmd(struct ispif_device *ispif, uint32_t cmd_bits,
 			pr_err("%s: invalid interface type\n", __func__);
 			return;
 		}
+<<<<<<< HEAD
 		if (params->entries[i].num_cids > MAX_CID_CH) {
+=======
+		if (params->entries[i].num_cids > MAX_CID_CH_V2) {
+>>>>>>> FETCH_HEAD
 			pr_err("%s: out of range of cid_num %d\n",
 				__func__, params->entries[i].num_cids);
 			return;
@@ -1169,9 +1267,21 @@ static irqreturn_t msm_io_ispif_irq(int irq_num, void *data)
 static int msm_ispif_set_vfe_info(struct ispif_device *ispif,
 	struct msm_ispif_vfe_info *vfe_info)
 {
+<<<<<<< HEAD
 	memcpy(&ispif->vfe_info, vfe_info, sizeof(struct msm_ispif_vfe_info));
 	if (ispif->vfe_info.num_vfe > ispif->hw_num_isps)
 		return -EINVAL;
+=======
+	if (!vfe_info || (vfe_info->num_vfe <= 0) ||
+		((uint32_t)(vfe_info->num_vfe) > ispif->hw_num_isps)) {
+		pr_err("Invalid VFE info: %p %d\n", vfe_info,
+			   (vfe_info ? vfe_info->num_vfe:0));
+		return -EINVAL;
+	}
+
+	memcpy(&ispif->vfe_info, vfe_info, sizeof(struct msm_ispif_vfe_info));
+
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 
@@ -1234,7 +1344,11 @@ static int msm_ispif_init(struct ispif_device *ispif,
 		goto error_ahb;
 	}
 
+<<<<<<< HEAD
 	msm_ispif_reset_hw(ispif);
+=======
+	msm_ispif_reset_hw(ispif, 0);
+>>>>>>> FETCH_HEAD
 
 	rc = msm_ispif_reset(ispif);
 	if (rc == 0) {
@@ -1267,8 +1381,15 @@ static void msm_ispif_release(struct ispif_device *ispif)
 		return;
 	}
 
+<<<<<<< HEAD
 	/* make sure no streaming going on */
 	msm_ispif_reset(ispif);
+=======
+	msm_ispif_clk_ahb_enable(ispif, 1);
+
+	/* make sure no streaming going on */
+	msm_ispif_reset_hw(ispif, 1);
+>>>>>>> FETCH_HEAD
 
 	msm_ispif_clk_ahb_enable(ispif, 0);
 
@@ -1353,8 +1474,16 @@ static long msm_ispif_subdev_ioctl(struct v4l2_subdev *sd,
 	case MSM_SD_SHUTDOWN: {
 		struct ispif_device *ispif =
 			(struct ispif_device *)v4l2_get_subdevdata(sd);
+<<<<<<< HEAD
 		if (ispif && ispif->base)
 			msm_ispif_release(ispif);
+=======
+		if (ispif && ispif->base) {
+			mutex_lock(&ispif->mutex);
+			msm_ispif_release(ispif);
+			mutex_unlock(&ispif->mutex);
+		}
+>>>>>>> FETCH_HEAD
 		return 0;
 	}
 	default:

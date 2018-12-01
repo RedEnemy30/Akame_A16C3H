@@ -1529,6 +1529,15 @@ void throttle_vm_writeout(gfp_t gfp_mask)
                 if (global_page_state(NR_UNSTABLE_NFS) +
 			global_page_state(NR_WRITEBACK) <= dirty_thresh)
                         	break;
+<<<<<<< HEAD
+=======
+		/* Try safe version */
+		else if (unlikely(global_page_state_snapshot(NR_UNSTABLE_NFS) +
+			global_page_state_snapshot(NR_WRITEBACK) <=
+				dirty_thresh))
+				break;
+
+>>>>>>> FETCH_HEAD
                 congestion_wait(BLK_RW_ASYNC, HZ/10);
 
 		/*

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -142,7 +146,11 @@ int diag_md_write(int id, unsigned char *buf, int len, int ctx)
 		if (ch->tbl[i].buf != buf)
 			continue;
 		found = 1;
+<<<<<<< HEAD
 		pr_err_ratelimited("diag: trying to write the same buffer buf: %p, ctxt: %d len: %d at i: %d back to the table, proc: %d, mode: %d\n",
+=======
+		pr_err_ratelimited("diag: trying to write the same buffer buf: %pK, ctxt: %d len: %d at i: %d back to the table, proc: %d, mode: %d\n",
+>>>>>>> FETCH_HEAD
 				   buf, ctx, ch->tbl[i].len,
 				   i, id, driver->logging_mode);
 	}
@@ -185,7 +193,11 @@ int diag_md_write(int id, unsigned char *buf, int len, int ctx)
 	return 0;
 }
 
+<<<<<<< HEAD
 int diag_md_copy_to_user(char __user *buf, int *pret)
+=======
+int diag_md_copy_to_user(char __user *buf, int *pret, size_t buf_size)
+>>>>>>> FETCH_HEAD
 {
 
 	int i, j;
@@ -196,6 +208,10 @@ int diag_md_copy_to_user(char __user *buf, int *pret)
 	unsigned long flags;
 	struct diag_md_info *ch = NULL;
 	struct diag_buf_tbl_t *entry = NULL;
+<<<<<<< HEAD
+=======
+	uint8_t drain_again = 0;
+>>>>>>> FETCH_HEAD
 
 	for (i = 0; i < NUM_DIAG_MD_DEV && !err; i++) {
 		ch = &diag_md[i];
@@ -208,6 +224,22 @@ int diag_md_copy_to_user(char __user *buf, int *pret)
 			 * token first
 			 */
 			if (i > 0) {
+<<<<<<< HEAD
+=======
+				if ((ret + (3 * sizeof(int)) + entry->len) >=
+							buf_size) {
+					drain_again = 1;
+					break;
+				}
+			} else {
+				if ((ret + (2 * sizeof(int)) + entry->len) >=
+						buf_size) {
+					drain_again = 1;
+					break;
+				}
+			}
+			if (i > 0) {
+>>>>>>> FETCH_HEAD
 				remote_token = diag_get_remote(i);
 				err = copy_to_user(buf + ret, &remote_token,
 						   sizeof(int));
@@ -253,6 +285,12 @@ drop_data:
 	*pret = ret;
 	err = copy_to_user(buf + sizeof(int), (void *)&num_data, sizeof(int));
 	diag_ws_on_copy_complete(DIAG_WS_MD);
+<<<<<<< HEAD
+=======
+	if (drain_again)
+		chk_logging_wakeup();
+
+>>>>>>> FETCH_HEAD
 	return err;
 }
 

@@ -31,6 +31,10 @@
                 mdss_fb0: qcom,mdss_fb_primary {
 			cell-index = <0>;
 			compatible = "qcom,mdss-fb";
+<<<<<<< HEAD
+=======
+			qcom,mdss-fb-format = "rgba8888";
+>>>>>>> FETCH_HEAD
 			qcom,cont-splash-memory {
 				linux,contiguous-region = <&cont_splash_mem>;
 			};

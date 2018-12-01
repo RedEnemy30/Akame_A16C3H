@@ -31,7 +31,11 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 	switch (cmd) {
 	case AUDIO_START: {
+<<<<<<< HEAD
 		pr_debug("%s[%p]: AUDIO_START session_id[%d]\n", __func__,
+=======
+		pr_debug("%s[%pK]: AUDIO_START session_id[%d]\n", __func__,
+>>>>>>> FETCH_HEAD
 						audio, audio->ac->session);
 		if (audio->feedback == NON_TUNNEL_MODE) {
 			/* Configure PCM output block */
@@ -62,7 +66,11 @@ static long audio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 	}
 	default:
+<<<<<<< HEAD
 		pr_debug("%s[%p]: Calling utils ioctl\n", __func__, audio);
+=======
+		pr_debug("%s[%pK]: Calling utils ioctl\n", __func__, audio);
+>>>>>>> FETCH_HEAD
 		rc = audio->codec_ioctl(file, cmd, arg);
 	}
 	return rc;

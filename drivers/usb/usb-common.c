@@ -32,6 +32,10 @@ const char *usb_otg_state_string(enum usb_otg_state state)
 		[OTG_STATE_B_IDLE] = "b_idle",
 		[OTG_STATE_B_SRP_INIT] = "b_srp_init",
 		[OTG_STATE_B_PERIPHERAL] = "b_peripheral",
+<<<<<<< HEAD
+=======
+		[OTG_STATE_B_CHARGER] = "b_charger",
+>>>>>>> FETCH_HEAD
 		[OTG_STATE_B_WAIT_ACON] = "b_wait_acon",
 		[OTG_STATE_B_HOST] = "b_host",
 	};

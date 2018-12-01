@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -28,6 +32,10 @@
 /* Macros */
 #define MEMSHARE_DEV_NAME "memshare"
 #define MEMSHARE_CHILD_DEV_NAME "memshare_child"
+<<<<<<< HEAD
+=======
+static DEFINE_DMA_ATTRS(attrs);
+>>>>>>> FETCH_HEAD
 
 #define MEM_SHARE_SERVICE_SVC_ID 0x00000034
 #define MEM_SHARE_SERVICE_INS_ID 1
@@ -161,8 +169,14 @@ void free_mem_clients(int proc)
 				!memblock[i].guarantee) {
 			pr_debug("Freeing memory for client id: %d\n",
 					memblock[i].client_id);
+<<<<<<< HEAD
 			dma_free_coherent(memsh_drv->dev, memblock[i].size,
 				memblock[i].virtual_addr, memblock[i].phy_addr);
+=======
+			dma_free_attrs(memsh_drv->dev, memblock[i].size,
+				memblock[i].virtual_addr, memblock[i].phy_addr,
+				&attrs);
+>>>>>>> FETCH_HEAD
 			free_client(i);
 		}
 	}
@@ -202,7 +216,11 @@ void initialize_client(void)
 		memblock[i].sequence_id = -1;
 		memblock[i].memory_type = MEMORY_CMA;
 	}
+<<<<<<< HEAD
 
+=======
+	dma_set_attr(DMA_ATTR_NO_KERNEL_MAPPING, &attrs);
+>>>>>>> FETCH_HEAD
 }
 
 static int modem_notifier_cb(struct notifier_block *this, unsigned long code,
@@ -298,6 +316,17 @@ static int handle_alloc_generic_req(void *req_h, void *req)
 			alloc_req->client_id, alloc_req->proc_id);
 	client_id = check_client(alloc_req->client_id, alloc_req->proc_id,
 								CHECK);
+<<<<<<< HEAD
+=======
+
+	if (client_id >= MAX_CLIENTS) {
+		pr_err("memshare: %s client not found, requested client: %d, proc_id: %d\n",
+			__func__, alloc_req->client_id,
+			alloc_req->proc_id);
+		return -EINVAL;
+	}
+
+>>>>>>> FETCH_HEAD
 	if (!memblock[client_id].alloted) {
 		rc = memshare_alloc(memsh_drv->dev, alloc_req->num_bytes,
 					&memblock[client_id]);
@@ -394,9 +423,16 @@ static int handle_free_generic_req(void *req_h, void *req)
 				memblock[client_id].virtual_addr,
 				(unsigned long int)memblock[client_id].phy_addr,
 				memblock[client_id].size);
+<<<<<<< HEAD
 		dma_free_coherent(memsh_drv->dev, memblock[client_id].size,
 			memblock[client_id].virtual_addr,
 			memblock[client_id].phy_addr);
+=======
+		dma_free_attrs(memsh_drv->dev, memblock[client_id].size,
+			memblock[client_id].virtual_addr,
+			memblock[client_id].phy_addr,
+			&attrs);
+>>>>>>> FETCH_HEAD
 		free_client(client_id);
 	} else {
 		pr_err("In %s, Request came for a guaranteed client cannot free up the memory\n",
@@ -563,8 +599,14 @@ int memshare_alloc(struct device *dev,
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	pblk->virtual_addr = dma_alloc_coherent(dev, block_size,
 						&pblk->phy_addr, GFP_KERNEL);
+=======
+	pblk->virtual_addr = dma_alloc_attrs(dev, block_size,
+						&pblk->phy_addr, GFP_KERNEL,
+						&attrs);
+>>>>>>> FETCH_HEAD
 	if (pblk->virtual_addr == NULL) {
 		pr_err("allocation failed, %d\n", block_size);
 		ret = -ENOMEM;

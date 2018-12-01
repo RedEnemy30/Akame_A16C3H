@@ -168,16 +168,28 @@ static inline void task_state(struct seq_file *m, struct pid_namespace *ns,
 	int g;
 	struct fdtable *fdt = NULL;
 	const struct cred *cred;
+<<<<<<< HEAD
 	pid_t ppid, tpid;
 
 	rcu_read_lock();
 	ppid = pid_alive(p) ?
 		task_tgid_nr_ns(rcu_dereference(p->real_parent), ns) : 0;
 	tpid = 0;
+=======
+	pid_t ppid = 0, tpid = 0;
+	struct task_struct *leader = NULL;
+
+	rcu_read_lock();
+>>>>>>> FETCH_HEAD
 	if (pid_alive(p)) {
 		struct task_struct *tracer = ptrace_parent(p);
 		if (tracer)
 			tpid = task_pid_nr_ns(tracer, ns);
+<<<<<<< HEAD
+=======
+		ppid = task_tgid_nr_ns(rcu_dereference(p->real_parent), ns);
+		leader = p->group_leader;
+>>>>>>> FETCH_HEAD
 	}
 	cred = get_task_cred(p);
 	seq_printf(m,
@@ -189,7 +201,11 @@ static inline void task_state(struct seq_file *m, struct pid_namespace *ns,
 		"Uid:\t%d\t%d\t%d\t%d\n"
 		"Gid:\t%d\t%d\t%d\t%d\n",
 		get_task_state(p),
+<<<<<<< HEAD
 		task_tgid_nr_ns(p, ns),
+=======
+		leader ? task_pid_nr_ns(leader, ns) : 0,
+>>>>>>> FETCH_HEAD
 		pid_nr_ns(pid, ns),
 		ppid, tpid,
 		from_kuid_munged(user_ns, cred->uid),

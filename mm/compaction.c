@@ -419,6 +419,7 @@ static void acct_isolated(struct zone *zone, bool locked, struct compact_control
 	}
 }
 
+<<<<<<< HEAD
 /* Similar to reclaim, but different enough that they don't share logic */
 static bool too_many_isolated(struct zone *zone)
 {
@@ -430,10 +431,51 @@ static bool too_many_isolated(struct zone *zone)
 					zone_page_state(zone, NR_ACTIVE_ANON);
 	isolated = zone_page_state(zone, NR_ISOLATED_FILE) +
 					zone_page_state(zone, NR_ISOLATED_ANON);
+=======
+static bool __too_many_isolated(struct zone *zone, int safe)
+{
+	unsigned long active, inactive, isolated;
+
+	if (safe) {
+		inactive = zone_page_state_snapshot(zone, NR_INACTIVE_FILE) +
+			zone_page_state_snapshot(zone, NR_INACTIVE_ANON);
+		active = zone_page_state_snapshot(zone, NR_ACTIVE_FILE) +
+			zone_page_state_snapshot(zone, NR_ACTIVE_ANON);
+		isolated = zone_page_state_snapshot(zone, NR_ISOLATED_FILE) +
+			zone_page_state_snapshot(zone, NR_ISOLATED_ANON);
+	} else {
+		inactive = zone_page_state(zone, NR_INACTIVE_FILE) +
+			zone_page_state(zone, NR_INACTIVE_ANON);
+		active = zone_page_state(zone, NR_ACTIVE_FILE) +
+			zone_page_state(zone, NR_ACTIVE_ANON);
+		isolated = zone_page_state(zone, NR_ISOLATED_FILE) +
+			zone_page_state(zone, NR_ISOLATED_ANON);
+	}
+>>>>>>> FETCH_HEAD
 
 	return isolated > (inactive + active) / 2;
 }
 
+<<<<<<< HEAD
+=======
+/* Similar to reclaim, but different enough that they don't share logic */
+static bool too_many_isolated(struct compact_control *cc)
+{
+	/*
+	 * __too_many_isolated(safe=0) is fast but inaccurate, because it
+	 * doesn't account for the vm_stat_diff[] counters.  So if it looks
+	 * like too_many_isolated() is about to return true, fall back to the
+	 * slower, more accurate zone_page_state_snapshot().
+	 */
+	if (unlikely(__too_many_isolated(cc->zone, 0))) {
+		if (cc->sync)
+			return __too_many_isolated(cc->zone, 1);
+	}
+
+	return false;
+}
+
+>>>>>>> FETCH_HEAD
 /**
  * isolate_migratepages_range() - isolate all migrate-able pages in range.
  * @zone:	Zone pages are in.
@@ -472,7 +514,11 @@ isolate_migratepages_range(struct zone *zone, struct compact_control *cc,
 	 * list by either parallel reclaimers or compaction. If there are,
 	 * delay for some time until fewer pages are isolated
 	 */
+<<<<<<< HEAD
 	while (unlikely(too_many_isolated(zone))) {
+=======
+	while (unlikely(too_many_isolated(cc))) {
+>>>>>>> FETCH_HEAD
 		/* async migration should just abort */
 		if (!cc->sync)
 			return 0;

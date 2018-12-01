@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -33,6 +37,10 @@ static struct class *thermal_class;
 static struct msm_thermal_ioctl_dev *msm_thermal_dev;
 static unsigned int freq_table_len[NR_CPUS], freq_table_set[NR_CPUS];
 static unsigned int *freq_table_ptr[NR_CPUS];
+<<<<<<< HEAD
+=======
+static DEFINE_MUTEX(ioctl_access_mutex);
+>>>>>>> FETCH_HEAD
 
 static int msm_thermal_ioctl_open(struct inode *node, struct file *filep)
 {
@@ -112,6 +120,12 @@ static long msm_thermal_process_freq_table_req(struct msm_thermal_ioctl *query,
 	uint32_t table_idx, idx = 0, cluster_id = query->clock_freq.cluster_num;
 	struct clock_plan_arg *clock_freq = &(query->clock_freq);
 
+<<<<<<< HEAD
+=======
+	if (cluster_id >= num_possible_cpus())
+		return -EINVAL;
+
+>>>>>>> FETCH_HEAD
 	if (!freq_table_len[cluster_id]) {
 		ret = msm_thermal_get_freq_plan_size(cluster_id,
 			&freq_table_len[cluster_id]);
@@ -199,8 +213,14 @@ static long msm_thermal_ioctl_process(struct file *filep, unsigned int cmd,
 
 	ret = validate_and_copy(&cmd, &arg, &query);
 	if (ret)
+<<<<<<< HEAD
 		goto process_exit;
 
+=======
+		return ret;
+
+	mutex_lock(&ioctl_access_mutex);
+>>>>>>> FETCH_HEAD
 	switch (cmd) {
 	case MSM_THERMAL_SET_CPU_MAX_FREQUENCY:
 		ret = msm_thermal_set_frequency(query.cpu_freq.cpu_num,
@@ -226,6 +246,10 @@ static long msm_thermal_ioctl_process(struct file *filep, unsigned int cmd,
 		goto process_exit;
 	}
 process_exit:
+<<<<<<< HEAD
+=======
+	mutex_unlock(&ioctl_access_mutex);
+>>>>>>> FETCH_HEAD
 	return ret;
 }
 

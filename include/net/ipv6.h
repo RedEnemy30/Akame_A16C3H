@@ -203,6 +203,10 @@ extern rwlock_t ip6_ra_lock;
  */
 
 struct ipv6_txoptions {
+<<<<<<< HEAD
+=======
+	atomic_t		refcnt;
+>>>>>>> FETCH_HEAD
 	/* Length of this structure */
 	int			tot_len;
 
@@ -215,7 +219,11 @@ struct ipv6_txoptions {
 	struct ipv6_opt_hdr	*dst0opt;
 	struct ipv6_rt_hdr	*srcrt;	/* Routing Header */
 	struct ipv6_opt_hdr	*dst1opt;
+<<<<<<< HEAD
 
+=======
+	struct rcu_head		rcu;
+>>>>>>> FETCH_HEAD
 	/* Option buffer, as read by IPV6_PKTOPTIONS, starts here. */
 };
 
@@ -254,6 +262,26 @@ extern void			fl6_free_socklist(struct sock *sk);
 extern int			ipv6_flowlabel_opt(struct sock *sk, char __user *optval, int optlen);
 extern int			ip6_flowlabel_init(void);
 extern void			ip6_flowlabel_cleanup(void);
+<<<<<<< HEAD
+=======
+static inline struct ipv6_txoptions *txopt_get(const struct ipv6_pinfo *np)
+{
+	struct ipv6_txoptions *opt;
+
+	rcu_read_lock();
+	opt = rcu_dereference(np->opt);
+	if (opt && !atomic_inc_not_zero(&opt->refcnt))
+		opt = NULL;
+	rcu_read_unlock();
+	return opt;
+}
+
+static inline void txopt_put(struct ipv6_txoptions *opt)
+{
+	if (opt && atomic_dec_and_test(&opt->refcnt))
+		kfree_rcu(opt, rcu);
+}
+>>>>>>> FETCH_HEAD
 
 static inline void fl6_sock_release(struct ip6_flowlabel *fl)
 {

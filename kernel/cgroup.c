@@ -5449,7 +5449,11 @@ static int cgroup_css_links_read(struct cgroup *cont,
 		struct css_set *cg = link->cg;
 		struct task_struct *task;
 		int count = 0;
+<<<<<<< HEAD
 		seq_printf(seq, "css_set %p\n", cg);
+=======
+		seq_printf(seq, "css_set %pK\n", cg);
+>>>>>>> FETCH_HEAD
 		list_for_each_entry(task, &cg->tasks, cg_list) {
 			if (count++ > MAX_TASKS_SHOWN_PER_CSS) {
 				seq_puts(seq, "  ...\n");

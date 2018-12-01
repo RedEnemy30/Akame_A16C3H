@@ -324,7 +324,11 @@ int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
 	if (!urb || !urb->complete)
 		return -EINVAL;
 	if (urb->hcpriv) {
+<<<<<<< HEAD
 		WARN_ONCE(1, "URB %p submitted while active\n", urb);
+=======
+		WARN_ONCE(1, "URB %pK submitted while active\n", urb);
+>>>>>>> FETCH_HEAD
 		return -EBUSY;
 	}
 

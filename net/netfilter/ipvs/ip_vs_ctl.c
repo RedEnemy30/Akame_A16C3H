@@ -2794,7 +2794,11 @@ static struct genl_family ip_vs_genl_family = {
 	.hdrsize	= 0,
 	.name		= IPVS_GENL_NAME,
 	.version	= IPVS_GENL_VERSION,
+<<<<<<< HEAD
 	.maxattr	= IPVS_CMD_MAX,
+=======
+	.maxattr	= IPVS_CMD_ATTR_MAX,
+>>>>>>> FETCH_HEAD
 	.netnsok        = true,         /* Make ipvsadm to work on netns */
 };
 

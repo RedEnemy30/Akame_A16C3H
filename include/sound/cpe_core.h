@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2013-2014, Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2013-2015, Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -16,10 +20,15 @@
 
 #include <linux/types.h>
 #include <linux/wait.h>
+<<<<<<< HEAD
 #include <linux/msm_ion.h>
 #include <linux/dma-mapping.h>
 #include <sound/lsm_params.h>
 #include <linux/mfd/wcd9xxx/wcd9xxx-slimslave.h>
+=======
+#include <linux/dma-mapping.h>
+#include <sound/lsm_params.h>
+>>>>>>> FETCH_HEAD
 
 enum {
 	CMD_INIT_STATE = 0,
@@ -27,6 +36,16 @@ enum {
 	CMD_RESP_RCVD,
 };
 
+<<<<<<< HEAD
+=======
+enum wcd_cpe_event {
+	WCD_CPE_PRE_ENABLE = 1,
+	WCD_CPE_POST_ENABLE,
+	WCD_CPE_PRE_DISABLE,
+	WCD_CPE_POST_DISABLE,
+};
+
+>>>>>>> FETCH_HEAD
 struct wcd_cpe_afe_port_cfg {
 	u8 port_id;
 	u16 bit_width;
@@ -34,6 +53,7 @@ struct wcd_cpe_afe_port_cfg {
 	u32 sample_rate;
 };
 
+<<<<<<< HEAD
 enum wcd_cpe_lab_thread {
 	MSM_LSM_LAB_THREAD_STOP,
 	MSM_LSM_LAB_THREAD_RUNNING,
@@ -67,6 +87,13 @@ struct wcd_cpe_lsm_lab {
 	struct wcd_cpe_lab_hw_params hw_params;
 	struct wcd_cpe_data_pcm_buf *pcm_buf;
 	wait_queue_head_t period_wait;
+=======
+struct lsm_out_fmt_cfg {
+	u8 format;
+	u8 pack_mode;
+	u8 data_path_events;
+	u8 transfer_mode;
+>>>>>>> FETCH_HEAD
 };
 
 struct cpe_lsm_session {
@@ -74,6 +101,11 @@ struct cpe_lsm_session {
 	void *snd_model_data;
 	u8 *conf_levels;
 	void *cmi_reg_handle;
+<<<<<<< HEAD
+=======
+
+	/* Clients private data */
+>>>>>>> FETCH_HEAD
 	void *priv_d;
 
 	void (*event_cb) (void *priv_data,
@@ -82,6 +114,10 @@ struct cpe_lsm_session {
 
 	struct completion cmd_comp;
 	struct wcd_cpe_afe_port_cfg afe_port_cfg;
+<<<<<<< HEAD
+=======
+	struct wcd_cpe_afe_port_cfg afe_out_port_cfg;
+>>>>>>> FETCH_HEAD
 	struct mutex lsm_lock;
 
 	u32 snd_model_size;
@@ -90,7 +126,14 @@ struct cpe_lsm_session {
 	u8 id;
 	u8 num_confidence_levels;
 	struct task_struct *lsm_lab_thread;
+<<<<<<< HEAD
 	struct wcd_cpe_lsm_lab lab;
+=======
+	bool started;
+
+	u32 lab_enable;
+	struct lsm_out_fmt_cfg out_fmt_cfg;
+>>>>>>> FETCH_HEAD
 };
 
 struct wcd_cpe_afe_ops {
@@ -108,6 +151,12 @@ struct wcd_cpe_afe_ops {
 
 	int (*afe_port_resume) (void *core_handle,
 			       struct wcd_cpe_afe_port_cfg *cfg);
+<<<<<<< HEAD
+=======
+
+	int (*afe_port_cmd_cfg)(void *core_handle,
+				struct wcd_cpe_afe_port_cfg *cfg);
+>>>>>>> FETCH_HEAD
 };
 
 struct wcd_cpe_lsm_ops {
@@ -148,6 +197,7 @@ struct wcd_cpe_lsm_ops {
 
 	int (*lsm_lab_control)(void *core_handle,
 			       struct cpe_lsm_session *session,
+<<<<<<< HEAD
 			       u32 bufsz, u32 bufcnt,
 			       bool enable);
 
@@ -163,11 +213,26 @@ struct wcd_cpe_lsm_ops {
 				struct cpe_lsm_session *session,
 				phys_addr_t phys, u8 *mem,
 				u32 read_len);
+=======
+			       bool enable);
+
+	int (*lab_ch_setup)(void *core_handle,
+				   struct cpe_lsm_session *session,
+				   enum wcd_cpe_event event);
+>>>>>>> FETCH_HEAD
 
 	int (*lsm_set_data) (void *core_handle,
 			struct cpe_lsm_session *session,
 			enum lsm_detection_mode detect_mode,
 			bool detect_failure);
+<<<<<<< HEAD
+=======
+	int (*lsm_set_fmt_cfg)(void *core_handle,
+			struct cpe_lsm_session *session);
+
+	int (*lsm_set_port)(void *core_handle,
+			struct cpe_lsm_session *session);
+>>>>>>> FETCH_HEAD
 };
 
 int wcd_cpe_get_lsm_ops(struct wcd_cpe_lsm_ops *);

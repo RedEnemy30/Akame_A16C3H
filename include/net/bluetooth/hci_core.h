@@ -290,9 +290,19 @@ struct hci_dev {
 	__u8			adv_data[HCI_MAX_AD_LENGTH];
 	__u8			adv_data_len;
 
+<<<<<<< HEAD
 	int (*open)(struct hci_dev *hdev);
 	int (*close)(struct hci_dev *hdev);
 	int (*flush)(struct hci_dev *hdev);
+=======
+	void			*driver_data;
+	struct module		*owner;
+
+	int (*open)(struct hci_dev *hdev);
+	int (*close)(struct hci_dev *hdev);
+	int (*flush)(struct hci_dev *hdev);
+	void (*destruct)(struct hci_dev *hdev);
+>>>>>>> FETCH_HEAD
 	int (*setup)(struct hci_dev *hdev);
 	int (*send)(struct sk_buff *skb);
 	void (*notify)(struct hci_dev *hdev, unsigned int evt);

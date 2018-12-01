@@ -702,6 +702,7 @@ int trace_print_context(struct trace_iterator *iter)
 	unsigned long secs, usec_rem;
 	char comm[TASK_COMM_LEN];
 	int ret;
+<<<<<<< HEAD
 	int tgid;
 
 	trace_find_cmdline(entry->pid, comm);
@@ -721,6 +722,13 @@ int trace_print_context(struct trace_iterator *iter)
 	}
 
 	ret = trace_seq_printf(s, "[%03d] ", iter->cpu);
+=======
+
+	trace_find_cmdline(entry->pid, comm);
+
+	ret = trace_seq_printf(s, "%16s-%-5d [%03d] ",
+			       comm, entry->pid, iter->cpu);
+>>>>>>> FETCH_HEAD
 	if (!ret)
 		return 0;
 

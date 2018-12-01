@@ -196,7 +196,11 @@ int fb_cmap_to_user(const struct fb_cmap *from, struct fb_cmap_user *to)
 	int tooff = 0, fromoff = 0;
 	int size;
 
+<<<<<<< HEAD
 	if (!to || !from)
+=======
+	if (!to || !from || (int)(to->start) < 0)
+>>>>>>> FETCH_HEAD
 		return -EINVAL;
 
 	if (to->start > from->start)

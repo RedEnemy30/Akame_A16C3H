@@ -727,7 +727,10 @@ static const char *trace_options[] = {
 	"irq-info",
 	"markers",
 	"function-trace",
+<<<<<<< HEAD
 	"print-tgid",
+=======
+>>>>>>> FETCH_HEAD
 	NULL
 };
 
@@ -1240,7 +1243,10 @@ void tracing_reset_all_online_cpus(void)
 static unsigned map_pid_to_cmdline[PID_MAX_DEFAULT+1];
 static unsigned map_cmdline_to_pid[SAVED_CMDLINES];
 static char saved_cmdlines[SAVED_CMDLINES][TASK_COMM_LEN];
+<<<<<<< HEAD
 static unsigned saved_tgids[SAVED_CMDLINES];
+=======
+>>>>>>> FETCH_HEAD
 static int cmdline_idx;
 static arch_spinlock_t trace_cmdline_lock = __ARCH_SPIN_LOCK_UNLOCKED;
 
@@ -1442,7 +1448,10 @@ static int trace_save_cmdline(struct task_struct *tsk)
 	}
 
 	memcpy(&saved_cmdlines[idx], tsk->comm, TASK_COMM_LEN);
+<<<<<<< HEAD
 	saved_tgids[idx] = tsk->tgid;
+=======
+>>>>>>> FETCH_HEAD
 
 	arch_spin_unlock(&trace_cmdline_lock);
 
@@ -1472,7 +1481,11 @@ void trace_find_cmdline(int pid, char comm[])
 	arch_spin_lock(&trace_cmdline_lock);
 	map = map_pid_to_cmdline[pid];
 	if (map != NO_CMDLINE_MAP)
+<<<<<<< HEAD
 		strcpy(comm, saved_cmdlines[map]);
+=======
+		strlcpy(comm, saved_cmdlines[map], TASK_COMM_LEN-1);
+>>>>>>> FETCH_HEAD
 	else
 		strcpy(comm, "<...>");
 
@@ -1480,6 +1493,7 @@ void trace_find_cmdline(int pid, char comm[])
 	preempt_enable();
 }
 
+<<<<<<< HEAD
 int trace_find_tgid(int pid)
 {
 	unsigned map;
@@ -1499,6 +1513,8 @@ int trace_find_tgid(int pid)
 	return tgid;
 }
 
+=======
+>>>>>>> FETCH_HEAD
 void tracing_record_cmdline(struct task_struct *tsk)
 {
 	if (atomic_read(&trace_record_cmdline_disabled) || !tracing_is_on())
@@ -2455,6 +2471,7 @@ static void print_func_help_header(struct trace_buffer *buf, struct seq_file *m)
 	seq_puts(m, "#              | |       |          |         |\n");
 }
 
+<<<<<<< HEAD
 static void print_func_help_header_tgid(struct trace_buffer *buf, struct seq_file *m)
 {
 	print_event_info(buf, m);
@@ -2462,6 +2479,8 @@ static void print_func_help_header_tgid(struct trace_buffer *buf, struct seq_fil
 	seq_puts(m, "#              | |        |      |          |         |\n");
 }
 
+=======
+>>>>>>> FETCH_HEAD
 static void print_func_help_header_irq(struct trace_buffer *buf, struct seq_file *m)
 {
 	print_event_info(buf, m);
@@ -2474,6 +2493,7 @@ static void print_func_help_header_irq(struct trace_buffer *buf, struct seq_file
 	seq_puts(m, "#              | |       |   ||||       |         |\n");
 }
 
+<<<<<<< HEAD
 static void print_func_help_header_irq_tgid(struct trace_buffer *buf, struct seq_file *m)
 {
 	print_event_info(buf, m);
@@ -2486,6 +2506,8 @@ static void print_func_help_header_irq_tgid(struct trace_buffer *buf, struct seq
 	seq_puts(m, "#              | |        |      |   ||||       |         |\n");
 }
 
+=======
+>>>>>>> FETCH_HEAD
 void
 print_trace_header(struct seq_file *m, struct trace_iterator *iter)
 {
@@ -2786,6 +2808,7 @@ void trace_default_header(struct seq_file *m)
 	} else {
 		if (!(trace_flags & TRACE_ITER_VERBOSE)) {
 			if (trace_flags & TRACE_ITER_IRQ_INFO)
+<<<<<<< HEAD
 				if (trace_flags & TRACE_ITER_TGID)
 					print_func_help_header_irq_tgid(iter->trace_buffer, m);
 				else
@@ -2795,6 +2818,12 @@ void trace_default_header(struct seq_file *m)
 					print_func_help_header_tgid(iter->trace_buffer, m);
 				else
 					print_func_help_header(iter->trace_buffer, m);
+=======
+				print_func_help_header_irq(iter->trace_buffer,
+								 m);
+			else
+				print_func_help_header(iter->trace_buffer, m);
+>>>>>>> FETCH_HEAD
 		}
 	}
 }
@@ -3652,6 +3681,7 @@ static const struct file_operations tracing_saved_cmdlines_fops = {
 };
 
 static ssize_t
+<<<<<<< HEAD
 tracing_saved_tgids_read(struct file *file, char __user *ubuf,
 				size_t cnt, loff_t *ppos)
 {
@@ -3696,6 +3726,8 @@ static const struct file_operations tracing_saved_tgids_fops = {
 };
 
 static ssize_t
+=======
+>>>>>>> FETCH_HEAD
 tracing_set_trace_read(struct file *filp, char __user *ubuf,
 		       size_t cnt, loff_t *ppos)
 {
@@ -6249,9 +6281,12 @@ init_tracer_debugfs(struct trace_array *tr, struct dentry *d_tracer)
 	trace_create_file("trace_marker", 0220, d_tracer,
 			  tr, &tracing_mark_fops);
 
+<<<<<<< HEAD
 	trace_create_file("saved_tgids", 0444, d_tracer,
 			  tr, &tracing_saved_tgids_fops);
 
+=======
+>>>>>>> FETCH_HEAD
 	trace_create_file("trace_clock", 0644, d_tracer, tr,
 			  &trace_clock_fops);
 

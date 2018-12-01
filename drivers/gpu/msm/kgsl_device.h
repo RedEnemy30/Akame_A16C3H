@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2002,2007-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2002,2007-2015,2018, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -52,7 +56,11 @@
 #define KGSL_STATE_NAP		0x00000004
 #define KGSL_STATE_SLEEP	0x00000008
 #define KGSL_STATE_SUSPEND	0x00000010
+<<<<<<< HEAD
 #define KGSL_STATE_HUNG		0x00000020
+=======
+#define KGSL_STATE_AWARE	0x00000020
+>>>>>>> FETCH_HEAD
 #define KGSL_STATE_SLUMBER	0x00000080
 
 #define KGSL_GRAPHICS_MEMORY_LOW_WATERMARK  0x1000000
@@ -241,6 +249,11 @@ struct kgsl_memobj_node {
  * @profile_index: Index to store the start/stop ticks in the kernel profiling
  * buffer
  * @submit_ticks: Variable to hold ticks at the time of cmdbatch submit.
+<<<<<<< HEAD
+=======
+ * @timeout_jiffies: For a syncpoint cmdbatch the jiffies at which the
+ * timer will expire
+>>>>>>> FETCH_HEAD
  * This structure defines an atomic batch of command buffers issued from
  * userspace.
  */
@@ -264,6 +277,10 @@ struct kgsl_cmdbatch {
 	unsigned long profiling_buffer_gpuaddr;
 	unsigned int profile_index;
 	uint64_t submit_ticks;
+<<<<<<< HEAD
+=======
+	unsigned long timeout_jiffies;
+>>>>>>> FETCH_HEAD
 };
 
 /**
@@ -486,6 +503,10 @@ struct kgsl_context {
  * @syncsource_idr: sync sources created by this process
  * @syncsource_lock: Spinlock to protect the syncsource idr
  * @fd_count: Counter for the number of FDs for this process
+<<<<<<< HEAD
+=======
+ * @ctxt_count: Count for the number of contexts for this process
+>>>>>>> FETCH_HEAD
  */
 struct kgsl_process_private {
 	unsigned long priv;
@@ -506,6 +527,10 @@ struct kgsl_process_private {
 	struct idr syncsource_idr;
 	spinlock_t syncsource_lock;
 	int fd_count;
+<<<<<<< HEAD
+=======
+	atomic_t ctxt_count;
+>>>>>>> FETCH_HEAD
 };
 
 /**
@@ -661,6 +686,18 @@ static inline int kgsl_create_device_workqueue(struct kgsl_device *device)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static inline int kgsl_state_is_awake(struct kgsl_device *device)
+{
+	if (device->state == KGSL_STATE_ACTIVE ||
+		device->state == KGSL_STATE_AWARE)
+		return true;
+	else
+		return false;
+}
+
+>>>>>>> FETCH_HEAD
 int kgsl_readtimestamp(struct kgsl_device *device, void *priv,
 		enum kgsl_timestamp_type type, unsigned int *timestamp);
 

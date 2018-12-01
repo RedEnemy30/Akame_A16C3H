@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2014, 2018 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -372,7 +376,10 @@ static int msm_dbm_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	struct dbm *dbm;
 	struct resource *res;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+>>>>>>> FETCH_HEAD
 
 	dbm_data = devm_kzalloc(dev, sizeof(*dbm_data), GFP_KERNEL);
 	if (!dbm_data)
@@ -382,24 +389,36 @@ static int msm_dbm_probe(struct platform_device *pdev)
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (!res) {
 		dev_err(&pdev->dev, "missing memory base resource\n");
+<<<<<<< HEAD
 		ret = -ENODEV;
 		goto free_dbm_data;
+=======
+		return -ENODEV;
+>>>>>>> FETCH_HEAD
 	}
 
 	dbm_data->base = devm_ioremap_nocache(&pdev->dev, res->start,
 		resource_size(res));
 	if (!dbm_data->base) {
 		dev_err(&pdev->dev, "ioremap failed\n");
+<<<<<<< HEAD
 		ret = -ENOMEM;
 		goto free_dbm_data;
+=======
+		return -ENOMEM;
+>>>>>>> FETCH_HEAD
 	}
 
 
 	dbm = devm_kzalloc(dev, sizeof(*dbm), GFP_KERNEL);
 	if (!dbm) {
 		dev_err(&pdev->dev, "not enough memory\n");
+<<<<<<< HEAD
 		ret = -ENOMEM;
 		goto free_dbm_data;
+=======
+		return -ENOMEM;
+>>>>>>> FETCH_HEAD
 	}
 
 	dbm->dev = dev;
@@ -418,6 +437,7 @@ static int msm_dbm_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, dbm);
 
 	return usb_add_dbm(dbm);
+<<<<<<< HEAD
 
 free_dbm_data:
 	kfree(dbm_data);
@@ -432,6 +452,8 @@ static int msm_dbm_remove(struct platform_device *pdev)
 	kfree(dbm_data);
 
 	return 0;
+=======
+>>>>>>> FETCH_HEAD
 }
 
 static const struct of_device_id msm_dbm_1_4_id_table[] = {
@@ -444,7 +466,10 @@ MODULE_DEVICE_TABLE(of, msm_dbm_1_4_id_table);
 
 static struct platform_driver msm_dbm_driver = {
 	.probe		= msm_dbm_probe,
+<<<<<<< HEAD
 	.remove		= msm_dbm_remove,
+=======
+>>>>>>> FETCH_HEAD
 	.driver = {
 		.name	= "msm-usb-dbm-1-4",
 		.of_match_table = of_match_ptr(msm_dbm_1_4_id_table),

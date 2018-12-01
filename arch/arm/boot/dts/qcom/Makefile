@@ -46,6 +46,10 @@ dtb-$(CONFIG_ARCH_MSM8909) += msm8909-sim.dtb \
 	msm8909-1gb-rcm.dtb \
 	msm8909-pm8916-1gb-rcm.dtb \
 	msm8909-pm8916-mtp.dtb \
+<<<<<<< HEAD
+=======
+	msm8909-pm8916-wear-mtp.dtb \
+>>>>>>> FETCH_HEAD
 	msm8909-pm8916-cdp.dtb \
 	msm8909-qhd-cdp.dtb \
 	msm8909-qhd-rcm.dtb \
@@ -53,6 +57,10 @@ dtb-$(CONFIG_ARCH_MSM8909) += msm8909-sim.dtb \
 	msm8909-pm8916-qhd-rcm.dtb \
 	msm8909-pm8916-qrd-skut-evt.dtb \
 	msm8909-pm8916-qrd-skut-dvt.dtb \
+<<<<<<< HEAD
+=======
+	msm8909-pm8916-qrd-skuq.dtb \
+>>>>>>> FETCH_HEAD
 	msm8208-cdp.dtb \
 	msm8208-mtp.dtb \
 	msm8208-1gb-cdp.dtb \
@@ -65,6 +73,7 @@ dtb-$(CONFIG_ARCH_MSM8909) += msm8909-sim.dtb \
 	msm8208-1gb-qrd-skue.dtb \
 	msm8208-1gb-rcm.dtb \
 	msm8208-qhd-cdp.dtb \
+<<<<<<< HEAD
 	msm8208-qhd-rcm.dtb
 dtb-$(CONFIG_ARCH_MSM8916) += msm8916-sim.dtb \
 	msm8916-rumi.dtb \
@@ -75,11 +84,30 @@ dtb-$(CONFIG_ARCH_MSM8916) += msm8916-sim.dtb \
 	msm8916-mtp-smb1360.dtb \
 	msm8916-512mb-mtp-smb1360.dtb \
 	msm8916-512mb-qrd-skui.dtb \
+=======
+	msm8208-qhd-rcm.dtb \
+	msm8909w-wtp.dtb \
+	msm8909w-cdp.dtb \
+	apq8009w-wtp.dtb \
+	apq8009w-cdp.dtb \
+	apq8009-mtp-wcd9326.dtb \
+	msm8909-mtp-wcd9326.dtb \
+	msm8909-mtp-wcd9326-refboard.dtb \
+	msm8909-512mb-mtp-wcd9326-refboard.dtb \
+	apq8009-mtp-wcd9326-refboard.dtb \
+	apq8009-512mb-mtp-wcd9326-refboard.dtb
+
+dtb-$(CONFIG_ARCH_MSM8916) += msm8916-cdp.dtb \
+	msm8916-cdp-smb1360.dtb \
+	msm8916-mtp.dtb \
+	msm8916-mtp-smb1360.dtb \
+>>>>>>> FETCH_HEAD
 	msm8916-qrd-skuh.dtb \
 	msm8916-qrd-skuhf.dtb \
 	msm8916-qrd-skui.dtb \
 	msm8916-qrd-skuic.dtb \
 	msm8916-qrd-skuid.dtb \
+<<<<<<< HEAD
 	msm8916-512mb-qrd-skuid.dtb \
 	msm8916-512mb-qrd-skuh.dtb \
 	msm8916-qrd-skut1.dtb \
@@ -87,6 +115,12 @@ dtb-$(CONFIG_ARCH_MSM8916) += msm8916-sim.dtb \
 	apq8016-mtp-smb1360.dtb \
 	msm8939-sim.dtb \
 	msm8939-rumi.dtb \
+=======
+	msm8916-qrd-skut1.dtb \
+	apq8016-mtp.dtb \
+	apq8016-mtp-smb1360.dtb \
+	apq8016-sbc.dtb \
+>>>>>>> FETCH_HEAD
 	msm8939-qrd-skuk.dtb \
 	msm8939-qrd-skul.dtb \
 	msm8939-cdp.dtb \
@@ -96,6 +130,18 @@ dtb-$(CONFIG_ARCH_MSM8916) += msm8916-sim.dtb \
 	msm8939-mtp-jdi.dtb \
 	msm8939-mtp-smb1360.dtb \
 	msm8939-mtp-wcd9306.dtb \
+<<<<<<< HEAD
+=======
+	msm8939-v3.0-qrd-skuk.dtb \
+	msm8939-v3.0-qrd-skul.dtb \
+	msm8939-v3.0-cdp.dtb \
+	msm8939-v3.0-cdp-jdi.dtb \
+	msm8939-v3.0-cdp-jdi-a216-fhd.dtb \
+	msm8939-v3.0-mtp.dtb \
+	msm8939-v3.0-mtp-jdi.dtb \
+	msm8939-v3.0-mtp-smb1360.dtb \
+	msm8939-v3.0-mtp-wcd9306.dtb \
+>>>>>>> FETCH_HEAD
 	msm8936-qrd-skuk.dtb \
 	msm8936-cdp.dtb \
 	msm8936-cdp-smb1360.dtb \

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License version 2 and
@@ -387,7 +391,11 @@ static int msm_afe_open(struct snd_pcm_substream *substream)
 		pr_err("Failed to allocate memory for msm_audio\n");
 		return -ENOMEM;
 	} else
+<<<<<<< HEAD
 		pr_debug("prtd %p\n", prtd);
+=======
+		pr_debug("prtd %pK\n", prtd);
+>>>>>>> FETCH_HEAD
 
 	mutex_init(&prtd->lock);
 	spin_lock_init(&prtd->dsp_lock);
@@ -499,6 +507,10 @@ done:
 	mutex_unlock(&prtd->lock);
 	prtd->prepared--;
 	kfree(prtd);
+<<<<<<< HEAD
+=======
+	runtime->private_data = NULL;
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 static int msm_afe_prepare(struct snd_pcm_substream *substream)
@@ -606,7 +618,11 @@ static int msm_afe_hw_params(struct snd_pcm_substream *substream,
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	pr_debug("%s:buf = %p\n", __func__, buf);
+=======
+	pr_debug("%s:buf = %pK\n", __func__, buf);
+>>>>>>> FETCH_HEAD
 	dma_buf->dev.type = SNDRV_DMA_TYPE_DEV;
 	dma_buf->dev.dev = substream->pcm->card->dev;
 	dma_buf->private_data = NULL;

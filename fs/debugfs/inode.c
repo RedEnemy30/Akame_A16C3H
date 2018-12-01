@@ -601,7 +601,11 @@ struct dentry *debugfs_rename(struct dentry *old_dir, struct dentry *old_dentry,
 {
 	int error;
 	struct dentry *dentry = NULL, *trap;
+<<<<<<< HEAD
 	const char *old_name;
+=======
+	struct name_snapshot old_name;
+>>>>>>> FETCH_HEAD
 
 	trap = lock_rename(new_dir, old_dir);
 	/* Source or destination directories don't exist? */
@@ -616,11 +620,16 @@ struct dentry *debugfs_rename(struct dentry *old_dir, struct dentry *old_dentry,
 	if (IS_ERR(dentry) || dentry == trap || dentry->d_inode)
 		goto exit;
 
+<<<<<<< HEAD
 	old_name = fsnotify_oldname_init(old_dentry->d_name.name);
+=======
+	take_dentry_name_snapshot(&old_name, old_dentry);
+>>>>>>> FETCH_HEAD
 
 	error = simple_rename(old_dir->d_inode, old_dentry, new_dir->d_inode,
 		dentry);
 	if (error) {
+<<<<<<< HEAD
 		fsnotify_oldname_free(old_name);
 		goto exit;
 	}
@@ -629,6 +638,16 @@ struct dentry *debugfs_rename(struct dentry *old_dir, struct dentry *old_dentry,
 		S_ISDIR(old_dentry->d_inode->i_mode),
 		NULL, old_dentry);
 	fsnotify_oldname_free(old_name);
+=======
+		release_dentry_name_snapshot(&old_name);
+		goto exit;
+	}
+	d_move(old_dentry, dentry);
+	fsnotify_move(old_dir->d_inode, new_dir->d_inode, old_name.name,
+		S_ISDIR(old_dentry->d_inode->i_mode),
+		NULL, old_dentry);
+	release_dentry_name_snapshot(&old_name);
+>>>>>>> FETCH_HEAD
 	unlock_rename(new_dir, old_dir);
 	dput(dentry);
 	return old_dentry;

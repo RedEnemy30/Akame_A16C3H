@@ -74,7 +74,11 @@ error:
 
 
 /* Free memory returned from module_alloc */
+<<<<<<< HEAD
 void module_free(struct module *mod, void *module_region)
+=======
+void module_memfree(void *module_region)
+>>>>>>> FETCH_HEAD
 {
 	vfree(module_region);
 

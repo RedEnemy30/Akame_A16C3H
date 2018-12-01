@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -868,8 +872,11 @@ static int stm_probe(struct platform_device *pdev)
 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
 	if (!drvdata)
 		return -ENOMEM;
+<<<<<<< HEAD
 	/* Store the driver data pointer for use in exported functions */
 	stmdrvdata = drvdata;
+=======
+>>>>>>> FETCH_HEAD
 	drvdata->dev = &pdev->dev;
 	platform_set_drvdata(pdev, drvdata);
 
@@ -948,6 +955,12 @@ static int stm_probe(struct platform_device *pdev)
 	if (boot_enable)
 		coresight_enable(drvdata->csdev);
 
+<<<<<<< HEAD
+=======
+	/* Store the driver data pointer for use in exported functions */
+	stmdrvdata = drvdata;
+
+>>>>>>> FETCH_HEAD
 	return 0;
 err:
 	coresight_unregister(drvdata->csdev);

@@ -111,8 +111,13 @@
 #define SPS_BAM_CANCEL_WB           (1UL << 6)
 /* Confirm resource status before access BAM*/
 #define SPS_BAM_RES_CONFIRM         (1UL << 7)
+<<<<<<< HEAD
 /* Verify Low Memory status */
 #define SPS_BAM_ATMC_MEM            (1UL << 8)
+=======
+/* Hold memory for BAM DMUX */
+#define SPS_BAM_HOLD_MEM            (1UL << 8)
+>>>>>>> FETCH_HEAD
 
 /* BAM device management flags */
 

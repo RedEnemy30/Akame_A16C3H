@@ -32,6 +32,10 @@ struct modem_data {
 	struct pil_desc desc;
 	struct device mba_mem_dev;
 	struct dma_attrs attrs_dma;
+<<<<<<< HEAD
+=======
+	struct device *mba_mem_dev_fixed;
+>>>>>>> FETCH_HEAD
 };
 
 extern struct pil_reset_ops pil_msa_mss_ops;

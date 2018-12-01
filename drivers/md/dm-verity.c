@@ -18,20 +18,48 @@
 
 #include <linux/module.h>
 #include <linux/device-mapper.h>
+<<<<<<< HEAD
+=======
+#include <linux/reboot.h>
+>>>>>>> FETCH_HEAD
 #include <crypto/hash.h>
 
 #define DM_MSG_PREFIX			"verity"
 
+<<<<<<< HEAD
+=======
+#define DM_VERITY_ENV_LENGTH		42
+#define DM_VERITY_ENV_VAR_NAME		"VERITY_ERR_BLOCK_NR"
+
+>>>>>>> FETCH_HEAD
 #define DM_VERITY_IO_VEC_INLINE		16
 #define DM_VERITY_MEMPOOL_SIZE		4
 #define DM_VERITY_DEFAULT_PREFETCH_SIZE	262144
 
 #define DM_VERITY_MAX_LEVELS		63
+<<<<<<< HEAD
+=======
+#define DM_VERITY_MAX_CORRUPTED_ERRS	100
+>>>>>>> FETCH_HEAD
 
 static unsigned dm_verity_prefetch_cluster = DM_VERITY_DEFAULT_PREFETCH_SIZE;
 
 module_param_named(prefetch_cluster, dm_verity_prefetch_cluster, uint, S_IRUGO | S_IWUSR);
 
+<<<<<<< HEAD
+=======
+enum verity_mode {
+	DM_VERITY_MODE_EIO = 0,
+	DM_VERITY_MODE_LOGGING = 1,
+	DM_VERITY_MODE_RESTART = 2
+};
+
+enum verity_block_type {
+	DM_VERITY_BLOCK_TYPE_DATA,
+	DM_VERITY_BLOCK_TYPE_METADATA
+};
+
+>>>>>>> FETCH_HEAD
 struct dm_verity {
 	struct dm_dev *data_dev;
 	struct dm_dev *hash_dev;
@@ -54,6 +82,11 @@ struct dm_verity {
 	unsigned digest_size;	/* digest size for the current hash algorithm */
 	unsigned shash_descsize;/* the size of temporary space for crypto */
 	int hash_failed;	/* set to 1 if hash of any block failed */
+<<<<<<< HEAD
+=======
+	enum verity_mode mode;	/* mode for handling verification errors */
+	unsigned corrupted_errs;/* Number of errors for corrupted blocks */
+>>>>>>> FETCH_HEAD
 
 	mempool_t *vec_mempool;	/* mempool of bio vector */
 
@@ -180,6 +213,57 @@ static void verity_hash_at_level(struct dm_verity *v, sector_t block, int level,
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Handle verification errors.
+ */
+static int verity_handle_err(struct dm_verity *v, enum verity_block_type type,
+				 unsigned long long block)
+{
+	char verity_env[DM_VERITY_ENV_LENGTH];
+	char *envp[] = { verity_env, NULL };
+	const char *type_str = "";
+	struct mapped_device *md = dm_table_get_md(v->ti->table);
+
+	if (v->corrupted_errs >= DM_VERITY_MAX_CORRUPTED_ERRS)
+		goto out;
+
+	++v->corrupted_errs;
+
+	switch (type) {
+	case DM_VERITY_BLOCK_TYPE_DATA:
+		type_str = "data";
+		break;
+	case DM_VERITY_BLOCK_TYPE_METADATA:
+		type_str = "metadata";
+		break;
+	default:
+		BUG();
+	}
+
+	DMERR_LIMIT("%s: %s block %llu is corrupted", v->data_dev->name,
+                type_str, block);
+
+	if (v->corrupted_errs == DM_VERITY_MAX_CORRUPTED_ERRS)
+		DMERR("%s: reached maximum errors", v->data_dev->name);
+
+	snprintf(verity_env, DM_VERITY_ENV_LENGTH, "%s=%d,%llu",
+		DM_VERITY_ENV_VAR_NAME, type, block);
+
+	kobject_uevent_env(&disk_to_dev(dm_disk(md))->kobj, KOBJ_CHANGE, envp);
+
+out:
+	if (v->mode == DM_VERITY_MODE_LOGGING)
+		return 0;
+
+	if (v->mode == DM_VERITY_MODE_RESTART)
+		kernel_restart("dm-verity device corrupted");
+
+	return 1;
+}
+
+/*
+>>>>>>> FETCH_HEAD
  * Verify hash of a metadata block pertaining to the specified data block
  * ("block" argument) at a specified level ("level" argument).
  *
@@ -256,11 +340,21 @@ static int verity_verify_level(struct dm_verity_io *io, sector_t block,
 			goto release_ret_r;
 		}
 		if (unlikely(memcmp(result, io_want_digest(v, io), v->digest_size))) {
+<<<<<<< HEAD
 			DMERR_LIMIT("metadata block %llu is corrupted",
 				(unsigned long long)hash_block);
 			v->hash_failed = 1;
 			r = -EIO;
 			goto release_ret_r;
+=======
+			v->hash_failed = 1;
+
+			if (verity_handle_err(v, DM_VERITY_BLOCK_TYPE_METADATA,
+					      hash_block)) {
+				r = -EIO;
+				goto release_ret_r;
+			}
+>>>>>>> FETCH_HEAD
 		} else
 			aux->hash_verified = 1;
 	}
@@ -377,10 +471,18 @@ test_block_hash:
 			return r;
 		}
 		if (unlikely(memcmp(result, io_want_digest(v, io), v->digest_size))) {
+<<<<<<< HEAD
 			DMERR_LIMIT("data block %llu is corrupted",
 				(unsigned long long)(io->block + b));
 			v->hash_failed = 1;
 			return -EIO;
+=======
+			v->hash_failed = 1;
+
+			if (verity_handle_err(v, DM_VERITY_BLOCK_TYPE_DATA,
+					      io->block + b))
+				return -EIO;
+>>>>>>> FETCH_HEAD
 		}
 	}
 	BUG_ON(vector != io->io_vec_size);
@@ -689,8 +791,13 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
 		goto bad;
 	}
 
+<<<<<<< HEAD
 	if (argc != 10) {
 		ti->error = "Invalid argument count: exactly 10 arguments required";
+=======
+	if (argc < 10 || argc > 11) {
+		ti->error = "Invalid argument count: 10-11 arguments required";
+>>>>>>> FETCH_HEAD
 		r = -EINVAL;
 		goto bad;
 	}
@@ -811,6 +918,20 @@ static int verity_ctr(struct dm_target *ti, unsigned argc, char **argv)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (argc > 10) {
+		if (sscanf(argv[10], "%d%c", &num, &dummy) != 1 ||
+			num < DM_VERITY_MODE_EIO ||
+			num > DM_VERITY_MODE_RESTART) {
+			ti->error = "Invalid mode";
+			r = -EINVAL;
+			goto bad;
+		}
+		v->mode = num;
+	}
+
+>>>>>>> FETCH_HEAD
 	v->hash_per_block_bits =
 		fls((1 << v->hash_dev_block_bits) / v->digest_size) - 1;
 

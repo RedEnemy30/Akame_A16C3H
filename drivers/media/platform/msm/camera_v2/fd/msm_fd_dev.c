@@ -369,6 +369,10 @@ static int msm_fd_open(struct file *file)
 	ctx->vb2_q.type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
 	ctx->vb2_q.io_modes = VB2_USERPTR;
 	ctx->vb2_q.timestamp_type = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+<<<<<<< HEAD
+=======
+	mutex_init(&ctx->lock);
+>>>>>>> FETCH_HEAD
 	ret = vb2_queue_init(&ctx->vb2_q);
 	if (ret < 0) {
 		dev_err(device->dev, "Error queue init\n");
@@ -411,7 +415,13 @@ static int msm_fd_release(struct file *file)
 {
 	struct fd_ctx *ctx = msm_fd_ctx_from_fh(file->private_data);
 
+<<<<<<< HEAD
 	vb2_queue_release(&ctx->vb2_q);
+=======
+	mutex_lock(&ctx->lock);
+	vb2_queue_release(&ctx->vb2_q);
+	mutex_unlock(&ctx->lock);
+>>>>>>> FETCH_HEAD
 
 	vfree(ctx->stats);
 
@@ -439,7 +449,13 @@ static unsigned int msm_fd_poll(struct file *file,
 	struct fd_ctx *ctx = msm_fd_ctx_from_fh(file->private_data);
 	unsigned int ret;
 
+<<<<<<< HEAD
 	ret = vb2_poll(&ctx->vb2_q, file, wait);
+=======
+	mutex_lock(&ctx->lock);
+	ret = vb2_poll(&ctx->vb2_q, file, wait);
+	mutex_unlock(&ctx->lock);
+>>>>>>> FETCH_HEAD
 
 	if (atomic_read(&ctx->subscribed_for_event)) {
 		poll_wait(file, &ctx->fh.wait, wait);
@@ -674,9 +690,19 @@ static int msm_fd_s_fmt_vid_out(struct file *file,
 static int msm_fd_reqbufs(struct file *file,
 	void *fh, struct v4l2_requestbuffers *req)
 {
+<<<<<<< HEAD
 	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
 
 	return vb2_reqbufs(&ctx->vb2_q, req);
+=======
+	int ret;
+	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
+
+	mutex_lock(&ctx->lock);
+	ret = vb2_reqbufs(&ctx->vb2_q, req);
+	mutex_unlock(&ctx->lock);
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 /*
@@ -688,9 +714,20 @@ static int msm_fd_reqbufs(struct file *file,
 static int msm_fd_qbuf(struct file *file, void *fh,
 	struct v4l2_buffer *pb)
 {
+<<<<<<< HEAD
 	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
 
 	return vb2_qbuf(&ctx->vb2_q, pb);
+=======
+	int ret;
+	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
+
+	mutex_lock(&ctx->lock);
+	ret = vb2_qbuf(&ctx->vb2_q, pb);
+	mutex_unlock(&ctx->lock);
+	return ret;
+
+>>>>>>> FETCH_HEAD
 }
 
 /*
@@ -702,9 +739,19 @@ static int msm_fd_qbuf(struct file *file, void *fh,
 static int msm_fd_dqbuf(struct file *file,
 	void *fh, struct v4l2_buffer *pb)
 {
+<<<<<<< HEAD
 	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
 
 	return vb2_dqbuf(&ctx->vb2_q, pb, file->f_flags & O_NONBLOCK);
+=======
+	int ret;
+	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
+
+	mutex_lock(&ctx->lock);
+	ret = vb2_dqbuf(&ctx->vb2_q, pb, file->f_flags & O_NONBLOCK);
+	mutex_unlock(&ctx->lock);
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 /*
@@ -719,7 +766,13 @@ static int msm_fd_streamon(struct file *file,
 	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
 	int ret;
 
+<<<<<<< HEAD
 	ret = vb2_streamon(&ctx->vb2_q, buf_type);
+=======
+	mutex_lock(&ctx->lock);
+	ret = vb2_streamon(&ctx->vb2_q, buf_type);
+	mutex_unlock(&ctx->lock);
+>>>>>>> FETCH_HEAD
 	if (ret < 0)
 		dev_err(ctx->fd_device->dev, "Stream on fails\n");
 
@@ -738,7 +791,13 @@ static int msm_fd_streamoff(struct file *file,
 	struct fd_ctx *ctx = msm_fd_ctx_from_fh(fh);
 	int ret;
 
+<<<<<<< HEAD
 	ret = vb2_streamoff(&ctx->vb2_q, buf_type);
+=======
+	mutex_lock(&ctx->lock);
+	ret = vb2_streamoff(&ctx->vb2_q, buf_type);
+	mutex_unlock(&ctx->lock);
+>>>>>>> FETCH_HEAD
 	if (ret < 0)
 		dev_err(ctx->fd_device->dev, "Stream off fails\n");
 
@@ -968,15 +1027,28 @@ static int msm_fd_s_ctrl(struct file *file, void *fh, struct v4l2_control *a)
 			a->value = ctx->format.size->work_size;
 		break;
 	case V4L2_CID_FD_WORK_MEMORY_FD:
+<<<<<<< HEAD
+=======
+                mutex_lock(&ctx->fd_device->recovery_lock);
+>>>>>>> FETCH_HEAD
 		if (ctx->work_buf.handle)
 			msm_fd_hw_unmap_buffer(&ctx->work_buf);
 
 		if (a->value >= 0) {
 			ret = msm_fd_hw_map_buffer(&ctx->mem_pool,
 				a->value, &ctx->work_buf);
+<<<<<<< HEAD
 			if (ret < 0)
 				return ret;
 		}
+=======
+			if (ret < 0) {
+				mutex_unlock(&ctx->fd_device->recovery_lock);
+				return ret;
+			}
+		}
+		mutex_unlock(&ctx->fd_device->recovery_lock);
+>>>>>>> FETCH_HEAD
 		break;
 	default:
 		return -EINVAL;
@@ -1226,6 +1298,10 @@ static int fd_probe(struct platform_device *pdev)
 
 	mutex_init(&fd->lock);
 	spin_lock_init(&fd->slock);
+<<<<<<< HEAD
+=======
+	mutex_init(&fd->recovery_lock);
+>>>>>>> FETCH_HEAD
 	fd->dev = &pdev->dev;
 
 	/* Get resources */

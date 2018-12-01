@@ -1,10 +1,20 @@
 /*
    BlueZ - Bluetooth protocol stack for Linux
    Copyright (C) 2000-2001 Qualcomm Incorporated
+<<<<<<< HEAD
    Written 2000,2001 by Maxim Krasnyansky <maxk@qualcomm.com>
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License version 2 as
    published by the Free Software Foundation;
+=======
+
+   Written 2000,2001 by Maxim Krasnyansky <maxk@qualcomm.com>
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License version 2 as
+   published by the Free Software Foundation;
+
+>>>>>>> FETCH_HEAD
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
@@ -13,6 +23,10 @@
    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+<<<<<<< HEAD
+=======
+
+>>>>>>> FETCH_HEAD
    ALL LIABILITY, INCLUDING LIABILITY FOR INFRINGEMENT OF ANY PATENTS,
    COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS, RELATING TO USE OF THIS
    SOFTWARE IS DISCLAIMED.
@@ -181,7 +195,11 @@ EXPORT_SYMBOL(bt_sock_unlink);
 
 void bt_accept_enqueue(struct sock *parent, struct sock *sk)
 {
+<<<<<<< HEAD
 	BT_DBG("parent %p, sk %p", parent, sk);
+=======
+	BT_DBG("parent %pK, sk %pK", parent, sk);
+>>>>>>> FETCH_HEAD
 
 	sock_hold(sk);
 	list_add_tail(&bt_sk(sk)->accept_q, &bt_sk(parent)->accept_q);
@@ -192,7 +210,11 @@ EXPORT_SYMBOL(bt_accept_enqueue);
 
 void bt_accept_unlink(struct sock *sk)
 {
+<<<<<<< HEAD
 	BT_DBG("sk %p state %d", sk, sk->sk_state);
+=======
+	BT_DBG("sk %pK state %d", sk, sk->sk_state);
+>>>>>>> FETCH_HEAD
 
 	list_del_init(&bt_sk(sk)->accept_q);
 	bt_sk(sk)->parent->sk_ack_backlog--;
@@ -206,7 +228,11 @@ struct sock *bt_accept_dequeue(struct sock *parent, struct socket *newsock)
 	struct list_head *p, *n;
 	struct sock *sk;
 
+<<<<<<< HEAD
 	BT_DBG("parent %p", parent);
+=======
+	BT_DBG("parent %pK", parent);
+>>>>>>> FETCH_HEAD
 
 	list_for_each_safe(p, n, &bt_sk(parent)->accept_q) {
 		sk = (struct sock *) list_entry(p, struct bt_sock, accept_q);
@@ -246,7 +272,11 @@ int bt_sock_recvmsg(struct kiocb *iocb, struct socket *sock,
 	size_t copied;
 	int err;
 
+<<<<<<< HEAD
 	BT_DBG("sock %p sk %p len %zu", sock, sk, len);
+=======
+	BT_DBG("sock %pK sk %pK len %zu", sock, sk, len);
+>>>>>>> FETCH_HEAD
 
 	if (flags & (MSG_OOB))
 		return -EOPNOTSUPP;
@@ -315,7 +345,11 @@ int bt_sock_stream_recvmsg(struct kiocb *iocb, struct socket *sock,
 	if (flags & MSG_OOB)
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	BT_DBG("sk %p size %zu", sk, size);
+=======
+	BT_DBG("sk %pK size %zu", sk, size);
+>>>>>>> FETCH_HEAD
 
 	lock_sock(sk);
 
@@ -431,7 +465,11 @@ unsigned int bt_sock_poll(struct file *file, struct socket *sock,
 	struct sock *sk = sock->sk;
 	unsigned int mask = 0;
 
+<<<<<<< HEAD
 	BT_DBG("sock %p, sk %p", sock, sk);
+=======
+	BT_DBG("sock %pK, sk %pK", sock, sk);
+>>>>>>> FETCH_HEAD
 
 	poll_wait(file, sk_sleep(sk), wait);
 
@@ -475,7 +513,11 @@ int bt_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
 	long amount;
 	int err;
 
+<<<<<<< HEAD
 	BT_DBG("sk %p cmd %x arg %lx", sk, cmd, arg);
+=======
+	BT_DBG("sk %pK cmd %x arg %lx", sk, cmd, arg);
+>>>>>>> FETCH_HEAD
 
 	switch (cmd) {
 	case TIOCOUTQ:
@@ -521,7 +563,11 @@ int bt_sock_wait_state(struct sock *sk, int state, unsigned long timeo)
 	DECLARE_WAITQUEUE(wait, current);
 	int err = 0;
 
+<<<<<<< HEAD
 	BT_DBG("sk %p", sk);
+=======
+	BT_DBG("sk %pK", sk);
+>>>>>>> FETCH_HEAD
 
 	add_wait_queue(sk_sleep(sk), &wait);
 	set_current_state(TASK_INTERRUPTIBLE);

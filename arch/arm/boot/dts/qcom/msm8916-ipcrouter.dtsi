@@ -23,6 +23,10 @@
 		qcom,xprt-linkid = <1>;
 		qcom,xprt-version = <1>;
 		qcom,fragmented-data;
+<<<<<<< HEAD
+=======
+		qcom,disable-pil-loading;
+>>>>>>> FETCH_HEAD
 	};
 
 	qcom,ipc_router_wcnss_xprt {

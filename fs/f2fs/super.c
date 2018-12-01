@@ -376,7 +376,11 @@ static int parse_options(struct super_block *sb, struct f2fs_sb_info *sbi,
 	return 0;
 }
 
+<<<<<<< HEAD
 static loff_t max_file_size(unsigned bits)
+=======
+loff_t max_file_size(unsigned bits)
+>>>>>>> FETCH_HEAD
 {
 	loff_t result = ADDRS_PER_INODE;
 	loff_t leaf_count = ADDRS_PER_BLOCK;
@@ -435,6 +439,16 @@ static int sanity_check_raw_super(struct super_block *sb,
 		f2fs_msg(sb, KERN_INFO, "Invalid log sectors per block");
 		return 1;
 	}
+<<<<<<< HEAD
+=======
+
+	if (le32_to_cpu(raw_super->segment_count) > F2FS_MAX_SEGMENT) {
+		f2fs_msg(sb, KERN_INFO,
+			"Invalid segment count (%u)",
+			le32_to_cpu(raw_super->segment_count));
+		return 1;
+	}
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 

@@ -720,6 +720,10 @@ struct usb_interface_assoc_descriptor {
 	__u8  iFunction;
 } __attribute__ ((packed));
 
+<<<<<<< HEAD
+=======
+#define USB_DT_INTERFACE_ASSOCIATION_SIZE	8
+>>>>>>> FETCH_HEAD
 
 /*-------------------------------------------------------------------------*/
 

@@ -108,7 +108,11 @@ static inline void cmtp_add_msgpart(struct cmtp_session *session, int id, const 
 	struct sk_buff *skb = session->reassembly[id], *nskb;
 	int size;
 
+<<<<<<< HEAD
 	BT_DBG("session %p buf %p count %d", session, buf, count);
+=======
+	BT_DBG("session %pK buf %pK count %d", session, buf, count);
+>>>>>>> FETCH_HEAD
 
 	size = (skb) ? skb->len + count : count;
 
@@ -133,7 +137,11 @@ static inline int cmtp_recv_frame(struct cmtp_session *session, struct sk_buff *
 	__u8 hdr, hdrlen, id;
 	__u16 len;
 
+<<<<<<< HEAD
 	BT_DBG("session %p skb %p len %d", session, skb, skb->len);
+=======
+	BT_DBG("session %pK skb %pK len %d", session, skb, skb->len);
+>>>>>>> FETCH_HEAD
 
 	while (skb->len > 0) {
 		hdr = skb->data[0];
@@ -196,7 +204,11 @@ static int cmtp_send_frame(struct cmtp_session *session, unsigned char *data, in
 	struct kvec iv = { data, len };
 	struct msghdr msg;
 
+<<<<<<< HEAD
 	BT_DBG("session %p data %p len %d", session, data, len);
+=======
+	BT_DBG("session %pK data %pK len %d", session, data, len);
+>>>>>>> FETCH_HEAD
 
 	if (!len)
 		return 0;
@@ -212,7 +224,11 @@ static void cmtp_process_transmit(struct cmtp_session *session)
 	unsigned char *hdr;
 	unsigned int size, tail;
 
+<<<<<<< HEAD
 	BT_DBG("session %p", session);
+=======
+	BT_DBG("session %pK", session);
+>>>>>>> FETCH_HEAD
 
 	nskb = alloc_skb(session->mtu, GFP_ATOMIC);
 	if (!nskb) {
@@ -282,7 +298,11 @@ static int cmtp_session(void *arg)
 	struct sk_buff *skb;
 	wait_queue_t wait;
 
+<<<<<<< HEAD
 	BT_DBG("session %p", session);
+=======
+	BT_DBG("session %pK", session);
+>>>>>>> FETCH_HEAD
 
 	set_user_nice(current, -15);
 

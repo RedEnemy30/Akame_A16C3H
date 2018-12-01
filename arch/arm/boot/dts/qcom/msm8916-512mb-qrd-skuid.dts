@@ -21,3 +21,7 @@
        qcom,board-id = <0x21010b 0x105>, <0x22010b 0x105>, <0x23010b 0x105>;
 };
 
+<<<<<<< HEAD
+=======
+/delete-node/ &mba_mss;
+>>>>>>> FETCH_HEAD

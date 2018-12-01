@@ -20,13 +20,20 @@ SECTIONS
   . = START + SIZEOF_HEADERS;
 
   _text = .;
+<<<<<<< HEAD
   _stext = .;
   __init_begin = .;
+=======
+>>>>>>> FETCH_HEAD
   INIT_TEXT_SECTION(0)
   . = ALIGN(PAGE_SIZE);
 
   .text      :
   {
+<<<<<<< HEAD
+=======
+    _stext = .;
+>>>>>>> FETCH_HEAD
     TEXT_TEXT
     SCHED_TEXT
     LOCK_TEXT
@@ -62,7 +69,14 @@ SECTIONS
 
   #include <asm/common.lds.S>
 
+<<<<<<< HEAD
   init.data : { INIT_DATA }
+=======
+  __init_begin = .;
+  init.data : { INIT_DATA }
+  __init_end = .;
+
+>>>>>>> FETCH_HEAD
   .data    :
   {
     INIT_TASK_DATA(KERNEL_STACK_SIZE)
@@ -97,6 +111,10 @@ SECTIONS
   PROVIDE(_bss_start = .);
   SBSS(0)
   BSS(0)
+<<<<<<< HEAD
+=======
+   __bss_stop = .;
+>>>>>>> FETCH_HEAD
   _end = .;
   PROVIDE (end = .);
 

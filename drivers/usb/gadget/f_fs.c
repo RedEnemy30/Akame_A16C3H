@@ -824,15 +824,39 @@ first_try:
 			}
 		}
 
+<<<<<<< HEAD
 		buffer_len = !read ? len : round_up(len,
 						ep->ep->desc->wMaxPacketSize);
+=======
+		spin_lock_irq(&epfile->ffs->eps_lock);
+		/*
+		 * While we were acquiring lock endpoint got disabled
+		 * (disconnect) or changed (composition switch) ?
+		 */
+		if (epfile->ep == ep) {
+			buffer_len = !read ? len : round_up(len,
+						ep->ep->desc->wMaxPacketSize);
+		} else {
+			spin_unlock_irq(&epfile->ffs->eps_lock);
+			ret = -ENODEV;
+			goto error;
+		}
+>>>>>>> FETCH_HEAD
 
 		/* Do we halt? */
 		halt = !read == !epfile->in;
 		if (halt && epfile->isoc) {
+<<<<<<< HEAD
 			ret = -EINVAL;
 			goto error;
 		}
+=======
+			spin_unlock_irq(&epfile->ffs->eps_lock);
+			ret = -EINVAL;
+			goto error;
+		}
+		spin_unlock_irq(&epfile->ffs->eps_lock);
+>>>>>>> FETCH_HEAD
 
 		/* Allocate & copy */
 		if (!halt && !data) {
@@ -1409,14 +1433,22 @@ static void ffs_data_clear(struct ffs_data *ffs)
 {
 	ENTER();
 
+<<<<<<< HEAD
 	pr_debug("%s: ffs->gadget= %p, ffs->flags= %lu\n", __func__,
+=======
+	pr_debug("%s: ffs->gadget= %pK, ffs->flags= %lu\n", __func__,
+>>>>>>> FETCH_HEAD
 						ffs->gadget, ffs->flags);
 	if (test_and_clear_bit(FFS_FL_CALL_CLOSED_CALLBACK, &ffs->flags))
 		functionfs_closed_callback(ffs);
 
 	/* Dump ffs->gadget and ffs->flags */
 	if (ffs->gadget)
+<<<<<<< HEAD
 		pr_err("%s: ffs->gadget= %p, ffs->flags= %lu\n", __func__,
+=======
+		pr_err("%s: ffs->gadget= %pK, ffs->flags= %lu\n", __func__,
+>>>>>>> FETCH_HEAD
 						ffs->gadget, ffs->flags);
 	BUG_ON(ffs->gadget);
 

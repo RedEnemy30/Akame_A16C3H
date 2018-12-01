@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2014,2016 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -45,7 +49,12 @@ struct msm_isp_bufq *msm_isp_get_bufq(
 	uint32_t bufq_index = bufq_handle & 0xFF;
 
 	if ((bufq_handle == 0) ||
+<<<<<<< HEAD
 		(bufq_index > buf_mgr->num_buf_q))
+=======
+		(bufq_index >= buf_mgr->num_buf_q) ||
+		(bufq_index >= BUF_MGR_NUM_BUF_Q))
+>>>>>>> FETCH_HEAD
 		return NULL;
 
 	bufq = &buf_mgr->bufq[bufq_index];
@@ -197,6 +206,15 @@ static void msm_isp_unprepare_v4l2_buf(
 	else
 		domain_num = buf_mgr->iommu_domain_num_secure;
 
+<<<<<<< HEAD
+=======
+	if (buf_info->num_planes > VIDEO_MAX_PLANES) {
+		pr_err("%s: Invalid num_planes %d \n",
+			__func__, buf_info->num_planes);
+		return;
+	}
+
+>>>>>>> FETCH_HEAD
 	for (i = 0; i < buf_info->num_planes; i++) {
 		mapped_info = &buf_info->mapped_info[i];
 
@@ -235,6 +253,15 @@ static int msm_isp_buf_prepare(struct msm_isp_buf_mgr *buf_mgr,
 		return rc;
 	}
 
+<<<<<<< HEAD
+=======
+	if (buf_info->num_planes > VIDEO_MAX_PLANES) {
+		pr_err("%s: Invalid num_planes %d \n",
+			__func__, buf_info->num_planes);
+		return rc;
+	}
+
+>>>>>>> FETCH_HEAD
 	bufq = msm_isp_get_bufq(buf_mgr, buf_info->bufq_handle);
 	if (!bufq) {
 		pr_err("%s: Invalid bufq\n", __func__);

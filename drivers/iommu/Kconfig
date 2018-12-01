@@ -137,6 +137,7 @@ config IOMMU_FORCE_4K_MAPPINGS
 
          If unsure, say N here.
 
+<<<<<<< HEAD
 config MSM_IOMMU_TLBINVAL_ON_MAP
 	bool "Invalidates the SMMU TLB on map"
 	depends on MSM_IOMMU
@@ -148,6 +149,8 @@ config MSM_IOMMU_TLBINVAL_ON_MAP
 
 	 If unsure, say Y here.
 
+=======
+>>>>>>> FETCH_HEAD
 config MMU500_ACTIVE_PREFETCH_BUG_WITH_SECTION_MAPPING
 	bool "Don't align Virtual address at 1MB boundary"
 	depends on MSM_IOMMU

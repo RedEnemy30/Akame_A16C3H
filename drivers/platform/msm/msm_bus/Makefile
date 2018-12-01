@@ -21,4 +21,7 @@ else
 endif
 
 obj-$(CONFIG_DEBUG_FS) += msm_bus_dbg.o
+<<<<<<< HEAD
 obj-$(CONFIG_MSM_BUSPM_DEV) += msm-buspm-dev.o
+=======
+>>>>>>> FETCH_HEAD

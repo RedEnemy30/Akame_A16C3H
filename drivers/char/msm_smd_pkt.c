@@ -359,6 +359,10 @@ static long smd_pkt_ioctl(struct file *file, unsigned int cmd,
 {
 	int ret;
 	struct smd_pkt_dev *smd_pkt_devp;
+<<<<<<< HEAD
+=======
+	uint32_t val;
+>>>>>>> FETCH_HEAD
 
 	smd_pkt_devp = file->private_data;
 	if (!smd_pkt_devp)
@@ -372,9 +376,21 @@ static long smd_pkt_ioctl(struct file *file, unsigned int cmd,
 		ret = smd_tiocmget(smd_pkt_devp->ch);
 		break;
 	case TIOCMSET:
+<<<<<<< HEAD
 		D_STATUS("%s TIOCSET command on smd_pkt_dev id:%d\n",
 			 __func__, smd_pkt_devp->i);
 		ret = smd_tiocmset(smd_pkt_devp->ch, arg, ~arg);
+=======
+		ret = get_user(val, (uint32_t *)arg);
+		if (ret) {
+			pr_err("Error getting TIOCMSET value\n");
+			mutex_unlock(&smd_pkt_devp->ch_lock);
+			return ret;
+		}
+		D_STATUS("%s TIOCSET command on smd_pkt_dev id:%d arg[0x%x]\n",
+			 __func__, smd_pkt_devp->i, val);
+		ret = smd_tiocmset(smd_pkt_devp->ch, val, ~val);
+>>>>>>> FETCH_HEAD
 		break;
 	case SMD_PKT_IOCTL_BLOCKING_WRITE:
 		ret = get_user(smd_pkt_devp->blocking_write, (int *)arg);

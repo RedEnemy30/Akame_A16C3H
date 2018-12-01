@@ -29,6 +29,10 @@
 #include <soc/qcom/scm.h>
 #include <soc/qcom/memory_dump.h>
 #include <soc/qcom/watchdog.h>
+<<<<<<< HEAD
+=======
+#include <linux/kmemleak.h>
+>>>>>>> FETCH_HEAD
 
 #define MODULE_NAME "msm_watchdog"
 #define WDT0_ACCSCSSNBARK_INT 0
@@ -482,13 +486,21 @@ static void configure_bark_dump(struct msm_watchdog_data *wdog_dd)
 			pr_err("cpu dump data structure allocation failed\n");
 			goto out0;
 		}
+<<<<<<< HEAD
+=======
+		kmemleak_not_leak(cpu_data);
+>>>>>>> FETCH_HEAD
 		cpu_buf = kzalloc(MAX_CPU_CTX_SIZE * num_present_cpus(),
 				  GFP_KERNEL);
 		if (!cpu_buf) {
 			pr_err("cpu reg context space allocation failed\n");
 			goto out1;
 		}
+<<<<<<< HEAD
 
+=======
+		kmemleak_not_leak(cpu_buf);
+>>>>>>> FETCH_HEAD
 		for_each_cpu(cpu, cpu_present_mask) {
 			cpu_data[cpu].addr = virt_to_phys(cpu_buf +
 							cpu * MAX_CPU_CTX_SIZE);

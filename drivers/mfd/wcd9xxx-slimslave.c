@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -87,6 +91,13 @@ int wcd9xxx_init_slimslave(struct wcd9xxx *wcd9xxx, u8 wcd9xxx_pgd_la,
 		goto err;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!rx_num || rx_num > wcd9xxx->num_rx_port) {
+		pr_err("%s: invalid rx num %d\n", __func__, rx_num);
+		return -EINVAL;
+	}
+>>>>>>> FETCH_HEAD
 	if (wcd9xxx->rx_chs) {
 		wcd9xxx->num_rx_port = rx_num;
 		for (i = 0; i < rx_num; i++) {
@@ -109,6 +120,13 @@ int wcd9xxx_init_slimslave(struct wcd9xxx *wcd9xxx, u8 wcd9xxx_pgd_la,
 			wcd9xxx->num_rx_port);
 	}
 
+<<<<<<< HEAD
+=======
+	if (!tx_num || tx_num > wcd9xxx->num_tx_port) {
+		pr_err("%s: invalid tx num %d\n", __func__, tx_num);
+		return -EINVAL;
+	}
+>>>>>>> FETCH_HEAD
 	if (wcd9xxx->tx_chs) {
 		wcd9xxx->num_tx_port = tx_num;
 		for (i = 0; i < tx_num; i++) {
@@ -266,7 +284,11 @@ int wcd9xxx_cfg_slim_sch_rx(struct wcd9xxx *wcd9xxx,
 
 	list_for_each_entry(rx, wcd9xxx_ch_list, list) {
 		codec_port = rx->port;
+<<<<<<< HEAD
 		pr_debug("%s: codec_port %d rx 0x%p, payload %d\n"
+=======
+		pr_debug("%s: codec_port %d rx 0x%pK, payload %d\n"
+>>>>>>> FETCH_HEAD
 			 "sh_ch.rx_port_ch_reg_base0 0x%x\n"
 			 "sh_ch.port_rx_cfg_reg_base 0x%x\n",
 			 __func__, codec_port, rx, payload,
@@ -373,7 +395,11 @@ int wcd9xxx_cfg_slim_sch_tx(struct wcd9xxx *wcd9xxx,
 	pr_debug("%s: ch_cnt[%d] rate[%d]\n", __func__, ch_cnt, rate);
 	list_for_each_entry(tx, wcd9xxx_ch_list, list) {
 		codec_port = tx->port;
+<<<<<<< HEAD
 		pr_debug("%s: codec_port %d tx 0x%p, payload 0x%x\n",
+=======
+		pr_debug("%s: codec_port %d tx 0x%pK, payload 0x%x\n",
+>>>>>>> FETCH_HEAD
 			 __func__, codec_port, tx, payload);
 		/* write to interface device */
 		ret = wcd9xxx_interface_reg_write(wcd9xxx,
@@ -595,7 +621,11 @@ int wcd9xxx_slim_ch_master_open(struct wcd9xxx *wcd9xxx,
 		 __func__, rate, bit_sz);
 
 	if (wcd9xxx == NULL || handle == NULL) {
+<<<<<<< HEAD
 		pr_err("%s: Invalid params, wcd9xxx(%p) handle(%p)\n",
+=======
+		pr_err("%s: Invalid params, wcd9xxx(%pK) handle(%pK)\n",
+>>>>>>> FETCH_HEAD
 			__func__, wcd9xxx, handle);
 		return -EINVAL;
 	}
@@ -658,12 +688,20 @@ int wcd9xxx_slim_ch_master_open(struct wcd9xxx *wcd9xxx,
 	*handle = (struct wcd9xxx_master_cfg *)tx_master;
 	tx_master->slim_s.handle = *handle;
 	init_completion(&tx_master->slim_s.sb_comp);
+<<<<<<< HEAD
 	pr_debug("%s: Handle %p slim_cfg->ph1 %x slim grp handle %x\n"
+=======
+	pr_debug("%s: Handle %pK slim_cfg->ph1 %x slim grp handle %x\n"
+>>>>>>> FETCH_HEAD
 		 "chanh %x\n", __func__, tx_master->slim_s.handle,
 		 tx_master->slim_cfg->ph1, tx_master->slim_cfg->grph,
 		 tx_master->slim_cfg->chanh);
 	mutex_unlock(&tx_master->lock);
+<<<<<<< HEAD
 	pr_debug("%s: Handle %p slim_cfg->ph1 %x slim grp\n"
+=======
+	pr_debug("%s: Handle %pK slim_cfg->ph1 %x slim grp\n"
+>>>>>>> FETCH_HEAD
 		 "handle %x chanh %x ref count %x\n",
 		 __func__, tx_master->slim_s.handle,
 		 tx_master->slim_cfg->ph1,
@@ -687,14 +725,22 @@ int wcd9xxx_slim_ch_master_close(struct wcd9xxx *wcd9xxx, void **handle)
 	struct wcd9xxx_slim_master_prop *slim_cfg;
 
 	if (wcd9xxx == NULL || handle == NULL) {
+<<<<<<< HEAD
 		pr_err("%s: Invalid params, wcd9xxx(%p) handle(%p)\n",
+=======
+		pr_err("%s: Invalid params, wcd9xxx(%pK) handle(%pK)\n",
+>>>>>>> FETCH_HEAD
 			__func__, wcd9xxx, handle);
 		return -EINVAL;
 	}
 
 	tx_master = &slim_tx_master;
 	if (*handle != tx_master->slim_s.handle) {
+<<<<<<< HEAD
 		pr_err("%s: handle(%p) not matching slim_hdl(%p)\n",
+=======
+		pr_err("%s: handle(%pK) not matching slim_hdl(%pK)\n",
+>>>>>>> FETCH_HEAD
 			__func__, *handle, tx_master->slim_s.handle);
 		return -EINVAL;
 	}
@@ -751,7 +797,11 @@ int wcd9xxx_slim_ch_master_status(struct wcd9xxx *wcd9xxx, void *handle,
 	}
 	tx_master = &slim_tx_master;
 	if (handle != tx_master->slim_s.handle) {
+<<<<<<< HEAD
 		pr_err("%s: handle(%p) not matching slim_hdl(%p)\n",
+=======
+		pr_err("%s: handle(%pK) not matching slim_hdl(%pK)\n",
+>>>>>>> FETCH_HEAD
 			__func__, handle, tx_master->slim_s.handle);
 		return -EINVAL;
 	}
@@ -775,17 +825,28 @@ int wcd9xxx_slim_ch_master_enable_read(struct wcd9xxx *wcd9xxx, void *handle)
 	int rc = 0;
 	struct wcd9xxx_master_cfg *tx_master;
 	struct wcd9xxx_slim_master_prop *slim_cfg;
+<<<<<<< HEAD
 	pr_debug("%s:handle = %p\n", __func__, handle);
 
 	if (wcd9xxx == NULL || handle == NULL) {
 		pr_err("%s: Invalid params, wcd9xxx(%p) handle(%p)\n",
+=======
+	pr_debug("%s:handle = %pK\n", __func__, handle);
+
+	if (wcd9xxx == NULL || handle == NULL) {
+		pr_err("%s: Invalid params, wcd9xxx(%pK) handle(%pK)\n",
+>>>>>>> FETCH_HEAD
 			__func__, wcd9xxx, handle);
 		return -EINVAL;
 	}
 
 	tx_master = &slim_tx_master;
 	if (handle != tx_master->slim_s.handle) {
+<<<<<<< HEAD
 		pr_err("%s: handle(%p) not matching slim_hdl(%p)\n",
+=======
+		pr_err("%s: handle(%pK) not matching slim_hdl(%pK)\n",
+>>>>>>> FETCH_HEAD
 			__func__, handle, tx_master->slim_s.handle);
 		return -EINVAL;
 	}
@@ -822,7 +883,11 @@ int wcd9xxx_slim_ch_master_read(struct wcd9xxx *wcd9xxx, void *handle,
 	struct wcd9xxx_slim_master_prop *slim_cfg;
 	struct completion *sb_comp;
 
+<<<<<<< HEAD
 	pr_debug("%s: handle %p len %x\n",
+=======
+	pr_debug("%s: handle %pK len %x\n",
+>>>>>>> FETCH_HEAD
 		  __func__, handle, read_len);
 
 	if (wcd9xxx == NULL || handle == NULL) {
@@ -832,7 +897,11 @@ int wcd9xxx_slim_ch_master_read(struct wcd9xxx *wcd9xxx, void *handle,
 
 	tx_master = &slim_tx_master;
 	if (handle != tx_master->slim_s.handle) {
+<<<<<<< HEAD
 		pr_err("%s: handle(%p) not matching slim_hdl(%p)\n",
+=======
+		pr_err("%s: handle(%pK) not matching slim_hdl(%pK)\n",
+>>>>>>> FETCH_HEAD
 			__func__, handle, tx_master->slim_s.handle);
 		return -EINVAL;
 	}

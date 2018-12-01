@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2014, 2016-2017, The Linux Foundation. All
+ * rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -18,10 +23,15 @@
 #include <sound/control.h>
 #include <sound/q6adm-v2.h>
 #include <sound/asound.h>
+<<<<<<< HEAD
 
 #include "msm-dts-srs-tm-config.h"
 #include "msm-pcm-routing-v2.h"
 #include "msm-dts-eagle.h"
+=======
+#include "msm-dts-srs-tm-config.h"
+#include "msm-pcm-routing-v2.h"
+>>>>>>> FETCH_HEAD
 
 static int srs_port_id[AFE_MAX_PORTS] = {-1};
 static int srs_copp_idx[AFE_MAX_PORTS] = {-1};
@@ -289,8 +299,13 @@ static int reg_ion_mem(void)
 				 &po.kvaddr);
 	if (rc != 0)
 		pr_err("%s: failed to allocate memory.\n", __func__);
+<<<<<<< HEAD
 		pr_debug("%s: exited ion_client = %p, ion_handle = %p, phys_addr = %lu,\
 		length = %d, vaddr = %p, rc = 0x%x\n",
+=======
+		pr_debug("%s: exited ion_client = %pK, ion_handle = %pK, phys_addr = %lu,\
+		length = %d, vaddr = %pK, rc = 0x%x\n",
+>>>>>>> FETCH_HEAD
 		__func__, ion_client, ion_handle, (long)po.paddr,
 		(unsigned int)po.size, po.kvaddr, rc);
 	return rc;

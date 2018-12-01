@@ -57,7 +57,10 @@
 	*(.uml.initcall.init)
 	__uml_initcall_end = .;
   }
+<<<<<<< HEAD
   __init_end = .;
+=======
+>>>>>>> FETCH_HEAD
 
   SECURITY_INIT
 

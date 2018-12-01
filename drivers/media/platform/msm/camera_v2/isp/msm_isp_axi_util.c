@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -25,6 +29,7 @@ int msm_isp_axi_create_stream(
 	struct msm_vfe_axi_shared_data *axi_data,
 	struct msm_vfe_axi_stream_request_cmd *stream_cfg_cmd)
 {
+<<<<<<< HEAD
 	int i, rc = -1;
 	for (i = 0; i < MAX_NUM_STREAM; i++) {
 		if (axi_data->stream_info[i].state == AVALIABLE)
@@ -34,6 +39,13 @@ int msm_isp_axi_create_stream(
 	if (i == MAX_NUM_STREAM) {
 		pr_err("%s: No free stream\n", __func__);
 		return rc;
+=======
+	uint32_t i = stream_cfg_cmd->stream_src;
+	if (i >= VFE_AXI_SRC_MAX) {
+		pr_err("%s:%d invalid stream_src %d\n", __func__, __LINE__,
+			stream_cfg_cmd->stream_src);
+		return -EINVAL;
+>>>>>>> FETCH_HEAD
 	}
 
 	if ((axi_data->stream_handle_cnt << 8) == 0)
@@ -586,6 +598,10 @@ void msm_isp_calculate_bandwidth(
 	struct msm_vfe_axi_shared_data *axi_data,
 	struct msm_vfe_axi_stream *stream_info)
 {
+<<<<<<< HEAD
+=======
+	int bpp = 0;
+>>>>>>> FETCH_HEAD
 	if (stream_info->stream_src < RDI_INTF_0) {
 		stream_info->bandwidth =
 			(axi_data->src_info[VFE_PIX_0].pixel_clock /
@@ -595,9 +611,16 @@ void msm_isp_calculate_bandwidth(
 			stream_info->format_factor / ISP_Q2;
 	} else {
 		int rdi = SRC_TO_INTF(stream_info->stream_src);
+<<<<<<< HEAD
 		if (rdi < VFE_SRC_MAX)
 			stream_info->bandwidth =
 				axi_data->src_info[rdi].pixel_clock;
+=======
+		bpp = msm_isp_get_bit_per_pixel(stream_info->output_format);
+		if (rdi < VFE_SRC_MAX)
+			stream_info->bandwidth =
+				(axi_data->src_info[rdi].pixel_clock / 8) * bpp;
+>>>>>>> FETCH_HEAD
 		else
 			pr_err("%s: Invalid rdi interface\n", __func__);
 	}

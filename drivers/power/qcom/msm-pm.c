@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2010-2014, 2017 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -89,6 +93,10 @@ static long *msm_pc_debug_counters;
 
 static cpumask_t retention_cpus;
 static DEFINE_SPINLOCK(retention_lock);
+<<<<<<< HEAD
+=======
+static DEFINE_MUTEX(msm_pc_debug_mutex);
+>>>>>>> FETCH_HEAD
 
 static bool msm_pm_is_L1_writeback(void)
 {
@@ -718,6 +726,7 @@ static ssize_t msm_pc_debug_counters_file_read(struct file *file,
 		char __user *bufu, size_t count, loff_t *ppos)
 {
 	struct msm_pc_debug_counters_buffer *data;
+<<<<<<< HEAD
 
 	data = file->private_data;
 
@@ -729,22 +738,62 @@ static ssize_t msm_pc_debug_counters_file_read(struct file *file,
 
 	if (!access_ok(VERIFY_WRITE, bufu, count))
 		return -EFAULT;
+=======
+	ssize_t ret;
+
+	mutex_lock(&msm_pc_debug_mutex);
+	data = file->private_data;
+
+	if (!data) {
+		ret = -EINVAL;
+		goto exit;
+	}
+
+	if (!bufu) {
+		ret = -EINVAL;
+		goto exit;
+	}
+
+	if (!access_ok(VERIFY_WRITE, bufu, count)) {
+		ret = -EFAULT;
+		goto exit;
+	}
+>>>>>>> FETCH_HEAD
 
 	if (*ppos >= data->len && data->len == 0)
 		data->len = msm_pc_debug_counters_copy(data);
 
+<<<<<<< HEAD
 	return simple_read_from_buffer(bufu, count, ppos,
 			data->buf, data->len);
+=======
+	ret = simple_read_from_buffer(bufu, count, ppos,
+			data->buf, data->len);
+exit:
+	mutex_unlock(&msm_pc_debug_mutex);
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 static int msm_pc_debug_counters_file_open(struct inode *inode,
 		struct file *file)
 {
 	struct msm_pc_debug_counters_buffer *buf;
+<<<<<<< HEAD
 
 
 	if (!inode->i_private)
 		return -EINVAL;
+=======
+	int ret = 0;
+
+	mutex_lock(&msm_pc_debug_mutex);
+
+	if (!inode->i_private) {
+		ret = -EINVAL;
+		goto exit;
+	}
+>>>>>>> FETCH_HEAD
 
 	file->private_data = kzalloc(
 		sizeof(struct msm_pc_debug_counters_buffer), GFP_KERNEL);
@@ -753,19 +802,36 @@ static int msm_pc_debug_counters_file_open(struct inode *inode,
 		pr_err("%s: ERROR kmalloc failed to allocate %zu bytes\n",
 		__func__, sizeof(struct msm_pc_debug_counters_buffer));
 
+<<<<<<< HEAD
 		return -ENOMEM;
+=======
+		ret = -ENOMEM;
+		goto exit;
+>>>>>>> FETCH_HEAD
 	}
 
 	buf = file->private_data;
 	buf->reg = (long *)inode->i_private;
 
+<<<<<<< HEAD
 	return 0;
+=======
+exit:
+	mutex_unlock(&msm_pc_debug_mutex);
+	return ret;
+>>>>>>> FETCH_HEAD
 }
 
 static int msm_pc_debug_counters_file_close(struct inode *inode,
 		struct file *file)
 {
+<<<<<<< HEAD
 	kfree(file->private_data);
+=======
+	mutex_lock(&msm_pc_debug_mutex);
+	kfree(file->private_data);
+	mutex_unlock(&msm_pc_debug_mutex);
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 

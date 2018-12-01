@@ -61,6 +61,18 @@
 			gpio-key,wakeup;
 			debounce-interval = <15>;
 		};
+<<<<<<< HEAD
+=======
+
+		vol_down {
+			label = "volume_down";
+			gpios = <&msm_gpio 91 0x1>;
+			linux,input-type = <1>;
+			linux,code = <114>;
+			gpio-key,wakeup;
+			debounce-interval = <15>;
+		};
+>>>>>>> FETCH_HEAD
 	};
 };
 
@@ -113,6 +125,17 @@
 };
 
 &spmi_bus {
+<<<<<<< HEAD
+=======
+	qcom,pm8916@0 {
+		qcom,leds@a300 {
+			compatible = "qcom,leds-qpnp";
+			reg = <0xa300 0x100>;
+			label = "mpp";
+		};
+	};
+
+>>>>>>> FETCH_HEAD
 	qcom,pm8916@1 {
 		qcom,vibrator@c000 {
 			status = "okay";

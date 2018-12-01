@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -202,7 +206,10 @@ int kgsl_add_fence_event(struct kgsl_device *device,
 		ret = priv.fence_fd;
 		goto unlock;
 	}
+<<<<<<< HEAD
 	sync_fence_install(fence, priv.fence_fd);
+=======
+>>>>>>> FETCH_HEAD
 
 	/*
 	 * If the timestamp hasn't expired yet create an event to trigger it.
@@ -229,6 +236,10 @@ int kgsl_add_fence_event(struct kgsl_device *device,
 		ret = -EFAULT;
 		goto out;
 	}
+<<<<<<< HEAD
+=======
+	sync_fence_install(fence, priv.fence_fd);
+>>>>>>> FETCH_HEAD
 
 	return 0;
 
@@ -473,6 +484,7 @@ long kgsl_ioctl_syncsource_create(struct kgsl_device_private *dev_priv,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	idr_preload(GFP_KERNEL);
 	spin_lock(&private->syncsource_lock);
 	id = idr_alloc(&private->syncsource_idr, syncsource, 1, 0, GFP_NOWAIT);
@@ -484,12 +496,28 @@ long kgsl_ioctl_syncsource_create(struct kgsl_device_private *dev_priv,
 		syncsource->id = id;
 		syncsource->private = private;
 
+=======
+	kref_init(&syncsource->refcount);
+	syncsource->private = private;
+
+	idr_preload(GFP_KERNEL);
+	spin_lock(&private->syncsource_lock);
+	id = idr_alloc(&private->syncsource_idr, syncsource, 1, 0, GFP_NOWAIT);
+	if (id > 0) {
+		syncsource->id = id;
+>>>>>>> FETCH_HEAD
 		param->id = id;
 		ret = 0;
 	} else {
 		ret = id;
 	}
 
+<<<<<<< HEAD
+=======
+	spin_unlock(&private->syncsource_lock);
+	idr_preload_end();
+
+>>>>>>> FETCH_HEAD
 out:
 	if (ret) {
 		if (syncsource && syncsource->oneshot)
@@ -547,6 +575,7 @@ long kgsl_ioctl_syncsource_destroy(struct kgsl_device_private *dev_priv,
 {
 	struct kgsl_syncsource_destroy *param = data;
 	struct kgsl_syncsource *syncsource = NULL;
+<<<<<<< HEAD
 	struct kgsl_process_private *private;
 
 	syncsource = kgsl_syncsource_get(dev_priv->process_priv,
@@ -566,6 +595,25 @@ long kgsl_ioctl_syncsource_destroy(struct kgsl_device_private *dev_priv,
 	kgsl_syncsource_put(syncsource);
 	/* put reference from getting the syncsource above */
 	kgsl_syncsource_put(syncsource);
+=======
+	struct kgsl_process_private *private = dev_priv->process_priv;
+
+	spin_lock(&private->syncsource_lock);
+	syncsource = idr_find(&private->syncsource_idr, param->id);
+
+	if (syncsource) {
+		idr_remove(&private->syncsource_idr, param->id);
+		syncsource->id = 0;
+	}
+
+	spin_unlock(&private->syncsource_lock);
+
+	if (syncsource == NULL)
+		return -EINVAL;
+
+	/* put reference from syncsource creation */
+	kgsl_syncsource_put(syncsource);
+>>>>>>> FETCH_HEAD
 	return 0;
 }
 
@@ -608,6 +656,12 @@ out:
 	if (ret) {
 		if (fence)
 			sync_fence_put(fence);
+<<<<<<< HEAD
+=======
+		if (fd >= 0)
+			put_unused_fd(fd);
+
+>>>>>>> FETCH_HEAD
 	}
 	kgsl_syncsource_put(syncsource);
 	return ret;

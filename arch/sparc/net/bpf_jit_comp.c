@@ -773,7 +773,11 @@ cond_branch:			f_offset = addrs[i + filter[i].jf];
 				if (unlikely(proglen + ilen > oldproglen)) {
 					pr_err("bpb_jit_compile fatal error\n");
 					kfree(addrs);
+<<<<<<< HEAD
 					module_free(NULL, image);
+=======
+					module_memfree(image);
+>>>>>>> FETCH_HEAD
 					return;
 				}
 				memcpy(image + proglen, temp, ilen);
@@ -819,11 +823,19 @@ out:
 
 static void jit_free_defer(struct work_struct *arg)
 {
+<<<<<<< HEAD
 	module_free(NULL, arg);
 }
 
 /* run from softirq, we must use a work_struct to call
  * module_free() from process context
+=======
+	module_memfree(arg);
+}
+
+/* run from softirq, we must use a work_struct to call
+ * module_memfree() from process context
+>>>>>>> FETCH_HEAD
  */
 void bpf_jit_free(struct sk_filter *fp)
 {

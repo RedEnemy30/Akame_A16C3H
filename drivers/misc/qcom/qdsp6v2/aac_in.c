@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2010-2014, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2010-2014, 2016-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -34,6 +38,11 @@
 
 #define AAC_FORMAT_ADTS 65535
 
+<<<<<<< HEAD
+=======
+#define MAX_SAMPLE_RATE_384K 384000
+
+>>>>>>> FETCH_HEAD
 static long aac_in_ioctl_shared(struct file *file, unsigned int cmd, void *arg)
 {
 	struct q6audio_in  *audio = file->private_data;
@@ -233,6 +242,16 @@ static long aac_in_ioctl_shared(struct file *file, unsigned int cmd, void *arg)
 			break;
 		}
 
+<<<<<<< HEAD
+=======
+		if (cfg->sample_rate > MAX_SAMPLE_RATE_384K) {
+			pr_err("%s: ERROR: invalid sample rate = %u",
+				__func__, cfg->sample_rate);
+			rc = -EINVAL;
+			break;
+		}
+
+>>>>>>> FETCH_HEAD
 		min_bitrate = ((cfg->sample_rate)*(cfg->channels))/2;
 		if (min_bitrate < 24000)
 			min_bitrate = 24000;
@@ -425,6 +444,11 @@ static long aac_in_compat_ioctl(struct file *file, unsigned int cmd,
 		struct msm_audio_aac_enc_config cfg;
 		struct msm_audio_aac_enc_config32 cfg_32;
 
+<<<<<<< HEAD
+=======
+		memset(&cfg_32, 0, sizeof(cfg_32));
+
+>>>>>>> FETCH_HEAD
 		cmd = AUDIO_GET_AAC_ENC_CONFIG;
 		rc = aac_in_ioctl_shared(file, cmd, &cfg);
 		if (rc) {

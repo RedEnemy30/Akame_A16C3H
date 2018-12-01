@@ -329,7 +329,11 @@ static int queuecommand_lck(struct scsi_cmnd *srb,
 
 	/* check for state-transition errors */
 	if (us->srb != NULL) {
+<<<<<<< HEAD
 		printk(KERN_ERR USB_STORAGE "Error in %s: us->srb = %p\n",
+=======
+		printk(KERN_ERR USB_STORAGE "Error in %s: us->srb = %pK\n",
+>>>>>>> FETCH_HEAD
 			__func__, us->srb);
 		return SCSI_MLQUEUE_HOST_BUSY;
 	}

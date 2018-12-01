@@ -1209,6 +1209,10 @@ int udp_recvmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 	int peeked, off = 0;
 	int err;
 	int is_udplite = IS_UDPLITE(sk);
+<<<<<<< HEAD
+=======
+	bool checksum_valid = false;
+>>>>>>> FETCH_HEAD
 	bool slow;
 
 	if (flags & MSG_ERRQUEUE)
@@ -1234,11 +1238,20 @@ try_again:
 	 */
 
 	if (copied < ulen || UDP_SKB_CB(skb)->partial_cov) {
+<<<<<<< HEAD
 		if (udp_lib_checksum_complete(skb))
 			goto csum_copy_err;
 	}
 
 	if (skb_csum_unnecessary(skb))
+=======
+		checksum_valid = !udp_lib_checksum_complete(skb);
+		if (!checksum_valid)
+			goto csum_copy_err;
+	}
+
+	if (checksum_valid || skb_csum_unnecessary(skb))
+>>>>>>> FETCH_HEAD
 		err = skb_copy_datagram_iovec(skb, sizeof(struct udphdr),
 					      msg->msg_iov, copied);
 	else {
@@ -1294,10 +1307,15 @@ csum_copy_err:
 	}
 	unlock_sock_fast(sk, slow);
 
+<<<<<<< HEAD
 	if (noblock)
 		return -EAGAIN;
 
 	/* starting over for a new packet */
+=======
+	/* starting over for a new packet, but check if we need to yield */
+	cond_resched();
+>>>>>>> FETCH_HEAD
 	msg->msg_flags &= ~MSG_TRUNC;
 	goto try_again;
 }
@@ -2153,6 +2171,11 @@ static void udp4_format_sock(struct sock *sp, struct seq_file *f,
 	__u8 state = sp->sk_state;
 	if (up->encap_rcv)
 		state |= 0xF0;
+<<<<<<< HEAD
+=======
+	else if (inet->transparent)
+		state |= 0x80;
+>>>>>>> FETCH_HEAD
 
 	seq_printf(f, "%5d: %08X:%04X %08X:%04X"
 		" %02X %08X:%08X %02X:%08lX %08X %5d %8d %lu %d %pK %d",

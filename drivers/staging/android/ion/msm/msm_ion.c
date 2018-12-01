@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2011-2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2011-2014,2016,2018 The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -714,7 +718,11 @@ long msm_ion_custom_ioctl(struct ion_client *client,
 		} else {
 			handle = ion_import_dma_buf(client, data.flush_data.fd);
 			if (IS_ERR(handle)) {
+<<<<<<< HEAD
 				pr_info("%s: Could not import handle: %p\n",
+=======
+				pr_info("%s: Could not import handle: %pK\n",
+>>>>>>> FETCH_HEAD
 					__func__, handle);
 				return -EINVAL;
 			}
@@ -722,6 +730,7 @@ long msm_ion_custom_ioctl(struct ion_client *client,
 
 		down_read(&mm->mmap_sem);
 
+<<<<<<< HEAD
 		start = (unsigned long) data.flush_data.vaddr;
 		end = (unsigned long) data.flush_data.vaddr
 			+ data.flush_data.length;
@@ -729,6 +738,15 @@ long msm_ion_custom_ioctl(struct ion_client *client,
 		if (start && check_vaddr_bounds(start, end)) {
 			pr_err("%s: virtual address %p is out of bounds\n",
 				__func__, data.flush_data.vaddr);
+=======
+		start = (unsigned long)data.flush_data.vaddr +
+			data.flush_data.offset;
+		end = start + data.flush_data.length;
+
+		if (check_vaddr_bounds(start, end)) {
+			pr_err("%s: virtual address %pK is out of bounds\n",
+			       __func__, data.flush_data.vaddr);
+>>>>>>> FETCH_HEAD
 			ret = -EINVAL;
 		} else {
 			ret = ion_do_cache_op(
@@ -746,16 +764,40 @@ long msm_ion_custom_ioctl(struct ion_client *client,
 	}
 	case ION_IOC_PREFETCH:
 	{
+<<<<<<< HEAD
 		ion_walk_heaps(client, data.prefetch_data.heap_id,
 			(void *)data.prefetch_data.len,
 			ion_secure_cma_prefetch);
+=======
+		int ret;
+
+		ret = ion_walk_heaps(client, data.prefetch_data.heap_id,
+			ION_HEAP_TYPE_SECURE_DMA,
+			(void *)data.prefetch_data.len,
+			ion_secure_cma_prefetch);
+
+		if (ret)
+			return ret;
+>>>>>>> FETCH_HEAD
 		break;
 	}
 	case ION_IOC_DRAIN:
 	{
+<<<<<<< HEAD
 		ion_walk_heaps(client, data.prefetch_data.heap_id,
 			(void *)data.prefetch_data.len,
 			ion_secure_cma_drain_pool);
+=======
+		int ret;
+
+		ret = ion_walk_heaps(client, data.prefetch_data.heap_id,
+			ION_HEAP_TYPE_SECURE_DMA,
+			(void *)data.prefetch_data.len,
+			ion_secure_cma_drain_pool);
+
+		if (ret)
+			return ret;
+>>>>>>> FETCH_HEAD
 		break;
 	}
 

@@ -26,6 +26,10 @@
 #include <linux/smp.h>
 #include <linux/ptrace.h>
 #include <linux/user.h>
+<<<<<<< HEAD
+=======
+#include <linux/seccomp.h>
+>>>>>>> FETCH_HEAD
 #include <linux/security.h>
 #include <linux/init.h>
 #include <linux/signal.h>
@@ -547,6 +551,35 @@ static int tls_set(struct task_struct *target, const struct user_regset *regset,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static int system_call_get(struct task_struct *target,
+			   const struct user_regset *regset,
+			   unsigned int pos, unsigned int count,
+			   void *kbuf, void __user *ubuf)
+{
+	int syscallno = task_pt_regs(target)->syscallno;
+
+	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+				   &syscallno, 0, -1);
+}
+
+static int system_call_set(struct task_struct *target,
+			   const struct user_regset *regset,
+			   unsigned int pos, unsigned int count,
+			   const void *kbuf, const void __user *ubuf)
+{
+	int syscallno, ret;
+
+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf, &syscallno, 0, -1);
+	if (ret)
+		return ret;
+
+	task_pt_regs(target)->syscallno = syscallno;
+	return ret;
+}
+
+>>>>>>> FETCH_HEAD
 enum aarch64_regset {
 	REGSET_GPR,
 	REGSET_FPR,
@@ -555,6 +588,10 @@ enum aarch64_regset {
 	REGSET_HW_BREAK,
 	REGSET_HW_WATCH,
 #endif
+<<<<<<< HEAD
+=======
+	REGSET_SYSTEM_CALL,
+>>>>>>> FETCH_HEAD
 };
 
 static const struct user_regset aarch64_regsets[] = {
@@ -604,6 +641,17 @@ static const struct user_regset aarch64_regsets[] = {
 		.set = hw_break_set,
 	},
 #endif
+<<<<<<< HEAD
+=======
+	[REGSET_SYSTEM_CALL] = {
+		.core_note_type = NT_ARM_SYSTEM_CALL,
+		.n = 1,
+		.size = sizeof(int),
+		.align = sizeof(int),
+		.get = system_call_get,
+		.set = system_call_set,
+	},
+>>>>>>> FETCH_HEAD
 };
 
 static const struct user_regset_view user_aarch64_view = {
@@ -1105,12 +1153,42 @@ static void tracehook_report_syscall(struct pt_regs *regs,
 
 asmlinkage int syscall_trace_enter(struct pt_regs *regs)
 {
+<<<<<<< HEAD
+=======
+	unsigned int saved_syscallno = regs->syscallno;
+
+	/* Do the secure computing check first; failures should be fast. */
+	if (secure_computing(regs->syscallno) == -1)
+		return RET_SKIP_SYSCALL_TRACE;
+
+>>>>>>> FETCH_HEAD
 	if (test_thread_flag(TIF_SYSCALL_TRACE))
 		tracehook_report_syscall(regs, PTRACE_SYSCALL_ENTER);
 
 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
 		trace_sys_enter(regs, regs->syscallno);
 
+<<<<<<< HEAD
+=======
+	if (IS_SKIP_SYSCALL(regs->syscallno)) {
+		/*
+		 * RESTRICTION: we can't modify a return value of user
+		 * issued syscall(-1) here. In order to ease this flavor,
+		 * we need to treat whatever value in x0 as a return value,
+		 * but this might result in a bogus value being returned.
+		 */
+		/*
+		 * NOTE: syscallno may also be set to -1 if fatal signal is
+		 * detected in tracehook_report_syscall_entry(), but since
+		 * a value set to x0 here is not used in this case, we may
+		 * neglect the case.
+		 */
+		if (!test_thread_flag(TIF_SYSCALL_TRACE) ||
+				(IS_SKIP_SYSCALL(saved_syscallno)))
+			regs->regs[0] = -ENOSYS;
+	}
+
+>>>>>>> FETCH_HEAD
 	return regs->syscallno;
 }
 

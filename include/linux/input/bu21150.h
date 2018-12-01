@@ -46,6 +46,10 @@ struct bu21150_ioctl_spi_data {
 	unsigned long addr;
 	char __user *buf;
 	unsigned int count;
+<<<<<<< HEAD
+=======
+	unsigned int next_mode;
+>>>>>>> FETCH_HEAD
 };
 
 struct bu21150_ioctl_timeout_data {

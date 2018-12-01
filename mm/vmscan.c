@@ -43,7 +43,10 @@
 #include <linux/sysctl.h>
 #include <linux/oom.h>
 #include <linux/prefetch.h>
+<<<<<<< HEAD
 #include <linux/debugfs.h>
+=======
+>>>>>>> FETCH_HEAD
 
 #include <asm/tlbflush.h>
 #include <asm/div64.h>
@@ -182,6 +185,7 @@ static unsigned long get_lru_size(struct lruvec *lruvec, enum lru_list lru)
 	return zone_page_state(lruvec_zone(lruvec), NR_LRU_BASE + lru);
 }
 
+<<<<<<< HEAD
 struct dentry *debug_file;
 
 static int debug_shrinker_show(struct seq_file *s, void *unused)
@@ -215,6 +219,8 @@ static const struct file_operations debug_shrinker_fops = {
         .release = single_release,
 };
 
+=======
+>>>>>>> FETCH_HEAD
 /*
  * Add a shrinker callback to be called from the vm
  */
@@ -227,6 +233,7 @@ void register_shrinker(struct shrinker *shrinker)
 }
 EXPORT_SYMBOL(register_shrinker);
 
+<<<<<<< HEAD
 static int __init add_shrinker_debug(void)
 {
 	debugfs_create_file("shrinker", 0644, NULL, NULL,
@@ -236,6 +243,8 @@ static int __init add_shrinker_debug(void)
 
 late_initcall(add_shrinker_debug);
 
+=======
+>>>>>>> FETCH_HEAD
 /*
  * Remove one
  */

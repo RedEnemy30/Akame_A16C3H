@@ -414,7 +414,11 @@ int sysmon_send_shutdown(struct subsys_desc *dest_desc)
 	struct sysmon_qmi_data *data = NULL, *temp;
 	const char *dest_ss = dest_desc->name;
 	char req = 0;
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret, shutdown_ack_ret;
+>>>>>>> FETCH_HEAD
 
 	if (dest_ss == NULL)
 		return -EINVAL;
@@ -469,6 +473,21 @@ int sysmon_send_shutdown(struct subsys_desc *dest_desc)
 							data->name);
 		ret = -ETIMEDOUT;
 	}
+<<<<<<< HEAD
+=======
+
+	/*
+	 * Subsystem SSCTL service might not be able to send the QMI
+	 * acknowledgment. Wait for the shutdown_ack SMP2P bit to be
+	 * set by the service if that's the case.
+	 */
+	shutdown_ack_ret = wait_for_shutdown_ack(dest_desc);
+	if (shutdown_ack_ret < 0) {
+		pr_err("shutdown_ack SMP2P bit for %s not set\n", data->name);
+		ret = shutdown_ack_ret;
+	} else if (shutdown_ack_ret > 0)
+		ret = 0;
+>>>>>>> FETCH_HEAD
 out:
 	mutex_unlock(&sysmon_lock);
 	return ret;

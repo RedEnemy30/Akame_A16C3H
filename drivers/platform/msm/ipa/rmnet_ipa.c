@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
+>>>>>>> FETCH_HEAD
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -60,6 +64,10 @@ static atomic_t is_initialized;
 static atomic_t is_ssr;
 
 u32 apps_to_ipa_hdl, ipa_to_apps_hdl; /* get handler from ipa */
+<<<<<<< HEAD
+=======
+static struct mutex add_mux_channel_lock;
+>>>>>>> FETCH_HEAD
 static int wwan_add_ul_flt_rule_to_ipa(void);
 static int wwan_del_ul_flt_rule_to_ipa(void);
 
@@ -374,12 +382,21 @@ int copy_ul_filter_rule_to_ipa(struct ipa_install_fltr_rule_req_msg_v01
 {
 	int rc = 0, i, j;
 
+<<<<<<< HEAD
+=======
+	/* prevent multi-threads accessing num_q6_rule */
+	mutex_lock(&add_mux_channel_lock);
+>>>>>>> FETCH_HEAD
 	if (rule_req->filter_spec_list_valid == true) {
 		num_q6_rule = rule_req->filter_spec_list_len;
 		IPAWANDBG("Received (%d) install_flt_req\n", num_q6_rule);
 	} else {
 		num_q6_rule = 0;
 		IPAWANERR("got no UL rules from modem\n");
+<<<<<<< HEAD
+=======
+		mutex_unlock(&add_mux_channel_lock);
+>>>>>>> FETCH_HEAD
 		return -EINVAL;
 	}
 	/* copy UL filter rules from Modem*/
@@ -523,6 +540,10 @@ int copy_ul_filter_rule_to_ipa(struct ipa_install_fltr_rule_req_msg_v01
 			rule_req->filter_spec_list[i].filter_rule.
 			ipv4_frag_eq_present;
 	}
+<<<<<<< HEAD
+=======
+	mutex_unlock(&add_mux_channel_lock);
+>>>>>>> FETCH_HEAD
 	return rc;
 }
 
@@ -1222,6 +1243,18 @@ static int ipa_wwan_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 					rmnet_mux_val.mux_id);
 				return rc;
 			}
+<<<<<<< HEAD
+=======
+			mutex_lock(&add_mux_channel_lock);
+			if (rmnet_index >= MAX_NUM_OF_MUX_CHANNEL) {
+				IPAWANERR("Exceed mux_channel limit(%d)\n",
+				rmnet_index);
+				mutex_unlock(&add_mux_channel_lock);
+				return -EFAULT;
+			}
+			extend_ioctl_data.u.rmnet_mux_val.vchannel_name
+				[IFNAMSIZ-1] = '\0';
+>>>>>>> FETCH_HEAD
 			IPAWANDBG("ADD_MUX_CHANNEL(%d, name: %s)\n",
 			extend_ioctl_data.u.rmnet_mux_val.mux_id,
 			extend_ioctl_data.u.rmnet_mux_val.vchannel_name);
@@ -1231,6 +1264,11 @@ static int ipa_wwan_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 			memcpy(mux_channel[rmnet_index].vchannel_name,
 				extend_ioctl_data.u.rmnet_mux_val.vchannel_name,
 				sizeof(mux_channel[rmnet_index].vchannel_name));
+<<<<<<< HEAD
+=======
+			mux_channel[rmnet_index].vchannel_name[
+				IFNAMSIZ - 1] = '\0';
+>>>>>>> FETCH_HEAD
 			IPAWANDBG("cashe device[%s:%d] in IPA_wan[%d]\n",
 				mux_channel[rmnet_index].vchannel_name,
 				mux_channel[rmnet_index].mux_id,
@@ -1245,6 +1283,10 @@ static int ipa_wwan_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 					IPAWANERR("device %s reg IPA failed\n",
 						extend_ioctl_data.u.
 						rmnet_mux_val.vchannel_name);
+<<<<<<< HEAD
+=======
+					mutex_unlock(&add_mux_channel_lock);
+>>>>>>> FETCH_HEAD
 					return -ENODEV;
 				}
 				mux_channel[rmnet_index].mux_channel_set = true;
@@ -1257,6 +1299,10 @@ static int ipa_wwan_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 				mux_channel[rmnet_index].ul_flt_reg = false;
 			}
 			rmnet_index++;
+<<<<<<< HEAD
+=======
+			mutex_unlock(&add_mux_channel_lock);
+>>>>>>> FETCH_HEAD
 			break;
 		case RMNET_IOCTL_SET_EGRESS_DATA_FORMAT:
 			IPAWANDBG("get RMNET_IOCTL_SET_EGRESS_DATA_FORMAT\n");
@@ -1294,8 +1340,16 @@ static int ipa_wwan_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 				IPAWANERR("failed to config egress endpoint\n");
 
 			if (num_q6_rule != 0) {
+<<<<<<< HEAD
 				/* already got Q6 UL filter rules*/
 				rc = wwan_add_ul_flt_rule_to_ipa();
+=======
+				/* protect num_q6_rule */
+				mutex_lock(&add_mux_channel_lock);
+				/* already got Q6 UL filter rules*/
+				rc = wwan_add_ul_flt_rule_to_ipa();
+				mutex_unlock(&add_mux_channel_lock);
+>>>>>>> FETCH_HEAD
 				egress_set = true;
 				if (rc)
 					IPAWANERR("install UL rules failed\n");
@@ -1932,6 +1986,11 @@ static int __init ipa_wwan_init(void)
 	if (!ipa_ssr_workqueue)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	mutex_init(&add_mux_channel_lock);
+	/* Register for Modem SSR */
+>>>>>>> FETCH_HEAD
 	subsys = subsys_notif_register_notifier(SUBSYS_MODEM, &ssr_notifier);
 	if (!IS_ERR(subsys)) {
 		return platform_driver_register(&rmnet_ipa_driver);
@@ -1943,6 +2002,10 @@ static int __init ipa_wwan_init(void)
 
 static void __exit ipa_wwan_cleanup(void)
 {
+<<<<<<< HEAD
+=======
+	mutex_destroy(&add_mux_channel_lock);
+>>>>>>> FETCH_HEAD
 	platform_driver_unregister(&rmnet_ipa_driver);
 }
 

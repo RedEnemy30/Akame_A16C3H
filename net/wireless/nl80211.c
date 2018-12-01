@@ -310,8 +310,12 @@ static const struct nla_policy nl80211_policy[NL80211_ATTR_MAX+1] = {
 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
 	[NL80211_ATTR_4ADDR] = { .type = NLA_U8 },
+<<<<<<< HEAD
 	[NL80211_ATTR_PMKID] = { .type = NLA_BINARY,
 				 .len = WLAN_PMKID_LEN },
+=======
+	[NL80211_ATTR_PMKID] = { .len = WLAN_PMKID_LEN },
+>>>>>>> FETCH_HEAD
 	[NL80211_ATTR_DURATION] = { .type = NLA_U32 },
 	[NL80211_ATTR_COOKIE] = { .type = NLA_U64 },
 	[NL80211_ATTR_TX_RATES] = { .type = NLA_NESTED },
@@ -366,6 +370,10 @@ static const struct nla_policy nl80211_policy[NL80211_ATTR_MAX+1] = {
 	[NL80211_ATTR_SCAN_FLAGS] = { .type = NLA_U32 },
 	[NL80211_ATTR_P2P_CTWINDOW] = { .type = NLA_U8 },
 	[NL80211_ATTR_P2P_OPPPS] = { .type = NLA_U8 },
+<<<<<<< HEAD
+=======
+	[NL80211_ATTR_LOCAL_MESH_POWER_MODE] = {. type = NLA_U32 },
+>>>>>>> FETCH_HEAD
 	[NL80211_ATTR_ACL_POLICY] = {. type = NLA_U32 },
 	[NL80211_ATTR_MAC_ADDRS] = { .type = NLA_NESTED },
 	[NL80211_ATTR_STA_CAPABILITY] = { .type = NLA_U16 },
@@ -389,6 +397,7 @@ static const struct nla_policy nl80211_policy[NL80211_ATTR_MAX+1] = {
 	[NL80211_ATTR_MAC_HINT] = { .len = ETH_ALEN },
 	[NL80211_ATTR_WIPHY_FREQ_HINT] = { .type = NLA_U32 },
 	[NL80211_ATTR_TDLS_PEER_CAPABILITY] = { .type = NLA_U32 },
+<<<<<<< HEAD
 	[NL80211_ATTR_AUTHORIZATION_STATUS] = { .type = NLA_U8 },
 	[NL80211_ATTR_KEY_REPLAY_CTR] = { .type = NLA_BINARY,
 				   .len = NL80211_KEY_REPLAY_CTR_LEN },
@@ -404,6 +413,8 @@ static const struct nla_policy nl80211_policy[NL80211_ATTR_MAX+1] = {
 				   .len = NL80211_KEY_LEN_PTK_KCK },
 	[NL80211_ATTR_PTK_KEK] = { .type = NLA_BINARY,
 				   .len = NL80211_KEY_LEN_PTK_KEK },
+=======
+>>>>>>> FETCH_HEAD
 };
 
 /* policy for the key attributes */
@@ -628,6 +639,15 @@ static int nl80211_msg_put_channel(struct sk_buff *msg,
 		if ((chan->flags & IEEE80211_CHAN_NO_160MHZ) &&
 		    nla_put_flag(msg, NL80211_FREQUENCY_ATTR_NO_160MHZ))
 			goto nla_put_failure;
+<<<<<<< HEAD
+=======
+		if ((chan->flags & IEEE80211_CHAN_INDOOR_ONLY) &&
+		    nla_put_flag(msg, NL80211_FREQUENCY_ATTR_INDOOR_ONLY))
+			goto nla_put_failure;
+		if ((chan->flags & IEEE80211_CHAN_GO_CONCURRENT) &&
+		    nla_put_flag(msg, NL80211_FREQUENCY_ATTR_GO_CONCURRENT))
+			goto nla_put_failure;
+>>>>>>> FETCH_HEAD
 	}
 
 	if (nla_put_u32(msg, NL80211_FREQUENCY_ATTR_MAX_TX_POWER,
@@ -1256,12 +1276,15 @@ static int nl80211_send_wiphy(struct cfg80211_registered_device *dev,
 		if ((dev->wiphy.flags & WIPHY_FLAG_TDLS_EXTERNAL_SETUP) &&
 		    nla_put_flag(msg, NL80211_ATTR_TDLS_EXTERNAL_SETUP))
 			goto nla_put_failure;
+<<<<<<< HEAD
 		if ((dev->wiphy.flags & WIPHY_FLAG_HAS_KEY_MGMT_OFFLOAD) &&
 		    (nla_put_u32(msg, NL80211_ATTR_KEY_MGMT_OFFLOAD_SUPPORT,
 				 dev->wiphy.key_mgmt_offload_support) ||
 		     nla_put_u32(msg, NL80211_ATTR_KEY_DERIVE_OFFLOAD_SUPPORT,
 				 dev->wiphy.key_derive_offload_support)))
 			goto nla_put_failure;
+=======
+>>>>>>> FETCH_HEAD
 
 		(*split_start)++;
 		if (split)
@@ -4256,10 +4279,19 @@ static int nl80211_del_station(struct sk_buff *skb, struct genl_info *info)
 {
 	struct cfg80211_registered_device *rdev = info->user_ptr[0];
 	struct net_device *dev = info->user_ptr[1];
+<<<<<<< HEAD
 	u8 *mac_addr = NULL;
 
 	if (info->attrs[NL80211_ATTR_MAC])
 		mac_addr = nla_data(info->attrs[NL80211_ATTR_MAC]);
+=======
+	struct station_del_parameters params;
+
+	memset(&params, 0, sizeof(params));
+
+	if (info->attrs[NL80211_ATTR_MAC])
+		params.mac = nla_data(info->attrs[NL80211_ATTR_MAC]);
+>>>>>>> FETCH_HEAD
 
 	if (dev->ieee80211_ptr->iftype != NL80211_IFTYPE_AP &&
 	    dev->ieee80211_ptr->iftype != NL80211_IFTYPE_AP_VLAN &&
@@ -4270,7 +4302,32 @@ static int nl80211_del_station(struct sk_buff *skb, struct genl_info *info)
 	if (!rdev->ops->del_station)
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	return rdev_del_station(rdev, dev, mac_addr);
+=======
+	if (info->attrs[NL80211_ATTR_MGMT_SUBTYPE]) {
+		params.subtype =
+			nla_get_u8(info->attrs[NL80211_ATTR_MGMT_SUBTYPE]);
+		if (params.subtype != IEEE80211_STYPE_DISASSOC >> 4 &&
+		    params.subtype != IEEE80211_STYPE_DEAUTH >> 4)
+			return -EINVAL;
+	} else {
+		/* Default to Deauthentication frame */
+		params.subtype = IEEE80211_STYPE_DEAUTH >> 4;
+	}
+
+	if (info->attrs[NL80211_ATTR_REASON_CODE]) {
+		params.reason_code =
+			nla_get_u16(info->attrs[NL80211_ATTR_REASON_CODE]);
+		if (params.reason_code == 0)
+			return -EINVAL; /* 0 is reserved */
+	} else {
+		/* Default to reason code 2 */
+		params.reason_code = WLAN_REASON_PREV_AUTH_NOT_VALID;
+	}
+
+	return rdev_del_station(rdev, dev, &params);
+>>>>>>> FETCH_HEAD
 }
 
 static int nl80211_send_mpath(struct sk_buff *msg, u32 portid, u32 seq,
@@ -6978,12 +7035,15 @@ static int nl80211_connect(struct sk_buff *skb, struct genl_info *info)
 		       sizeof(connect.vht_capa));
 	}
 
+<<<<<<< HEAD
 	if (nla_get_flag(info->attrs[NL80211_ATTR_OFFLOAD_KEY_MGMT]))
 		connect.flags |= ASSOC_REQ_OFFLOAD_KEY_MGMT;
 
 	if (info->attrs[NL80211_ATTR_PSK])
 		connect.psk = nla_data(info->attrs[NL80211_ATTR_PSK]);
 
+=======
+>>>>>>> FETCH_HEAD
 	err = cfg80211_connect(rdev, dev, &connect, connkeys);
 	if (err)
 		kfree(connkeys);
@@ -8710,6 +8770,7 @@ static int nl80211_set_qos_map(struct sk_buff *skb,
 	return ret;
 }
 
+<<<<<<< HEAD
 static int nl80211_key_mgmt_set_pmk(struct sk_buff *skb, struct genl_info *info)
 {
 	struct cfg80211_registered_device *rdev = info->user_ptr[0];
@@ -8732,6 +8793,8 @@ static int nl80211_key_mgmt_set_pmk(struct sk_buff *skb, struct genl_info *info)
 	return rdev_key_mgmt_set_pmk(rdev, dev, pmk, pmk_len);
 }
 
+=======
+>>>>>>> FETCH_HEAD
 #define NL80211_FLAG_NEED_WIPHY		0x01
 #define NL80211_FLAG_NEED_NETDEV	0x02
 #define NL80211_FLAG_NEED_RTNL		0x04
@@ -9453,6 +9516,7 @@ static struct genl_ops nl80211_ops[] = {
 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
 				  NL80211_FLAG_NEED_RTNL,
 	},
+<<<<<<< HEAD
 	{
 		.cmd = NL80211_CMD_KEY_MGMT_SET_PMK,
 		.doit = nl80211_key_mgmt_set_pmk,
@@ -9461,6 +9525,8 @@ static struct genl_ops nl80211_ops[] = {
 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
 				  NL80211_FLAG_NEED_RTNL,
 	},
+=======
+>>>>>>> FETCH_HEAD
 };
 
 static struct genl_multicast_group nl80211_mlme_mcgrp = {
@@ -11268,6 +11334,7 @@ void cfg80211_ap_stopped(struct net_device *netdev, gfp_t gfp)
 }
 EXPORT_SYMBOL(cfg80211_ap_stopped);
 
+<<<<<<< HEAD
 void __cfg80211_authorization_event(struct net_device *dev,
 			    enum nl80211_authorization_status auth_status,
 			    const u8 *key_replay_ctr, const u8 *ptk_kck,
@@ -11389,6 +11456,8 @@ void cfg80211_key_mgmt_auth(struct net_device *dev,
 }
 EXPORT_SYMBOL(cfg80211_key_mgmt_auth);
 
+=======
+>>>>>>> FETCH_HEAD
 /* initialisation/exit functions */
 
 int nl80211_init(void)
